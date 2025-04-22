@@ -4,6 +4,18 @@ export class BoolExpression {
     public expressionType: BoolExpressionType,
     public rightOperand?: string | BoolExpression,
   ) {}
+
+  clone(): BoolExpression {
+    const newLeftOperand = this.leftOperand instanceof BoolExpression
+                           ? this.leftOperand.clone()
+                           : this.leftOperand;
+
+    const newRightOperand = this.rightOperand instanceof BoolExpression
+                         ? this.rightOperand.clone()
+                         : this.rightOperand;
+
+    return new BoolExpression(newLeftOperand, this.expressionType, newRightOperand);
+  }
 }
 
 export class ArithmeticExpression {
@@ -12,6 +24,18 @@ export class ArithmeticExpression {
     public expressionType: ArithmeticExpressionType,
     public rightOperand?: string | ArithmeticExpression,
   ) {}
+
+  clone(): ArithmeticExpression {
+    const newLeftOperand = this.leftOperand instanceof ArithmeticExpression
+                           ? this.leftOperand.clone()
+                           : this.leftOperand;
+
+    const newRightOperand = this.rightOperand instanceof ArithmeticExpression
+                            ? this.rightOperand.clone()
+                            : this.rightOperand;
+
+    return new ArithmeticExpression(newLeftOperand, this.expressionType, newRightOperand);
+  }
 }
 
 export enum BoolExpressionType {
@@ -44,6 +68,14 @@ export class AssignExpression {
     public isNew: boolean = false,
     public type?: ValueType,
   ) {}
+
+  clone(): AssignExpression {
+    const newAssign = typeof this.assign === 'string'
+                      ? this.assign
+                      : this.assign.clone();
+
+    return new AssignExpression(this.destination, newAssign, this.isNew, this.type?.clone());
+  }
 }
 
 export enum DataType {
@@ -58,4 +90,8 @@ export class ValueType {
     public type: DataType,
     public isCollection: boolean = false
   ) {}
+
+  clone() {
+    return new ValueType(this.type, this.isCollection);
+  }
 }

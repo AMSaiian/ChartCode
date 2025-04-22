@@ -1,5 +1,5 @@
 import { AssignExpression, BoolExpression } from '../expression/expression.model';
-import { BaseLoop } from '../scope/loop/loop.model';
+import { ILoop } from '../scope/loop/loop.interface';
 import { IScope } from '../scope/scope.interface';
 import { IElement } from './element.interface';
 
@@ -13,6 +13,16 @@ export abstract class BaseElement implements IElement {
     this.previousId = [];
     this.nextId = null;
   }
+
+  abstract clone(): BaseElement;
+
+  protected copyBaseTo<T extends BaseElement>(target: T): T {
+    target.id = this.id;
+    target.previousId = [...this.previousId];
+    target.nextId = this.nextId;
+
+    return target;
+  }
 }
 
 export class InputElement extends BaseElement {
@@ -21,6 +31,12 @@ export class InputElement extends BaseElement {
     public isOutside: boolean = true
   ) {
     super();
+  }
+
+  override clone(): InputElement {
+    const element = new InputElement(this.destination, this.isOutside);
+
+    return this.copyBaseTo(element);
   }
 }
 
@@ -31,6 +47,12 @@ export class OutputElement extends BaseElement {
   ) {
     super();
   }
+
+  override clone(): OutputElement {
+    const element = new OutputElement(this.source, this.isOutside);
+
+    return this.copyBaseTo(element);
+  }
 }
 
 export class TerminalElement extends BaseElement {
@@ -38,6 +60,12 @@ export class TerminalElement extends BaseElement {
     public isStart: boolean
   ) {
     super();
+  }
+
+  override clone(): TerminalElement {
+    const element = new TerminalElement(this.isStart);
+
+    return this.copyBaseTo(element);
   }
 }
 
@@ -47,13 +75,25 @@ export class AssignElement extends BaseElement {
   ) {
     super();
   }
+
+  override clone(): AssignElement {
+    const element = new AssignElement(this.expression.clone());
+
+    return this.copyBaseTo(element);
+  }
 }
 
 export class LoopElement extends BaseElement {
   constructor(
-    public loop: BaseLoop
+    public loop: ILoop
   ) {
     super();
+  }
+
+  override clone(): LoopElement {
+    const element = new LoopElement(this.loop.clone());
+
+    return this.copyBaseTo(element);
   }
 }
 
@@ -64,5 +104,15 @@ export class ConditionElement extends BaseElement {
     public conditionExpression: BoolExpression
   ) {
     super();
+  }
+
+  override clone(): ConditionElement {
+    const element = new ConditionElement(
+      this.positiveWay.clone(),
+      this.negativeWay.clone(),
+      this.conditionExpression.clone()
+    );
+
+    return this.copyBaseTo(element);
   }
 }

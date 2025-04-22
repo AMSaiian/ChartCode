@@ -3,6 +3,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
+import { AppStateService } from './common/services/app-state.service';
 
 import { routes } from './app.routes';
 
@@ -18,6 +19,7 @@ export const appConfig: ApplicationConfig = {
         }
       }
     }),
-    provideRouter(routes)
+    provideRouter(routes),
+    AppStateService
   ]
 };

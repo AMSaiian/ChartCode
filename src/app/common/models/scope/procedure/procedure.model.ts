@@ -13,5 +13,10 @@ export class Procedure extends Scope implements IProcedure {
     super();
     this.isMain = isMain;
   }
+
+  override clone(): Scope {
+    const newProcedure = new Procedure(this.name, this.isMain);
+    return this.copyBaseTo(newProcedure);
+  }
 }
 
