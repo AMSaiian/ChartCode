@@ -1,6 +1,4 @@
 import { AssignExpression, BoolExpression } from '../expression/expression.model';
-import { ILoop } from '../scope/loop/loop.interface';
-import { IScope } from '../scope/scope.interface';
 import { IElement } from './element.interface';
 
 export abstract class BaseElement implements IElement {
@@ -83,15 +81,59 @@ export class AssignElement extends BaseElement {
   }
 }
 
-export class LoopElement extends BaseElement {
+export class ForLoopElement extends BaseElement {
   constructor(
-    public loop: ILoop
+    public scopeId: string,
+    public checkExpression: BoolExpression,
+    public accumulator?: AssignExpression,
+    public increment?: AssignExpression
   ) {
     super();
   }
 
-  override clone(): LoopElement {
-    const element = new LoopElement(this.loop.clone());
+  override clone(): ForLoopElement {
+    const element = new ForLoopElement(
+      this.scopeId,
+      this.checkExpression.clone(),
+      this.accumulator?.clone(),
+      this.increment?.clone()
+    );
+
+    return this.copyBaseTo(element);
+  }
+}
+
+export class DoLoopElement extends BaseElement {
+  constructor(
+    public scopeId: string,
+    public checkExpression: BoolExpression
+  ) {
+    super();
+  }
+
+  override clone(): DoLoopElement {
+    const element = new DoLoopElement(
+      this.scopeId,
+      this.checkExpression.clone()
+    );
+
+    return this.copyBaseTo(element);
+  }
+}
+
+export class WhileLoopElement extends BaseElement {
+  constructor(
+    public scopeId: string,
+    public checkExpression: BoolExpression
+  ) {
+    super();
+  }
+
+  override clone(): WhileLoopElement {
+    const element = new WhileLoopElement(
+      this.scopeId,
+      this.checkExpression.clone(),
+    );
 
     return this.copyBaseTo(element);
   }
@@ -99,18 +141,18 @@ export class LoopElement extends BaseElement {
 
 export class ConditionElement extends BaseElement {
   constructor(
-    public positiveWay: IScope,
-    public negativeWay: IScope,
-    public conditionExpression: BoolExpression
+    public conditionExpression: BoolExpression,
+    public positiveWayId: string | null = null,
+    public negativeWayId: string | null = null,
   ) {
     super();
   }
 
   override clone(): ConditionElement {
     const element = new ConditionElement(
-      this.positiveWay.clone(),
-      this.negativeWay.clone(),
-      this.conditionExpression.clone()
+      this.conditionExpression.clone(),
+      this.positiveWayId,
+      this.negativeWayId
     );
 
     return this.copyBaseTo(element);

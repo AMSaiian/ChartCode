@@ -14,7 +14,7 @@ export class Scope implements IScope {
 
   clone(): Scope {
     const base = new Scope();
-    return base.copyBaseTo(base);
+    return this.copyBaseTo(base);
   }
 
   protected copyBaseTo<T extends Scope>(target: T): T {
