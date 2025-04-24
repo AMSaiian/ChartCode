@@ -1,34 +1,59 @@
 <div class="w-full h-full overflow-auto">
-  <svg [attr.width]="1000" [attr.height]="2000" style="border: 1px solid #ccc">
-    <ng-container *ngFor="let node of nodes | async">
-      <g [attr.transform]="'translate(' + node.x + ',' + node.y + ')'">
+  <!-- 1. Забираем сразу и nodes, и edges -->
+  <ng-container *ngIf="elements$ | async as elements">
 
-        <!-- TerminalElement — начало или конец -->
-        <ellipse *ngIf="node.element | instanceOf: TerminalElement"
-                 [attr.cx]="node.width / 2" [attr.cy]="node.height / 2"
-                 [attr.rx]="node.width / 2" [attr.ry]="node.height / 2"
-                 fill="#d1e7dd" stroke="#0f5132" stroke-width="2" />
+    <svg [attr.width]="1000" [attr.height]="2000" style="border:1px solid #ccc">
+      <!-- 2. Определяем маркер стрелки -->
+      <defs>
+        <marker id="arrow" markerWidth="6" markerHeight="6"
+                refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L6,3 L0,6 Z" fill="black"/>
+        </marker>
+      </defs>
 
-        <!-- ConditionElement — ромб -->
-        <polygon *ngIf="node.element | instanceOf: ConditionElement"
-                 [attr.points]="getConditionPoints(node.width, node.height)"
-                 fill="#fff3cd" stroke="#664d03" stroke-width="2" />
+      <!-- 3. Рисуем сначала все линии -->
+      <ng-container *ngFor="let e of elements.edges">
+        <path
+          [attr.d]="e.path"
+          stroke="black"
+          fill="none"
+          marker-end="url(#arrow)" />
+      </ng-container>
 
-        <!-- Все остальные — прямоугольник -->
-        <rect *ngIf="!((node.element | instanceOf: TerminalElement) || (node.element | instanceOf: ConditionElement))"
-              [attr.width]="node.width" [attr.height]="node.height"
-              fill="#cff4fc" stroke="#055160" stroke-width="2" />
+      <!-- 4. А потом поверх линии — узлы -->
+      <ng-container *ngFor="let node of elements.nodes">
+        <g [attr.transform]="'translate(' + node.x + ',' + node.y + ')'">
+          <!-- Терминал -->
+          <ellipse *ngIf="node.element | instanceOf: TerminalElement"
+                   [attr.cx]="node.width/2" [attr.cy]="node.height/2"
+                   [attr.rx]="node.width/2" [attr.ry]="node.height/2"
+                   fill="#d1e7dd" stroke="#0f5132" stroke-width="2" />
 
-        <text
-          [attr.x]="node.width / 2"
-          [attr.y]="node.height / 2"
-          text-anchor="middle"
-          dominant-baseline="central"
-          font-family="Arial"
-          font-size="12">
-          {{ node.element.constructor.name + "biliberda alalala" }}
-        </text>
-      </g>
-    </ng-container>
-  </svg>
+          <!-- Условие -->
+          <polygon *ngIf="node.element | instanceOf: ConditionElement"
+                   [attr.points]="getConditionPoints(node.width, node.height)"
+                   fill="#fff3cd" stroke="#664d03" stroke-width="2" />
+
+          <!-- Всё остальное -->
+          <rect *ngIf="!((node.element | instanceOf: TerminalElement)
+                         || (node.element | instanceOf: ConditionElement))"
+                [attr.width]="node.width"
+                [attr.height]="node.height"
+                fill="#cff4fc"
+                stroke="#055160"
+                stroke-width="2" />
+
+          <text
+            [attr.x]="node.width/2"
+            [attr.y]="node.height/2"
+            text-anchor="middle"
+            dominant-baseline="central"
+            font-family="Arial"
+            font-size="12">
+            {{ node.element.constructor.name }}
+          </text>
+        </g>
+      </ng-container>
+    </svg>
+  </ng-container>
 </div>

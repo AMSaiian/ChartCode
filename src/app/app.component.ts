@@ -39,13 +39,26 @@ export class AppComponent implements OnInit {
     console.log(this.state);
     console.log(this.state.getStateSnapshot());
 
-    // this.state.addElement(
-    //   new InputElement('x', true),
-    //   condition.positiveWayId!,
-    //   null
-    // );
-    // console.log(this.state);
-    // console.log(this.state.getStateSnapshot());
+    this.state.addElement(
+      new InputElement('x', true),
+      condition.positiveWayId!,
+      null
+    );
+
+    this.state.addElement(
+      new InputElement('x', true),
+      condition.negativeWayId!,
+      null
+    );
+
+    this.state.addElement(
+      new InputElement('x', true),
+      condition.negativeWayId!,
+      null
+    );
+
+    console.log(this.state);
+    console.log(this.state.getStateSnapshot());
 
     this.state.selectedProcedureId$.subscribe(id => {
       if (id) {

@@ -7,7 +7,7 @@ import { Procedure } from '../models/scope/procedure/procedure.model';
 import { IScope } from '../models/scope/scope.interface';
 import { Scope } from '../models/scope/scope.model';
 import { isLoop } from '../utils/element.utils';
-import { layoutScope } from '../utils/layout.utils';
+import { buildEdges, computeGridLayout, EdgeDTO } from '../utils/layout.utils';
 
 export interface AppState {
   scopes: Record<string, IScope>;
@@ -94,9 +94,16 @@ export class AppStateService {
     this.state$.next(snapshot);
   }
 
-  public getProcedureElements(procedureId: string): Observable<NodeDto[]> {
+  public getProcedureElements(procedureId: string): Observable<{ nodes: NodeDto[]; edges: EdgeDTO[] }> {
     return this.state$.pipe(
-      map(snapshot => layoutScope(procedureId, snapshot))
+      map(snapshot => {
+        const nodes = computeGridLayout(procedureId, snapshot, 500);
+
+        return {
+          nodes,
+          edges: buildEdges(nodes, snapshot)
+        }
+      })
     )
   }
 

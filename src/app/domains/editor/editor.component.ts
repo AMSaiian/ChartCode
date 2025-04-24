@@ -4,7 +4,8 @@ import { NodeDto } from '../../common/dto/layout.dto';
 import { ConditionElement, TerminalElement } from '../../common/models/element/element.model';
 import { InstanceofPipe } from '../../common/pipes/instance-of.pipe';
 import { AppStateService } from '../../common/services/app-state.service';
-import { Observable, switchMap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
+import { EdgeDTO } from '../../common/utils/layout.utils';
 
 @Component({
   selector: 'app-editor',
@@ -19,7 +20,7 @@ import { Observable, switchMap } from 'rxjs';
 })
 export class EditorComponent implements OnInit {
   state = inject(AppStateService);
-  nodes!: Observable<NodeDto[]>;
+  elements$!: Observable<{ nodes: NodeDto[], edges: EdgeDTO[] }>;
 
   getConditionPoints(width: number, height: number): string {
     const hw = width / 2;
@@ -28,10 +29,11 @@ export class EditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.nodes = this.state.selectedProcedureId$.pipe(
+    this.elements$ = this.state.selectedProcedureId$.pipe(
       switchMap(
         procedureId => this.state.getProcedureElements(procedureId)
-      )
+      ),
+      tap(x => console.log(x))
     )
   }
 
