@@ -114,12 +114,12 @@ export function layoutScope(
           false: { x: headerX + DEFAULT_WIDTH, y: headerY + DEFAULT_HEIGHT / 2 },
         },
       });
-      const branchY = headerY + HORIZONTAL_SPACING + DEFAULT_HEIGHT;
+      const branchY = headerY + VERTICAL_SPACING + DEFAULT_HEIGHT;
       if (element.positiveWayId) {
-        positionScope(element.positiveWayId, headerX - posSize.width - HORIZONTAL_SPACING + compensationCache[element.positiveWayId], branchY);
+        positionScope(element.positiveWayId, headerX - posSize.width + (compensationCache[element.positiveWayId] ?? -HORIZONTAL_SPACING), branchY);
       }
       if (element.negativeWayId) {
-        positionScope(element.negativeWayId, headerX + DEFAULT_WIDTH + HORIZONTAL_SPACING, branchY);
+        positionScope(element.negativeWayId, headerX + DEFAULT_WIDTH + (compensationCache[element.negativeWayId] ?? HORIZONTAL_SPACING), branchY);
       }
       return { width: totalW, height: totalH };
     }
