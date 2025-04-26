@@ -101,6 +101,10 @@ export class AppComponent implements OnInit {
       null
     )
 
+    const condition4 = new ConditionElement(new BoolExpression('x', BoolExpressionType.GreaterThan, 'y'));
+    this.state.addElement(condition4, condition.negativeWayId!, null);
+    this.state.addElement(new ConditionElement(new BoolExpression('x', BoolExpressionType.GreaterThan, 'y')), condition4.positiveWayId!, null);
+
     console.log(this.state);
     console.log(this.state.getStateSnapshot());
 

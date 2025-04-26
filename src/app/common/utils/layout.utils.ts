@@ -3,7 +3,11 @@ import { ConditionElement } from '../models/element/element.model';
 import { AppState } from '../services/app-state.service';
 import { isLoop } from './element.utils';
 
-export interface Point { x: number; y: number }
+export interface Point {
+  x: number;
+  y: number;
+}
+
 export interface NodeDto {
   element: IElement;
   x: number;
@@ -19,21 +23,21 @@ const DEFAULT_HEIGHT = 60;
 const HORIZONTAL_SPACING = 15;
 const VERTICAL_SPACING = 30;
 
-/**
- * Основная функция раскладки: возвращает все NodeDto для заданного scope.
- */
 export function layoutScope(
   scopeId: string,
   snapshot: AppState,
   originX = 0,
-  originY = 0
+  originY = 0,
 ): NodeDto[] {
+  const rootId = scopeId;
   const nodes: NodeDto[] = [];
   const dimensionCache: Record<string, { width: number; height: number }> = {};
+  const compensationCache: Record<string, number> = {};
 
-  // Измеряет размеры scope без побочных эффектов, с мемоизацией
   function measureScope(id: string): { width: number; height: number } {
-    if (dimensionCache[id]) return dimensionCache[id];
+    if (dimensionCache[id]) {
+      return dimensionCache[id];
+    }
     const scope = snapshot.scopes[id];
     let maxWidth = 0;
     let totalHeight = 0;
@@ -49,11 +53,16 @@ export function layoutScope(
     return result;
   }
 
-  // Измеряет один элемент (без отрисовки)
   function measureElement(id: string): { width: number; height: number } {
     const element = snapshot.elements[id];
     if (element instanceof ConditionElement) {
-      const posSize = element.positiveWayId ? measureScope(element.positiveWayId) : { width: 0, height: 0 };
+      let posSize = { width: 0, height: 0 };
+      if (element.positiveWayId) {
+        posSize = measureScope(element.positiveWayId);
+        const parentId = snapshot.scopes[element.positiveWayId].parentId;
+        compensationCache[parentId!] = posSize.width > 0 ? posSize.width : HORIZONTAL_SPACING;
+      }
+
       const negSize = element.negativeWayId ? measureScope(element.negativeWayId) : { width: 0, height: 0 };
       const width = posSize.width + HORIZONTAL_SPACING + DEFAULT_WIDTH + HORIZONTAL_SPACING + negSize.width;
       const height = DEFAULT_HEIGHT + VERTICAL_SPACING + Math.max(posSize.height, negSize.height);
@@ -69,7 +78,6 @@ export function layoutScope(
     return { width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT };
   }
 
-  // Рисует scope и возвращает его размеры
   function positionScope(id: string, startX: number, startY: number): { width: number; height: number } {
     let maxWidth = 0;
     let currentY = startY;
@@ -84,10 +92,8 @@ export function layoutScope(
     return { width: maxWidth, height: currentY - startY };
   }
 
-  // Рисует один элемент и его вложенные области
   function positionElement(id: string, x: number, y: number): { width: number; height: number } {
     const element = snapshot.elements[id];
-    // Condition
     if (element instanceof ConditionElement) {
       const posSize = element.positiveWayId ? measureScope(element.positiveWayId) : { width: 0, height: 0 };
       const negSize = element.negativeWayId ? measureScope(element.negativeWayId) : { width: 0, height: 0 };
@@ -99,21 +105,24 @@ export function layoutScope(
         element,
         x: headerX,
         y: headerY,
-        width: DEFAULT_WIDTH,
-        height: DEFAULT_HEIGHT,
-        inPort: { x: headerX + DEFAULT_WIDTH/2, y: headerY },
+        width: totalW,
+        height: totalH,
+        inPort: { x: headerX + DEFAULT_WIDTH / 2, y: headerY },
         outPorts: {
-          default: { x: headerX + DEFAULT_WIDTH/2, y: headerY + DEFAULT_HEIGHT },
-          true:    { x: headerX,                y: headerY + DEFAULT_HEIGHT/2 },
-          false:   { x: headerX + DEFAULT_WIDTH, y: headerY + DEFAULT_HEIGHT/2 }
-        }
+          default: { x: headerX + DEFAULT_WIDTH / 2, y: headerY + DEFAULT_HEIGHT },
+          true: { x: headerX, y: headerY + DEFAULT_HEIGHT / 2 },
+          false: { x: headerX + DEFAULT_WIDTH, y: headerY + DEFAULT_HEIGHT / 2 },
+        },
       });
       const branchY = headerY + HORIZONTAL_SPACING + DEFAULT_HEIGHT;
-      if (element.positiveWayId) positionScope(element.positiveWayId, headerX - posSize.width - HORIZONTAL_SPACING, branchY);
-      if (element.negativeWayId) positionScope(element.negativeWayId, headerX + DEFAULT_WIDTH + HORIZONTAL_SPACING, branchY);
+      if (element.positiveWayId) {
+        positionScope(element.positiveWayId, headerX - posSize.width - HORIZONTAL_SPACING + compensationCache[element.positiveWayId], branchY);
+      }
+      if (element.negativeWayId) {
+        positionScope(element.negativeWayId, headerX + DEFAULT_WIDTH + HORIZONTAL_SPACING, branchY);
+      }
       return { width: totalW, height: totalH };
     }
-    // Loop
     if (isLoop(element)) {
       const loopScopeId = element.scopeId;
       const bodySize = loopScopeId ? measureScope(loopScopeId) : { width: 0, height: 0 };
@@ -125,31 +134,32 @@ export function layoutScope(
         element,
         x: headerX,
         y: headerY,
-        width: DEFAULT_WIDTH,
-        height: DEFAULT_HEIGHT,
-        inPort: { x: headerX + DEFAULT_WIDTH/2, y: headerY },
+        width: totalW,
+        height: totalH,
+        inPort: { x: headerX + DEFAULT_WIDTH / 2, y: headerY },
         outPorts: {
-          default:  { x: headerX + DEFAULT_WIDTH/2, y: headerY + DEFAULT_HEIGHT },
-          loopBack: { x: headerX + DEFAULT_WIDTH/2, y: headerY }
-        }
+          default: { x: headerX + DEFAULT_WIDTH / 2, y: headerY + DEFAULT_HEIGHT },
+          loopBack: { x: headerX + DEFAULT_WIDTH / 2, y: headerY },
+        },
       });
-      if (loopScopeId) positionScope(loopScopeId, headerX, headerY + DEFAULT_HEIGHT + VERTICAL_SPACING);
+      if (loopScopeId) {
+        positionScope(loopScopeId, headerX, headerY + DEFAULT_HEIGHT + VERTICAL_SPACING);
+      }
       return { width: totalW, height: totalH };
     }
-    // Simple element
+
     nodes.push({
       element,
       x,
       y,
       width: DEFAULT_WIDTH,
       height: DEFAULT_HEIGHT,
-      inPort: { x: x + DEFAULT_WIDTH/2, y },
-      outPorts: { default: { x: x + DEFAULT_WIDTH/2, y: y + DEFAULT_HEIGHT } }
+      inPort: { x: x + DEFAULT_WIDTH / 2, y },
+      outPorts: { default: { x: x + DEFAULT_WIDTH / 2, y: y + DEFAULT_HEIGHT } },
     });
     return { width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT };
   }
 
-  // Старт раскладки
   positionScope(scopeId, originX, originY);
   return nodes;
 }

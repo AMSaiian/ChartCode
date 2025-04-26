@@ -25,27 +25,27 @@
         <g [attr.transform]="'translate(' + node.x + ',' + node.y + ')'">
           <!-- Терминал -->
           <ellipse *ngIf="node.element | instanceOf: TerminalElement"
-                   [attr.cx]="node.width/2" [attr.cy]="node.height/2"
-                   [attr.rx]="node.width/2" [attr.ry]="node.height/2"
+                   [attr.cx]="120/2" [attr.cy]="60/2"
+                   [attr.rx]="120/2" [attr.ry]="60/2"
                    fill="#d1e7dd" stroke="#0f5132" stroke-width="2" />
 
           <!-- Условие -->
           <polygon *ngIf="node.element | instanceOf: ConditionElement"
-                   [attr.points]="getConditionPoints(node.width, node.height)"
+                   [attr.points]="getConditionPoints(120, 60)"
                    fill="#fff3cd" stroke="#664d03" stroke-width="2" />
 
           <!-- Всё остальное -->
           <rect *ngIf="!((node.element | instanceOf: TerminalElement)
                          || (node.element | instanceOf: ConditionElement))"
-                [attr.width]="node.width"
-                [attr.height]="node.height"
+                [attr.width]="120"
+                [attr.height]="60"
                 fill="#cff4fc"
                 stroke="#055160"
                 stroke-width="2" />
 
           <text
-            [attr.x]="node.width/2"
-            [attr.y]="node.height/2"
+            [attr.x]="120/2"
+            [attr.y]="60/2"
             text-anchor="middle"
             dominant-baseline="central"
             font-family="Arial"
