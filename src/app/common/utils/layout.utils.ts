@@ -1,14 +1,11 @@
-import { AppState } from '../services/app-state.service';
 import { IElement } from '../models/element/element.interface';
 import { ConditionElement } from '../models/element/element.model';
+import { AppState } from '../services/app-state.service';
 import { isLoop } from './element.utils';
 
 export interface Point { x: number; y: number }
-
 export interface NodeDto {
   element: IElement;
-  row: number;
-  col: number;
   x: number;
   y: number;
   width: number;
@@ -17,193 +14,142 @@ export interface NodeDto {
   outPorts: Record<string, Point>;
 }
 
-export interface EdgeDTO { from: Point; to: Point; path: string }
-
 const DEFAULT_WIDTH = 120;
 const DEFAULT_HEIGHT = 60;
-const V_SPACING = 40;
-const COL_WIDTH = DEFAULT_WIDTH;
-const ROW_HEIGHT = DEFAULT_HEIGHT + V_SPACING;
-const RETURN_MARGIN = 20;
+const HORIZONTAL_SPACING = 15;
+const VERTICAL_SPACING = 30;
 
 /**
- * Рекурсивно вычисляет grid layout для scopeId:
- * - row/col позиции
- * - абсолютные x/y
- * - порты inPort/outPorts
+ * Основная функция раскладки: возвращает все NodeDto для заданного scope.
  */
-export function computeGridLayout(
+export function layoutScope(
   scopeId: string,
   snapshot: AppState,
   originX = 0,
   originY = 0
 ): NodeDto[] {
   const nodes: NodeDto[] = [];
-  let rowCounter = 0;
+  const dimensionCache: Record<string, { width: number; height: number }> = {};
 
-  function traverse(sId: string, col: number) {
-    const scope = snapshot.scopes[sId];
-    let curId = scope.startId;
+  // Измеряет размеры scope без побочных эффектов, с мемоизацией
+  function measureScope(id: string): { width: number; height: number } {
+    if (dimensionCache[id]) return dimensionCache[id];
+    const scope = snapshot.scopes[id];
+    let maxWidth = 0;
+    let totalHeight = 0;
+    let elId = scope.startId;
+    while (elId) {
+      const dims = measureElement(elId);
+      maxWidth = Math.max(maxWidth, dims.width);
+      totalHeight += dims.height + VERTICAL_SPACING;
+      elId = snapshot.elements[elId].nextId;
+    }
+    const result = { width: maxWidth, height: totalHeight };
+    dimensionCache[id] = result;
+    return result;
+  }
 
-    while (curId) {
-      const el = snapshot.elements[curId];
-      const row = rowCounter++;
-      const x = originX + col * COL_WIDTH;
-      const y = originY + row * ROW_HEIGHT;
+  // Измеряет один элемент (без отрисовки)
+  function measureElement(id: string): { width: number; height: number } {
+    const element = snapshot.elements[id];
+    if (element instanceof ConditionElement) {
+      const posSize = element.positiveWayId ? measureScope(element.positiveWayId) : { width: 0, height: 0 };
+      const negSize = element.negativeWayId ? measureScope(element.negativeWayId) : { width: 0, height: 0 };
+      const width = posSize.width + HORIZONTAL_SPACING + DEFAULT_WIDTH + HORIZONTAL_SPACING + negSize.width;
+      const height = DEFAULT_HEIGHT + VERTICAL_SPACING + Math.max(posSize.height, negSize.height);
+      return { width, height };
+    }
+    if (isLoop(element)) {
+      const loopScopeId = element.scopeId;
+      const bodySize = loopScopeId ? measureScope(loopScopeId) : { width: 0, height: 0 };
+      const width = Math.max(DEFAULT_WIDTH, bodySize.width);
+      const height = DEFAULT_HEIGHT + VERTICAL_SPACING + bodySize.height;
+      return { width, height };
+    }
+    return { width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT };
+  }
 
-      // создаём NodeDto и добавляем порты
-      const node: NodeDto = {
-        element: el,
-        row,
-        col,
-        x,
-        y,
+  // Рисует scope и возвращает его размеры
+  function positionScope(id: string, startX: number, startY: number): { width: number; height: number } {
+    let maxWidth = 0;
+    let currentY = startY;
+    const scope = snapshot.scopes[id];
+    let elId = scope.startId;
+    while (elId) {
+      const dims = positionElement(elId, startX, currentY);
+      maxWidth = Math.max(maxWidth, dims.width);
+      currentY += dims.height + VERTICAL_SPACING;
+      elId = snapshot.elements[elId].nextId;
+    }
+    return { width: maxWidth, height: currentY - startY };
+  }
+
+  // Рисует один элемент и его вложенные области
+  function positionElement(id: string, x: number, y: number): { width: number; height: number } {
+    const element = snapshot.elements[id];
+    // Condition
+    if (element instanceof ConditionElement) {
+      const posSize = element.positiveWayId ? measureScope(element.positiveWayId) : { width: 0, height: 0 };
+      const negSize = element.negativeWayId ? measureScope(element.negativeWayId) : { width: 0, height: 0 };
+      const totalW = posSize.width + HORIZONTAL_SPACING + DEFAULT_WIDTH + HORIZONTAL_SPACING + negSize.width;
+      const totalH = DEFAULT_HEIGHT + VERTICAL_SPACING + Math.max(posSize.height, negSize.height);
+      const headerX = x;
+      const headerY = y;
+      nodes.push({
+        element,
+        x: headerX,
+        y: headerY,
         width: DEFAULT_WIDTH,
         height: DEFAULT_HEIGHT,
-        inPort: { x: x + DEFAULT_WIDTH / 2, y },
-        outPorts: { default: { x: x + DEFAULT_WIDTH / 2, y: y + DEFAULT_HEIGHT } }
-      };
-      if (el instanceof ConditionElement) {
-        node.outPorts = {
-          true:  { x: x,                 y: y + DEFAULT_HEIGHT / 2 },
-          false: { x: x + DEFAULT_WIDTH, y: y + DEFAULT_HEIGHT / 2 }
-        };
-      }
-      if (isLoop(el)) {
-        node.outPorts['loopBack'] = {
-          x: x - RETURN_MARGIN,
-          y: y + DEFAULT_HEIGHT / 2
-        };
-      }
-
-      nodes.push(node);
-
-      // Развилка: две ветки начинаются на одном row
-      if (el instanceof ConditionElement) {
-        const branchStart = rowCounter;
-        let maxRow = branchStart;
-        if (el.positiveWayId) {
-          rowCounter = branchStart;
-          traverse(el.positiveWayId, col - 1);
-          maxRow = Math.max(maxRow, rowCounter);
+        inPort: { x: headerX + DEFAULT_WIDTH/2, y: headerY },
+        outPorts: {
+          default: { x: headerX + DEFAULT_WIDTH/2, y: headerY + DEFAULT_HEIGHT },
+          true:    { x: headerX,                y: headerY + DEFAULT_HEIGHT/2 },
+          false:   { x: headerX + DEFAULT_WIDTH, y: headerY + DEFAULT_HEIGHT/2 }
         }
-        if (el.negativeWayId) {
-          rowCounter = branchStart;
-          traverse(el.negativeWayId, col + 1);
-          maxRow = Math.max(maxRow, rowCounter);
-        }
-        rowCounter = maxRow;
-      }
-      // Цикл: тело под родителем в той же колонке
-      else if (isLoop(el)) {
-        traverse(el.scopeId, col);
-      }
-
-      // Переходим к следующему в текущем scope
-      curId = el.nextId ?? null;
+      });
+      const branchY = headerY + HORIZONTAL_SPACING + DEFAULT_HEIGHT;
+      if (element.positiveWayId) positionScope(element.positiveWayId, headerX - posSize.width - HORIZONTAL_SPACING, branchY);
+      if (element.negativeWayId) positionScope(element.negativeWayId, headerX + DEFAULT_WIDTH + HORIZONTAL_SPACING, branchY);
+      return { width: totalW, height: totalH };
     }
+    // Loop
+    if (isLoop(element)) {
+      const loopScopeId = element.scopeId;
+      const bodySize = loopScopeId ? measureScope(loopScopeId) : { width: 0, height: 0 };
+      const totalW = Math.max(DEFAULT_WIDTH, bodySize.width);
+      const totalH = DEFAULT_HEIGHT + VERTICAL_SPACING + bodySize.height;
+      const headerX = x;
+      const headerY = y;
+      nodes.push({
+        element,
+        x: headerX,
+        y: headerY,
+        width: DEFAULT_WIDTH,
+        height: DEFAULT_HEIGHT,
+        inPort: { x: headerX + DEFAULT_WIDTH/2, y: headerY },
+        outPorts: {
+          default:  { x: headerX + DEFAULT_WIDTH/2, y: headerY + DEFAULT_HEIGHT },
+          loopBack: { x: headerX + DEFAULT_WIDTH/2, y: headerY }
+        }
+      });
+      if (loopScopeId) positionScope(loopScopeId, headerX, headerY + DEFAULT_HEIGHT + VERTICAL_SPACING);
+      return { width: totalW, height: totalH };
+    }
+    // Simple element
+    nodes.push({
+      element,
+      x,
+      y,
+      width: DEFAULT_WIDTH,
+      height: DEFAULT_HEIGHT,
+      inPort: { x: x + DEFAULT_WIDTH/2, y },
+      outPorts: { default: { x: x + DEFAULT_WIDTH/2, y: y + DEFAULT_HEIGHT } }
+    });
+    return { width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT };
   }
 
-  traverse(scopeId, 0);
+  // Старт раскладки
+  positionScope(scopeId, originX, originY);
   return nodes;
-}
-
-/**
- * Строит ортогональные Manhattan пути между NodeDto.
- */
-export function buildEdges(
-  nodes: NodeDto[],
-  snapshot: AppState
-): EdgeDTO[] {
-  const edges: EdgeDTO[] = [];
-  const byId: Record<string, NodeDto> = {};
-  nodes.forEach(n => { byId[n.element.id] = n; });
-
-  function manhattan(a: Point, b: Point): string {
-    const midY = (a.y + b.y) / 2;
-    return `M${a.x},${a.y} V${midY} H${b.x} V${b.y}`;
-  }
-
-  for (const node of nodes) {
-    const el = node.element;
-
-    // условие: ветки и слияние
-    if (el instanceof ConditionElement) {
-      const mergeNode = el.nextId && byId[el.nextId] ? byId[el.nextId] : undefined;
-      // TRUE branch (mirrored)
-      if (el.positiveWayId) {
-        const posScope = snapshot.scopes[el.positiveWayId];
-        if (posScope.elementsId?.length && byId[posScope.startId!]) {
-          const start = byId[posScope.startId!];
-          edges.push({
-            from: node.outPorts['true'],
-            to: start.inPort,
-            path: `M${node.outPorts['true'].x},${node.outPorts['true'].y} H${start.inPort.x} V${start.inPort.y}`
-          });
-          if (mergeNode && posScope.endId && byId[posScope.endId]) {
-            const end = byId[posScope.endId];
-            edges.push({
-              from: end.outPorts['default'],
-              to: mergeNode.inPort,
-              path: manhattan(end.outPorts['default'], mergeNode.inPort)
-            });
-          }
-        } else if (mergeNode) {
-          edges.push({
-            from: node.outPorts['true'],
-            to: mergeNode.inPort,
-            path: manhattan(node.outPorts['true'], mergeNode.inPort)
-          });
-        }
-      }
-      // FALSE branch (mirrored)
-      if (el.negativeWayId) {
-        const negScope = snapshot.scopes[el.negativeWayId];
-        if (negScope.elementsId?.length && byId[negScope.startId!]) {
-          const start = byId[negScope.startId!];
-          edges.push({
-            from: node.outPorts['false'],
-            to: start.inPort,
-            path: `M${node.outPorts['false'].x},${node.outPorts['false'].y} H${start.inPort.x} V${start.inPort.y}`
-          });
-          if (mergeNode && negScope.endId && byId[negScope.endId]) {
-            const end = byId[negScope.endId];
-            edges.push({
-              from: end.outPorts['default'],
-              to: mergeNode.inPort,
-              path: manhattan(end.outPorts['default'], mergeNode.inPort)
-            });
-          }
-        } else if (mergeNode) {
-          edges.push({
-            from: node.outPorts['false'],
-            to: mergeNode.inPort,
-            path: manhattan(node.outPorts['false'], mergeNode.inPort)
-          });
-        }
-      }
-    }
-    // цикл: возврат
-    else if (isLoop(el)) {
-      const loopScope = snapshot.scopes[el.scopeId];
-      if (loopScope.endId && byId[loopScope.endId]) {
-        const bodyEnd = byId[loopScope.endId];
-        const a = bodyEnd.outPorts['default'];
-        const b = node.outPorts['loopBack']!;
-        edges.push({ from: a, to: b, path: `M${a.x},${a.y} H${b.x} V${b.y}` });
-      }
-      // выход из цикла
-      if (el.nextId && byId[el.nextId]) {
-        const nxt = byId[el.nextId];
-        edges.push({ from: node.outPorts['default'], to: nxt.inPort, path: manhattan(node.outPorts['default'], nxt.inPort) });
-      }
-    }
-    // обычный переход
-    else if (el.nextId && byId[el.nextId]) {
-      const nxt = byId[el.nextId];
-      edges.push({ from: node.outPorts['default'], to: nxt.inPort, path: manhattan(node.outPorts['default'], nxt.inPort) });
-    }
-  }
-
-  return edges;
 }

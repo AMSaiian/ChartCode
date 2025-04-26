@@ -10,7 +10,7 @@ export class Procedure extends Scope implements IProcedure {
     public name: string,
     public isMain: boolean = false,
   ) {
-    super();
+    super('procedure');
     this.isMain = isMain;
   }
 

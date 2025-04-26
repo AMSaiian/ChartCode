@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { ConditionElement, InputElement } from './common/models/element/element.model';
+import { ConditionElement, ForLoopElement, InputElement } from './common/models/element/element.model';
 import { BoolExpression, BoolExpressionType } from './common/models/expression/expression.model';
 import { AppStateService } from './common/services/app-state.service';
 
@@ -31,6 +31,22 @@ export class AppComponent implements OnInit {
     const condition = new ConditionElement(
         new BoolExpression('x', BoolExpressionType.GreaterThan, 'y')
     );
+
+    const forLoop = new ForLoopElement('', new BoolExpression('x', BoolExpressionType.GreaterThan, 'y'));
+    const forLoop2 = new ForLoopElement('', new BoolExpression('x', BoolExpressionType.GreaterThan, 'y'));
+
+    // this.state.addElement(
+    //   forLoop,
+    //   scope.id,
+    //   element.id
+    // );
+    //
+    // this.state.addElement(
+    //   forLoop2,
+    //   forLoop.scopeId,
+    //   null
+    // );
+
     this.state.addElement(
       condition,
       scope.id,
@@ -56,6 +72,34 @@ export class AppComponent implements OnInit {
       condition.negativeWayId!,
       null
     );
+
+    const condition2 = new ConditionElement(
+      new BoolExpression('x', BoolExpressionType.GreaterThan, 'y')
+    );
+
+    this.state.addElement(condition2, condition.positiveWayId!, this.state.getStateSnapshot().scopes[condition.positiveWayId!].startId)
+
+    this.state.addElement(
+      new InputElement('x', true),
+      condition2.negativeWayId!,
+      null
+    );
+
+    const condition3 = new ConditionElement(
+      new BoolExpression('x', BoolExpressionType.GreaterThan, 'y')
+    );
+
+    this.state.addElement(
+      condition3,
+      condition2.positiveWayId!,
+      null
+    );
+
+    this.state.addElement(
+      new InputElement('x', true),
+      condition3.negativeWayId!,
+      null
+    )
 
     console.log(this.state);
     console.log(this.state.getStateSnapshot());

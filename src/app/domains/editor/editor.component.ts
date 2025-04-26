@@ -5,7 +5,7 @@ import { ConditionElement, TerminalElement } from '../../common/models/element/e
 import { InstanceofPipe } from '../../common/pipes/instance-of.pipe';
 import { AppStateService } from '../../common/services/app-state.service';
 import { Observable, switchMap, tap } from 'rxjs';
-import { EdgeDTO } from '../../common/utils/layout.utils';
+// import { EdgeDTO } from '../../common/utils/layout.utils';
 
 @Component({
   selector: 'app-editor',
@@ -20,7 +20,7 @@ import { EdgeDTO } from '../../common/utils/layout.utils';
 })
 export class EditorComponent implements OnInit {
   state = inject(AppStateService);
-  elements$!: Observable<{ nodes: NodeDto[], edges: EdgeDTO[] }>;
+  elements$!: Observable<{ nodes: NodeDto[], edges: any[] }>;
 
   getConditionPoints(width: number, height: number): string {
     const hw = width / 2;

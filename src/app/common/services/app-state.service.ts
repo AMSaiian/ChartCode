@@ -7,7 +7,7 @@ import { Procedure } from '../models/scope/procedure/procedure.model';
 import { IScope } from '../models/scope/scope.interface';
 import { Scope } from '../models/scope/scope.model';
 import { isLoop } from '../utils/element.utils';
-import { buildEdges, computeGridLayout, EdgeDTO } from '../utils/layout.utils';
+import { layoutScope } from '../utils/layout.utils';
 
 export interface AppState {
   scopes: Record<string, IScope>;
@@ -27,6 +27,7 @@ export class AppStateService {
 
   public addElement(element: IElement, scopeId: string, previousId: string | null) {
     const snapshot = this.getStateSnapshot();
+    // element = element.clone();
 
     const scope = snapshot.scopes[scopeId].clone();
     snapshot.scopes[scope.id] = scope;
@@ -35,9 +36,9 @@ export class AppStateService {
     snapshot.elements[element.id] = element;
 
     if (element instanceof ConditionElement) {
-      const positiveScope = new Scope();
+      const positiveScope = new Scope('positive');
       snapshot.scopes[positiveScope.id] = positiveScope;
-      const negativeScope = new Scope();
+      const negativeScope = new Scope('negative');
       snapshot.scopes[negativeScope.id] = negativeScope;
 
       element.positiveWayId = positiveScope.id;
@@ -48,7 +49,8 @@ export class AppStateService {
 
       scope.childrenId = [...scope.childrenId, positiveScope.id, negativeScope.id];
     } else if (isLoop(element)) {
-      const loopScope = new Scope();
+      const loopScope = new Scope('loop');
+      snapshot.scopes[loopScope.id] = loopScope;
       element.scopeId = loopScope.id;
       loopScope.parentId = scope.id;
       scope.childrenId = [...scope.childrenId, loopScope.id];
@@ -94,14 +96,14 @@ export class AppStateService {
     this.state$.next(snapshot);
   }
 
-  public getProcedureElements(procedureId: string): Observable<{ nodes: NodeDto[]; edges: EdgeDTO[] }> {
+  public getProcedureElements(procedureId: string): Observable<{ nodes: NodeDto[]; edges: any[] }> {
     return this.state$.pipe(
       map(snapshot => {
-        const nodes = computeGridLayout(procedureId, snapshot, 500);
+        const nodes = layoutScope(procedureId, snapshot);
 
         return {
           nodes,
-          edges: buildEdges(nodes, snapshot)
+          edges: []
         }
       })
     )
