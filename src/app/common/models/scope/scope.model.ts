@@ -1,4 +1,4 @@
-import { IScope, ScopeType } from './scope.interface';
+import { IScope } from './scope.interface';
 
 export class Scope implements IScope {
   id: string;
@@ -8,12 +8,12 @@ export class Scope implements IScope {
   childrenId: string[] = [];
   elementsId: string[] = [];
 
-  constructor(public type: ScopeType) {
+  constructor() {
     this.id = crypto.randomUUID();
   }
 
   clone(): Scope {
-    const base = new Scope(this.type);
+    const base = new Scope();
     return this.copyBaseTo(base);
   }
 
@@ -24,7 +24,6 @@ export class Scope implements IScope {
     target.endId = this.endId;
     target.childrenId = [...this.childrenId];
     target.elementsId = [...this.elementsId];
-    target.type = this.type;
 
     return target;
   }

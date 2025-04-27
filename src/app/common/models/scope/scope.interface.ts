@@ -2,7 +2,6 @@ import { Clonable } from '../clonable';
 
 type ScopeId = string;
 type ElementId = string;
-export type ScopeType = 'procedure' | 'loop' | 'positive' | 'negative'
 
 export interface IScope extends Clonable<IScope> {
   id: string;
@@ -11,7 +10,6 @@ export interface IScope extends Clonable<IScope> {
   parentId: ScopeId | null;
   childrenId: ScopeId[];
   elementsId: ElementId[];
-  type: ScopeType
 }
 
 // export interface IScopeVariable {

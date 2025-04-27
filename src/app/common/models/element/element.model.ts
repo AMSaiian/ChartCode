@@ -23,6 +23,18 @@ export abstract class BaseElement implements IElement {
   }
 }
 
+export class ProcedureElement extends BaseElement {
+  constructor(public scopeId: string) {
+    super();
+  }
+
+  override clone(): ProcedureElement {
+    const element = new ProcedureElement(this.scopeId);
+
+    return this.copyBaseTo(element);
+  }
+}
+
 export class InputElement extends BaseElement {
   constructor(
     public destination: string,
@@ -83,20 +95,20 @@ export class AssignElement extends BaseElement {
 
 export class ForLoopElement extends BaseElement {
   constructor(
-    public scopeId: string,
     public checkExpression: BoolExpression,
     public accumulator?: AssignExpression,
-    public increment?: AssignExpression
+    public increment?: AssignExpression,
+    public scopeId: string = ''
   ) {
     super();
   }
 
   override clone(): ForLoopElement {
     const element = new ForLoopElement(
-      this.scopeId,
       this.checkExpression.clone(),
       this.accumulator?.clone(),
-      this.increment?.clone()
+      this.increment?.clone(),
+      this.scopeId
     );
 
     return this.copyBaseTo(element);
@@ -105,16 +117,16 @@ export class ForLoopElement extends BaseElement {
 
 export class DoLoopElement extends BaseElement {
   constructor(
-    public scopeId: string,
-    public checkExpression: BoolExpression
+    public checkExpression: BoolExpression,
+    public scopeId: string = ''
   ) {
     super();
   }
 
   override clone(): DoLoopElement {
     const element = new DoLoopElement(
-      this.scopeId,
-      this.checkExpression.clone()
+      this.checkExpression.clone(),
+      this.scopeId
     );
 
     return this.copyBaseTo(element);
@@ -123,16 +135,16 @@ export class DoLoopElement extends BaseElement {
 
 export class WhileLoopElement extends BaseElement {
   constructor(
-    public scopeId: string,
-    public checkExpression: BoolExpression
+    public checkExpression: BoolExpression,
+    public scopeId: string = ''
   ) {
     super();
   }
 
   override clone(): WhileLoopElement {
     const element = new WhileLoopElement(
-      this.scopeId,
       this.checkExpression.clone(),
+      this.scopeId,
     );
 
     return this.copyBaseTo(element);
@@ -142,8 +154,8 @@ export class WhileLoopElement extends BaseElement {
 export class ConditionElement extends BaseElement {
   constructor(
     public conditionExpression: BoolExpression,
-    public positiveWayId: string | null = null,
-    public negativeWayId: string | null = null,
+    public positiveWayId: string = '',
+    public negativeWayId: string = '',
   ) {
     super();
   }

@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { NodeDto } from '../dto/layout.dto';
 import { IElement } from '../models/element/element.interface';
-import { ConditionElement, TerminalElement } from '../models/element/element.model';
+import { ConditionElement, ProcedureElement, TerminalElement } from '../models/element/element.model';
 import { Procedure } from '../models/scope/procedure/procedure.model';
 import { IScope } from '../models/scope/scope.interface';
 import { Scope } from '../models/scope/scope.model';
 import { isLoop } from '../utils/element.utils';
-import { layoutScope } from '../utils/layout.utils';
+import { layoutProcedure } from '../utils/layout.utils';
 
 export interface AppState {
   scopes: Record<string, IScope>;
@@ -29,6 +29,13 @@ export class AppStateService {
     const snapshot = this.getStateSnapshot();
     // element = element.clone();
 
+    if (!snapshot.scopes[scopeId]) {
+      throw new Error(`Scope with id ${scopeId} doesn't exists`);
+    }
+    if (previousId && !snapshot.scopes[scopeId].elementsId.includes(previousId)) {
+      throw new Error(`Scope with id ${scopeId} doesn't have element with id ${previousId}`);
+    }
+
     const scope = snapshot.scopes[scopeId].clone();
     snapshot.scopes[scope.id] = scope;
     scope.elementsId = [...scope.elementsId, element.id];
@@ -36,9 +43,9 @@ export class AppStateService {
     snapshot.elements[element.id] = element;
 
     if (element instanceof ConditionElement) {
-      const positiveScope = new Scope('positive');
+      const positiveScope = new Scope();
       snapshot.scopes[positiveScope.id] = positiveScope;
-      const negativeScope = new Scope('negative');
+      const negativeScope = new Scope();
       snapshot.scopes[negativeScope.id] = negativeScope;
 
       element.positiveWayId = positiveScope.id;
@@ -49,7 +56,7 @@ export class AppStateService {
 
       scope.childrenId = [...scope.childrenId, positiveScope.id, negativeScope.id];
     } else if (isLoop(element)) {
-      const loopScope = new Scope('loop');
+      const loopScope = new Scope();
       snapshot.scopes[loopScope.id] = loopScope;
       element.scopeId = loopScope.id;
       loopScope.parentId = scope.id;
@@ -99,7 +106,7 @@ export class AppStateService {
   public getProcedureElements(procedureId: string): Observable<{ nodes: NodeDto[]; edges: any[] }> {
     return this.state$.pipe(
       map(snapshot => {
-        const nodes = layoutScope(procedureId, snapshot, 900);
+        const nodes = layoutProcedure(procedureId, snapshot, 900);
 
         return {
           nodes,
@@ -112,23 +119,25 @@ export class AppStateService {
   public initializeDefault() {
     const snapshot = this.getStateSnapshot();
 
-    const main = new Procedure('Main', true);
+    const mainScope = new Procedure('Main', true);
+    const mainElement = new ProcedureElement(mainScope.id);
     const start = new TerminalElement(true);
     const end = new TerminalElement(false);
-    main.startId = start.id;
-    main.endId = end.id;
-    main.elementsId = [main.startId, main.endId];
+    mainScope.startId = start.id;
+    mainScope.endId = end.id;
+    mainScope.elementsId = [mainScope.startId, mainScope.endId];
 
     start.nextId = end.id;
     end.previousId.push(start.id);
 
-    snapshot.scopes[main.id] = main;
+    snapshot.scopes[mainScope.id] = mainScope;
 
+    snapshot.elements[mainElement.id] = mainElement;
     snapshot.elements[start.id] = start;
     snapshot.elements[end.id] = end;
 
     this.state$.next(snapshot);
-    this.selectedProcedureId$.next(main.id);
+    this.selectedProcedureId$.next(mainElement.id);
   }
 
   public getStateSnapshot(): AppState {
