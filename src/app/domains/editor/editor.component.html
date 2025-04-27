@@ -36,7 +36,8 @@
 
           <!-- Всё остальное -->
           <rect *ngIf="!((node.element | instanceOf: TerminalElement)
-                         || (node.element | instanceOf: ConditionElement))"
+                         || (node.element | instanceOf: ConditionElement)
+                         || (node.element | instanceOf: ProcedureElement))"
                 [attr.width]="120"
                 [attr.height]="60"
                 fill="#cff4fc"

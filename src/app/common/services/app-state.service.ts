@@ -106,7 +106,7 @@ export class AppStateService {
   public getProcedureElements(procedureId: string): Observable<{ nodes: NodeDto[]; edges: any[] }> {
     return this.state$.pipe(
       map(snapshot => {
-        const nodes = layoutProcedure(procedureId, snapshot, 900);
+        const nodes = layoutProcedure(procedureId, snapshot);
 
         return {
           nodes,

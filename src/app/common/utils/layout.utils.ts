@@ -1,5 +1,11 @@
 import { IElement } from '../models/element/element.interface';
-import { ConditionElement, ProcedureElement } from '../models/element/element.model';
+import {
+  AssignElement,
+  ConditionElement, ForLoopElement,
+  InputElement,
+  OutputElement,
+  ProcedureElement, TerminalElement, WhileLoopElement,
+} from '../models/element/element.model';
 import { AppState } from '../services/app-state.service';
 import { isLoop } from './element.utils';
 
@@ -14,17 +20,47 @@ export interface NodeDto {
   y: number;
   width: number;
   height: number;
-  children?: NodeDto[];
-  left?: NodeDto[];
-  right?: NodeDto[];
+  body?: BranchDto;
+  left?: BranchDto;
+  right?: BranchDto;
   // inPort: Point;
   // outPorts: Record<string, Point>;
 }
 
+export interface BranchDto {
+  width: number;
+  height: number;
+  nodes: NodeDto[];
+}
+
+export interface Margin {
+  top: number,
+  bottom: number,
+  left: number,
+  right: number
+}
+
+const MARGIN_MAP = new Map<Function, Margin>([
+  [ProcedureElement, { top: 40, bottom: 50, left: 10, right: 10 }],
+  [AssignElement, { top: 16, bottom: 10, left: 10, right: 10 }],
+  [InputElement, { top: 16, bottom: 10, left: 10, right: 10 }],
+  [OutputElement, { top: 16, bottom: 10, left: 10, right: 10 }],
+  [ConditionElement, { top: 92, bottom: 16, left: 10, right: 10 }],
+  [WhileLoopElement, { top: 108, bottom: 32, left: 10, right: 10 }],
+  [ForLoopElement, { top: 108, bottom: 32, left: 10, right: 10 }],
+  [TerminalElement, { top: 16, bottom: 10, left: 10, right: 10 }],
+]);
+
+const DEFAULT_MARGINS: Margin = { top: 60, bottom: 60, left: 10, right: 10 };
+
+function getMargins(node: IElement): Margin {
+  return MARGIN_MAP.get(node.constructor as Function) ?? DEFAULT_MARGINS;
+}
+
 const DEFAULT_WIDTH = 120;
 const DEFAULT_HEIGHT = 60;
-const HORIZONTAL_SPACING = 15;
-const VERTICAL_SPACING = 30;
+const MIN_BRANCH_WIDTH = 180;
+const MIN_BRANCH_HEIGHT = 16;
 
 export function layoutProcedure(
   procedureId: string,
@@ -39,7 +75,7 @@ export function layoutProcedure(
 
   const nodes: NodeDto[] = [];
 
-  function measureScope(id: string): { width: number; height: number; nodes: NodeDto[] } {
+  function measureScope(id: string): BranchDto {
     const scope = snapshot.scopes[id];
 
     if (!scope) {
@@ -56,14 +92,14 @@ export function layoutProcedure(
       nodes.push(element);
 
       maxWidth = Math.max(maxWidth, element.width);
-      totalHeight += element.height + VERTICAL_SPACING;
+      totalHeight += element.height;
 
       elementId = snapshot.elements[elementId].nextId;
     }
 
     return {
-      width: maxWidth,
-      height: totalHeight,
+      width: maxWidth > MIN_BRANCH_WIDTH ? maxWidth : MIN_BRANCH_WIDTH,
+      height: totalHeight > MIN_BRANCH_HEIGHT ? totalHeight : MIN_BRANCH_HEIGHT,
       nodes: nodes
     };
   }
@@ -83,35 +119,75 @@ export function layoutProcedure(
       width: DEFAULT_WIDTH
     };
 
+    nodes.push(node);
+
     if (element instanceof ConditionElement) {
 
-      const positiveNode = measureScope(element.positiveWayId!);
-      const negativeNode = measureScope(element.negativeWayId!);
-      node.width = positiveNode.width + 2 * HORIZONTAL_SPACING + negativeNode.width;
-      node.height = DEFAULT_HEIGHT + VERTICAL_SPACING + Math.max(positiveNode.height, negativeNode.height);
-      node.left = positiveNode.nodes;
-      node.right = negativeNode.nodes;
+      const positiveBranch = measureScope(element.positiveWayId!);
+      const negativeBranch = measureScope(element.negativeWayId!);
+      node.width = positiveBranch.width + negativeBranch.width;
+      node.height = Math.max(positiveBranch.height, negativeBranch.height);
+      node.left = positiveBranch;
+      node.right = negativeBranch;
 
     } else if (isLoop(element)) {
 
       const body = measureScope(element.scopeId);
-      node.width = 2 * HORIZONTAL_SPACING + Math.max(DEFAULT_WIDTH, body.width);
-      node.height = DEFAULT_HEIGHT + VERTICAL_SPACING + body.height;
-      node.children = body.nodes
+      node.width = body.width;
+      node.height = body.height;
+      node.body = body;
 
     } else if (element instanceof ProcedureElement) {
 
-      const bodySize = measureScope(element.scopeId);
-      node.width = Math.max(DEFAULT_WIDTH, bodySize.width);
-      node.height = DEFAULT_HEIGHT + VERTICAL_SPACING + bodySize.height;
-
+      const body = measureScope(element.scopeId);
+      node.width = body.width;
+      node.height = body.height;
+      node.body = body;
     }
 
-    nodes.push(node);
+    const margin = getMargins(node.element);
+    node.width += margin.left + margin.right;
+    node.height += margin.top + margin.bottom;
+
     return node;
   }
 
+  function positionBranch(branch: BranchDto, x: number, y: number) {
+    let currentY = y;
+
+    for (const node of branch.nodes)  {
+      positionNode(node, x + (branch.width - node.width) / 2, currentY);
+
+      currentY += node.height;
+    }
+  }
+
+  function positionNode(node: NodeDto, x: number, y: number) {
+    node.x = x;
+    node.y = y;
+
+    const margin = getMargins(node.element!);
+    const branchY = y + margin.top;
+
+    if (node.element instanceof ConditionElement) {
+
+      positionBranch(node.left!, x + margin.left, branchY);
+      positionBranch(node.right!, x + margin.left + node.left?.width!, branchY);
+
+    } else if (node.element instanceof ProcedureElement
+               || isLoop(node.element)
+    ) {
+      positionBranch(node.body!, x + margin.left, branchY);
+    }
+  }
+
   measureElement(procedureId);
+  positionNode(nodes[0], originX, originY);
+
+  for (const node of nodes) {
+    node.x = node.x + node.width / 2;
+    node.y = node.y + 16;
+  }
 
   return nodes;
 }
