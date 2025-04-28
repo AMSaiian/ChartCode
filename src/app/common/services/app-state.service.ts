@@ -7,8 +7,8 @@ import { Procedure } from '../models/scope/procedure/procedure.model';
 import { IScope } from '../models/scope/scope.interface';
 import { Scope } from '../models/scope/scope.model';
 import { isLoop } from '../utils/element.utils';
-import { layoutProcedure } from '../utils/layout.utils';
-import { getProcedureEdges } from '../utils/edging.utils';
+import { ProcedureLayoutBuilder } from '../utils/layout.builder';
+import { ProcedureEdgeBuilder } from '../utils/edging.builder';
 
 export interface AppState {
   scopes: Record<string, IScope>;
@@ -107,8 +107,8 @@ export class AppStateService {
   public getProcedureElements(procedureId: string): Observable<{ nodes: NodeDto[]; edges: any[] }> {
     return this.state$.pipe(
       map(snapshot => {
-        const nodes = layoutProcedure(procedureId, snapshot);
-        const edges = getProcedureEdges(nodes);
+        const nodes = new ProcedureLayoutBuilder(procedureId, snapshot).build();
+        const edges = new ProcedureEdgeBuilder(nodes).build();
 
         return {
           nodes,

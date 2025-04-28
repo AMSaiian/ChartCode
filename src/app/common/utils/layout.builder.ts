@@ -1,9 +1,11 @@
 import {
   BranchDto,
-  DEFAULT_HEIGHT, DEFAULT_LINE_BOTTOM_MARGIN, DEFAULT_LINE_TOP_MARGIN, DEFAULT_WIDTH, EdgeDto, getMargins,
+  DEFAULT_HEIGHT,
+  DEFAULT_WIDTH,
+  getMargins,
   MIN_BRANCH_HEIGHT,
   MIN_BRANCH_WIDTH,
-  NodeDto, Point,
+  NodeDto,
 } from '../dto/layout.dto';
 import { IElement } from '../models/element/element.interface';
 import {
@@ -11,26 +13,40 @@ import {
   ProcedureElement,
 } from '../models/element/element.model';
 import { AppState } from '../services/app-state.service';
-import { isLoop, isScopable } from './element.utils';
+import { isLoop } from './element.utils';
 
-export function layoutProcedure(
-  procedureId: string,
-  snapshot: AppState,
-  originX = 0,
-  originY = 0,
-): NodeDto[] {
-  const root: IElement = snapshot.elements[procedureId];
-  if (!root) {
-    throw new Error(`Root with id ${procedureId} not found`);
+export class ProcedureLayoutBuilder {
+  private nodes: NodeDto[] = [];
+
+  constructor(
+    private procedureId: string,
+    private snapshot: AppState,
+    private originX = 0,
+    private originY = 0
+  ) {}
+
+  public build(): NodeDto[] {
+    const root: IElement = this.snapshot.elements[this.procedureId];
+    if (!root) {
+      throw new Error(`Root with id ${this.procedureId} not found`);
+    }
+
+    this.measureElement(this.procedureId);
+    this.positionNode(this.nodes[0], this.originX, this.originY);
+
+    for (const node of this.nodes) {
+      node.x = node.x + node.width / 2;
+      node.y = node.y + MIN_BRANCH_HEIGHT;
+    }
+
+    return this.nodes;
   }
 
-  const nodes: NodeDto[] = [];
-
-  function measureScope(id: string): BranchDto {
-    const scope = snapshot.scopes[id];
+  private measureScope(id: string): BranchDto {
+    const scope = this.snapshot.scopes[id];
 
     if (!scope) {
-      throw new Error(`Scope with id ${procedureId} not found`);
+      throw new Error(`Scope with id ${this.procedureId} not found`);
     }
 
     const nodes: NodeDto[] = [];
@@ -39,13 +55,13 @@ export function layoutProcedure(
 
     let elementId = scope.startId;
     while (elementId) {
-      const element = measureElement(elementId);
+      const element = this.measureElement(elementId);
       nodes.push(element);
 
       maxWidth = Math.max(maxWidth, element.width);
       totalHeight += element.height;
 
-      elementId = snapshot.elements[elementId].nextId;
+      elementId = this.snapshot.elements[elementId].nextId;
     }
 
     return {
@@ -57,8 +73,8 @@ export function layoutProcedure(
     };
   }
 
-  function measureElement(id: string): NodeDto {
-    const element = snapshot.elements[id];
+  private measureElement(id: string): NodeDto {
+    const element = this.snapshot.elements[id];
 
     if (!element) {
       throw new Error(`Element with id ${id} not found`);
@@ -72,12 +88,12 @@ export function layoutProcedure(
       width: DEFAULT_WIDTH
     };
 
-    nodes.push(node);
+    this.nodes.push(node);
 
     if (element instanceof ConditionElement) {
 
-      const positiveBranch = measureScope(element.positiveWayId!);
-      const negativeBranch = measureScope(element.negativeWayId!);
+      const positiveBranch = this.measureScope(element.positiveWayId!);
+      const negativeBranch = this.measureScope(element.negativeWayId!);
       node.width = positiveBranch.width + negativeBranch.width;
       node.height = Math.max(positiveBranch.height, negativeBranch.height);
       node.left = positiveBranch;
@@ -85,14 +101,14 @@ export function layoutProcedure(
 
     } else if (isLoop(element)) {
 
-      const body = measureScope(element.scopeId);
+      const body = this.measureScope(element.scopeId);
       node.width = body.width;
       node.height = body.height;
       node.body = body;
 
     } else if (element instanceof ProcedureElement) {
 
-      const body = measureScope(element.scopeId);
+      const body = this.measureScope(element.scopeId);
       node.width = body.width;
       node.height = body.height;
       node.body = body;
@@ -105,20 +121,19 @@ export function layoutProcedure(
     return node;
   }
 
-  function positionBranch(branch: BranchDto, x: number, y: number) {
+  private positionBranch(branch: BranchDto, x: number, y: number): void {
     branch.x = x;
     branch.y = y;
 
     let currentY = y;
 
     for (const node of branch.nodes)  {
-      positionNode(node, x + (branch.width - node.width) / 2, currentY);
-
+      this.positionNode(node, x + (branch.width - node.width) / 2, currentY);
       currentY += node.height;
     }
   }
 
-  function positionNode(node: NodeDto, x: number, y: number) {
+  private positionNode(node: NodeDto, x: number, y: number): void {
     node.x = x;
     node.y = y;
 
@@ -126,24 +141,12 @@ export function layoutProcedure(
     const branchY = y + margin.top;
 
     if (node.element instanceof ConditionElement) {
+      this.positionBranch(node.left!, x + margin.left, branchY);
+      this.positionBranch(node.right!, x + margin.left + node.left?.width!, branchY);
 
-      positionBranch(node.left!, x + margin.left, branchY);
-      positionBranch(node.right!, x + margin.left + node.left?.width!, branchY);
-
-    } else if (node.element instanceof ProcedureElement
-               || isLoop(node.element)
-    ) {
-      positionBranch(node.body!, x + margin.left, branchY);
+    } else if (node.element instanceof ProcedureElement || isLoop(node.element)) {
+      this.positionBranch(node.body!, x + margin.left, branchY);
     }
   }
-
-  measureElement(procedureId);
-  positionNode(nodes[0], originX, originY);
-
-  for (const node of nodes) {
-    node.x = node.x + node.width / 2;
-    node.y = node.y + MIN_BRANCH_HEIGHT;
-  }
-
-  return nodes;
 }
+
