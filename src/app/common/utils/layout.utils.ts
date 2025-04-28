@@ -1,66 +1,17 @@
+import {
+  BranchDto,
+  DEFAULT_HEIGHT, DEFAULT_LINE_BOTTOM_MARGIN, DEFAULT_LINE_TOP_MARGIN, DEFAULT_WIDTH, EdgeDto, getMargins,
+  MIN_BRANCH_HEIGHT,
+  MIN_BRANCH_WIDTH,
+  NodeDto, Point,
+} from '../dto/layout.dto';
 import { IElement } from '../models/element/element.interface';
 import {
-  AssignElement,
-  ConditionElement, ForLoopElement,
-  InputElement,
-  OutputElement,
-  ProcedureElement, TerminalElement, WhileLoopElement,
+  ConditionElement,
+  ProcedureElement,
 } from '../models/element/element.model';
 import { AppState } from '../services/app-state.service';
-import { isLoop } from './element.utils';
-
-export interface Point {
-  x: number;
-  y: number;
-}
-
-export interface NodeDto {
-  element: IElement;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  body?: BranchDto;
-  left?: BranchDto;
-  right?: BranchDto;
-  // inPort: Point;
-  // outPorts: Record<string, Point>;
-}
-
-export interface BranchDto {
-  width: number;
-  height: number;
-  nodes: NodeDto[];
-}
-
-export interface Margin {
-  top: number,
-  bottom: number,
-  left: number,
-  right: number
-}
-
-const MARGIN_MAP = new Map<Function, Margin>([
-  [ProcedureElement, { top: 40, bottom: 50, left: 10, right: 10 }],
-  [AssignElement, { top: 16, bottom: 10, left: 10, right: 10 }],
-  [InputElement, { top: 16, bottom: 10, left: 10, right: 10 }],
-  [OutputElement, { top: 16, bottom: 10, left: 10, right: 10 }],
-  [ConditionElement, { top: 92, bottom: 16, left: 10, right: 10 }],
-  [WhileLoopElement, { top: 108, bottom: 32, left: 10, right: 10 }],
-  [ForLoopElement, { top: 108, bottom: 32, left: 10, right: 10 }],
-  [TerminalElement, { top: 16, bottom: 10, left: 10, right: 10 }],
-]);
-
-const DEFAULT_MARGINS: Margin = { top: 60, bottom: 60, left: 10, right: 10 };
-
-function getMargins(node: IElement): Margin {
-  return MARGIN_MAP.get(node.constructor as Function) ?? DEFAULT_MARGINS;
-}
-
-const DEFAULT_WIDTH = 120;
-const DEFAULT_HEIGHT = 60;
-const MIN_BRANCH_WIDTH = 180;
-const MIN_BRANCH_HEIGHT = 16;
+import { isLoop, isScopable } from './element.utils';
 
 export function layoutProcedure(
   procedureId: string,
@@ -98,6 +49,8 @@ export function layoutProcedure(
     }
 
     return {
+      x: -Infinity,
+      y: -Infinity,
       width: maxWidth > MIN_BRANCH_WIDTH ? maxWidth : MIN_BRANCH_WIDTH,
       height: totalHeight > MIN_BRANCH_HEIGHT ? totalHeight : MIN_BRANCH_HEIGHT,
       nodes: nodes
@@ -153,6 +106,9 @@ export function layoutProcedure(
   }
 
   function positionBranch(branch: BranchDto, x: number, y: number) {
+    branch.x = x;
+    branch.y = y;
+
     let currentY = y;
 
     for (const node of branch.nodes)  {
@@ -186,7 +142,7 @@ export function layoutProcedure(
 
   for (const node of nodes) {
     node.x = node.x + node.width / 2;
-    node.y = node.y + 16;
+    node.y = node.y + MIN_BRANCH_HEIGHT;
   }
 
   return nodes;

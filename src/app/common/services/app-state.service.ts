@@ -8,6 +8,7 @@ import { IScope } from '../models/scope/scope.interface';
 import { Scope } from '../models/scope/scope.model';
 import { isLoop } from '../utils/element.utils';
 import { layoutProcedure } from '../utils/layout.utils';
+import { getProcedureEdges } from '../utils/edging.utils';
 
 export interface AppState {
   scopes: Record<string, IScope>;
@@ -107,10 +108,11 @@ export class AppStateService {
     return this.state$.pipe(
       map(snapshot => {
         const nodes = layoutProcedure(procedureId, snapshot);
+        const edges = getProcedureEdges(nodes);
 
         return {
           nodes,
-          edges: []
+          edges
         }
       })
     )
