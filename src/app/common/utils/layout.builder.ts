@@ -36,7 +36,8 @@ export class ProcedureLayoutBuilder {
 
     for (const node of this.nodes) {
       node.x = node.x + node.width / 2;
-      node.y = node.y + MIN_BRANCH_HEIGHT;
+      node.y = node.y
+               + (isLoop(node.element) ? 2 * MIN_BRANCH_HEIGHT : MIN_BRANCH_HEIGHT);
     }
 
     return this.nodes;

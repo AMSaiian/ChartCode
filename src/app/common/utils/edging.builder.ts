@@ -10,7 +10,7 @@ import {
   Point,
 } from '../dto/layout.dto';
 import { ConditionElement } from '../models/element/element.model';
-import { isScopable } from './element.utils';
+import { isLoop, isScopable } from './element.utils';
 
 export class LinePathBuilder {
   private path: string = '';
@@ -38,7 +38,10 @@ export class LinePathBuilder {
 
 function getNodeBottomY(node: NodeDto): number {
   const bottomMargin = isScopable(node.element) ? 0 : getMargins(node.element).bottom;
-  return node.y + node.height - MIN_BRANCH_HEIGHT - bottomMargin;
+  return node.y
+         + node.height
+         - (isLoop(node.element) ? 2 * MIN_BRANCH_HEIGHT : MIN_BRANCH_HEIGHT)
+         - bottomMargin;
 }
 
 export class ProcedureEdgeBuilder {
