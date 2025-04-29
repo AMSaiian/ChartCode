@@ -1,7 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { ConditionElement, ForLoopElement, InputElement } from './common/models/element/element.model';
+import {
+  ConditionElement,
+  ForLoopElement,
+  InputElement,
+  WhileLoopElement,
+} from './common/models/element/element.model';
 import { BoolExpression, BoolExpressionType } from './common/models/expression/expression.model';
 import { AppStateService } from './common/services/app-state.service';
 
@@ -37,19 +42,8 @@ export class AppComponent implements OnInit {
       );
 
       const forLoop = new ForLoopElement(new BoolExpression('x', BoolExpressionType.GreaterThan, 'y'));
-      const forLoop2 = new ForLoopElement(new BoolExpression('x', BoolExpressionType.GreaterThan, 'y'));
+      const forLoop2 = new WhileLoopElement(new BoolExpression('x', BoolExpressionType.GreaterThan, 'y'));
 
-      // this.state.addElement(
-      //   forLoop,
-      //   scope.id,
-      //   element.id
-      // );
-      //
-      // this.state.addElement(
-      //   forLoop2,
-      //   forLoop.scopeId,
-      //   null
-      // );
 
       this.state.addElement(
         condition,
@@ -58,6 +52,18 @@ export class AppComponent implements OnInit {
       );
       console.log(this.state);
       console.log(this.state.getStateSnapshot());
+
+      this.state.addElement(
+        forLoop,
+        scope.id,
+        element.id
+      );
+
+      this.state.addElement(
+        forLoop2,
+        forLoop.scopeId,
+        null
+      );
 
       this.state.addElement(
         new InputElement('x', true),

@@ -34,10 +34,18 @@
                    [attr.points]="getConditionPoints(120, 60)"
                    fill="#fff3cd" stroke="#664d03" stroke-width="2" />
 
+          <rect *ngIf="node.element | instanceOf: ForLoopElement"
+                [attr.width]="120"
+                [attr.height]="60"
+                fill="#FAA0A0"
+                stroke="#880808"
+                stroke-width="2" />
+
           <!-- Всё остальное -->
           <rect *ngIf="!((node.element | instanceOf: TerminalElement)
                          || (node.element | instanceOf: ConditionElement)
-                         || (node.element | instanceOf: ProcedureElement))"
+                         || (node.element | instanceOf: ProcedureElement)
+                         || (node.element | instanceOf: ForLoopElement))"
                 [attr.width]="120"
                 [attr.height]="60"
                 fill="#cff4fc"

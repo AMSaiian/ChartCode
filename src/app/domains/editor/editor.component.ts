@@ -1,7 +1,12 @@
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { NodeDto } from '../../common/dto/layout.dto';
-import { ConditionElement, ProcedureElement, TerminalElement } from '../../common/models/element/element.model';
+import {
+  ConditionElement,
+  ForLoopElement,
+  ProcedureElement,
+  TerminalElement,
+} from '../../common/models/element/element.model';
 import { InstanceofPipe } from '../../common/pipes/instance-of.pipe';
 import { AppStateService } from '../../common/services/app-state.service';
 import { Observable, switchMap, tap } from 'rxjs';
@@ -40,4 +45,5 @@ export class EditorComponent implements OnInit {
   protected readonly TerminalElement = TerminalElement;
   protected readonly ConditionElement = ConditionElement;
   protected readonly ProcedureElement = ProcedureElement;
+  protected readonly ForLoopElement = ForLoopElement;
 }
