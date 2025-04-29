@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { NodeDto } from '../dto/layout.dto';
+import { EdgeDto, NodeDto } from '../dto/layout.dto';
 import { IElement } from '../models/element/element.interface';
 import { ConditionElement, ProcedureElement, TerminalElement } from '../models/element/element.model';
 import { Procedure } from '../models/scope/procedure/procedure.model';
@@ -104,7 +104,7 @@ export class AppStateService {
     this.state$.next(snapshot);
   }
 
-  public getProcedureElements(procedureId: string): Observable<{ nodes: NodeDto[]; edges: any[] }> {
+  public getProcedureElements(procedureId: string): Observable<{ nodes: NodeDto[]; edges: EdgeDto[] }> {
     return this.state$.pipe(
       map(snapshot => {
         const nodes = new ProcedureLayoutBuilder(procedureId, snapshot).build();

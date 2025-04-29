@@ -26,6 +26,8 @@ export class ProcedureLayoutBuilder {
   ) {}
 
   public build(): NodeDto[] {
+    this.nodes = [];
+
     const root: IElement = this.snapshot.elements[this.procedureId];
     if (!root) {
       throw new Error(`Root with id ${this.procedureId} not found`);
@@ -40,7 +42,7 @@ export class ProcedureLayoutBuilder {
                + (isLoop(node.element) ? 2 * MIN_BRANCH_HEIGHT : MIN_BRANCH_HEIGHT);
     }
 
-    return this.nodes;
+    return [...this.nodes];
   }
 
   private measureScope(id: string): BranchDto {

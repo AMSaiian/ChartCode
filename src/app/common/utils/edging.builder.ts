@@ -63,7 +63,7 @@ export class ProcedureEdgeBuilder {
     for (const node of this.nodes) {
       this.processNode(node);
     }
-    return this.edges;
+    return [...this.edges];
   }
 
   private processNode(node: NodeDto): void {
