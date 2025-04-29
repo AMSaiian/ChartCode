@@ -68,6 +68,7 @@ export class ProcedureLayoutBuilder {
     }
 
     return {
+      scope: scope,
       x: -Infinity,
       y: -Infinity,
       width: maxWidth > MIN_BRANCH_WIDTH ? maxWidth : MIN_BRANCH_WIDTH,

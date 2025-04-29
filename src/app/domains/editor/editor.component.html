@@ -63,6 +63,15 @@
           </text>
         </g>
       </ng-container>
+
+      <g *ngFor="let point of elements.insertions" [attr.transform]="'translate(' + point.x + ',' + point.y + ')'">
+        <circle
+          cx="0" cy="0" r="4"
+          fill="red"
+          stroke="black"
+          stroke-width="1"
+        />
+      </g>
     </svg>
   </ng-container>
 </div>

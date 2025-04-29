@@ -1,10 +1,10 @@
 import {
   BranchDto,
-  DEFAULT_HEIGHT,
+  DEFAULT_HEIGHT, DEFAULT_INSERT_RADIUS,
   DEFAULT_LINE_BOTTOM_MARGIN,
   DEFAULT_WIDTH,
   EdgeDto,
-  getMargins,
+  getMargins, InsertionDto,
   MIN_BRANCH_HEIGHT,
   NodeDto,
   Point,
@@ -46,7 +46,7 @@ function getNodeBottomY(node: NodeDto): number {
 
 export class ProcedureEdgeBuilder {
   private edges!: EdgeDto[];
-  private insertPoints!: Point[];
+  private insertPoints!: InsertionDto[];
   private nodeMap: Record<string, NodeDto>;
 
   constructor(private nodes: NodeDto[]) {
@@ -56,14 +56,14 @@ export class ProcedureEdgeBuilder {
     }, {});
   }
 
-  public build(): EdgeDto[] {
+  public build(): { edges: EdgeDto[], insertions: InsertionDto[] } {
     this.edges = [];
     this.insertPoints = [];
 
     for (const node of this.nodes) {
       this.processNode(node);
     }
-    return [...this.edges];
+    return { edges: [...this.edges], insertions: [...this.insertPoints] } ;
   }
 
   private processNode(node: NodeDto): void {
@@ -78,7 +78,14 @@ export class ProcedureEdgeBuilder {
         y: nextNode.y - DEFAULT_LINE_BOTTOM_MARGIN,
       };
 
-      this.connectVertical(startPosition, endPosition.y, node.element.id, node.element.nextId, false);
+      this.connectVertical(
+        startPosition,
+        endPosition.y,
+        node.element.id,
+        node.element.nextId,
+        node.element.inScopeId!,
+        false
+      );
     }
 
     if (node.element instanceof ConditionElement) {
@@ -112,6 +119,16 @@ export class ProcedureEdgeBuilder {
         },
         finishingEnd
       );
+
+      if (!node.element.nextId) {
+        this.insertPoints.push({
+          x: finishingEnd.x,
+          y: finishingEnd.y + DEFAULT_INSERT_RADIUS,
+          fromId: node.element.id,
+          scopeId: node.element.inScopeId!
+        })
+      }
+
     } else if (isLoop(node.element)) {
       const labelPosition: Point = {
         x: node.x + DEFAULT_WIDTH / 2,
@@ -130,10 +147,19 @@ export class ProcedureEdgeBuilder {
     endY: number,
     fromId: string | null,
     toId: string | null,
+    scopeId: string,
     isSupport: boolean
   ): void {
     const builder = new LinePathBuilder(start);
     builder.lineVertical(endY - start.y);
+
+    this.insertPoints.push({
+      x: start.x,
+      y: start.y + (endY - start.y) / 2 - DEFAULT_INSERT_RADIUS,
+      fromId,
+      scopeId
+    })
+
     this.edges.push({
       path: builder.getPath(),
       fromId,
@@ -188,7 +214,29 @@ export class ProcedureEdgeBuilder {
         y: shoulderStart.y,
       };
       const endY = firstNode.y - DEFAULT_LINE_BOTTOM_MARGIN;
-      this.connectVertical(startPosition, endY, null, firstNode.element.id, false);
+      this.connectVertical(
+        startPosition,
+        endY,
+        null,
+        firstNode.element.id,
+        firstNode.element.inScopeId!,
+        false
+      );
+    } else {
+      this.insertPoints.push({
+        x: shoulderEnd.x,
+        y: shoulderStart.y + (shoulderEnd.y - shoulderStart.y) / 2 - DEFAULT_INSERT_RADIUS,
+        fromId: null,
+        scopeId: branch.scope.id
+      });
+    }
+    if (lastNode) {
+      this.insertPoints.push({
+        x: finishingStart.x,
+        y: finishingStart.y + (finishingEnd.y - finishingStart.y) / 2 - DEFAULT_INSERT_RADIUS,
+        fromId: lastNode.element.id,
+        scopeId: branch.scope.id
+      })
     }
   }
 
@@ -205,7 +253,14 @@ export class ProcedureEdgeBuilder {
         y: firstBody.y - DEFAULT_LINE_BOTTOM_MARGIN,
       };
 
-      this.connectVertical(labelPosition, firstBodyTop.y, null, firstBody.element.nextId, false);
+      this.connectVertical(
+        labelPosition,
+        firstBodyTop.y,
+        null,
+        firstBody.element.nextId,
+        firstBody.element.inScopeId!,
+        false
+      );
 
       loopBodyEnd = {
         x: lastBody.x + DEFAULT_WIDTH / 2,
@@ -217,7 +272,14 @@ export class ProcedureEdgeBuilder {
         y: loopBodyEnd.y + getMargins(node.element).bottom / 2
       };
 
-      this.connectVertical(loopBodyEnd, loopEnd.y, lastBody.element.id, null, true);
+      this.connectVertical(
+        loopBodyEnd,
+        loopEnd.y,
+        lastBody.element.id,
+        null,
+        lastBody.element.inScopeId!,
+        true
+      );
     } else {
       loopBodyEnd = {
         x: labelPosition.x,
@@ -229,7 +291,14 @@ export class ProcedureEdgeBuilder {
         y: loopBodyEnd.y + getMargins(node.element).bottom / 2
       };
 
-      this.connectVertical(labelPosition, loopEnd.y, null, null, true);
+      this.connectVertical(
+        labelPosition,
+        loopEnd.y,
+        null,
+        null,
+        node.body!.scope.id,
+        true
+      );
     }
 
     return { loopBodyEnd, loopEnd };

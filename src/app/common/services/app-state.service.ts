@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { EdgeDto, NodeDto } from '../dto/layout.dto';
+import { EdgeDto, InsertionDto, NodeDto, Point } from '../dto/layout.dto';
 import { IElement } from '../models/element/element.interface';
 import { ConditionElement, ProcedureElement, TerminalElement } from '../models/element/element.model';
 import { Procedure } from '../models/scope/procedure/procedure.model';
@@ -40,6 +40,7 @@ export class AppStateService {
     const scope = snapshot.scopes[scopeId].clone();
     snapshot.scopes[scope.id] = scope;
     scope.elementsId = [...scope.elementsId, element.id];
+    element.inScopeId = scope.id;
 
     snapshot.elements[element.id] = element;
 
@@ -104,15 +105,16 @@ export class AppStateService {
     this.state$.next(snapshot);
   }
 
-  public getProcedureElements(procedureId: string): Observable<{ nodes: NodeDto[]; edges: EdgeDto[] }> {
+  public getProcedureElements(procedureId: string): Observable<{ nodes: NodeDto[]; edges: EdgeDto[], insertions: InsertionDto[] }> {
     return this.state$.pipe(
       map(snapshot => {
         const nodes = new ProcedureLayoutBuilder(procedureId, snapshot).build();
-        const edges = new ProcedureEdgeBuilder(nodes).build();
+        const edgesAndInsertions = new ProcedureEdgeBuilder(nodes).build();
 
         return {
           nodes,
-          edges
+          edges: edgesAndInsertions.edges,
+          insertions: edgesAndInsertions.insertions
         }
       })
     )
@@ -131,6 +133,9 @@ export class AppStateService {
 
     start.nextId = end.id;
     end.previousId.push(start.id);
+
+    start.inScopeId = mainScope.id;
+    end.inScopeId = mainScope.id;
 
     snapshot.scopes[mainScope.id] = mainScope;
 

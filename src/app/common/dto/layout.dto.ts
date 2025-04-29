@@ -6,6 +6,7 @@ import {
   OutputElement,
   ProcedureElement, TerminalElement, WhileLoopElement,
 } from '../models/element/element.model';
+import { IScope } from '../models/scope/scope.interface';
 
 export interface NodeDto {
   element: IElement;
@@ -21,6 +22,7 @@ export interface NodeDto {
 }
 
 export interface BranchDto {
+  scope: IScope;
   x: number;
   y: number;
   width: number;
@@ -66,7 +68,6 @@ export interface EdgeDto {
   fromId: string | null;
   toId: string | null;
   isSupport: boolean;
-  scopeId?: string;
   path: string;
 }
 
@@ -74,3 +75,11 @@ export const DEFAULT_LINE_WIDTH = 1;
 export const DEFAULT_ARROW_SIZE = 6;
 export const DEFAULT_LINE_TOP_MARGIN = 1;
 export const DEFAULT_LINE_BOTTOM_MARGIN = 2;
+export const DEFAULT_INSERT_RADIUS = 4;
+
+export interface InsertionDto {
+  x: number;
+  y: number;
+  scopeId: string;
+  fromId: string | null;
+}

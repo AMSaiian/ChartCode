@@ -5,11 +5,13 @@ export abstract class BaseElement implements IElement {
   id: string;
   previousId: string[];
   nextId: string | null;
+  inScopeId: string | null;
 
   constructor() {
     this.id = crypto.randomUUID();
     this.previousId = [];
     this.nextId = null;
+    this.inScopeId = null;
   }
 
   abstract clone(): BaseElement;
@@ -18,6 +20,7 @@ export abstract class BaseElement implements IElement {
     target.id = this.id;
     target.previousId = [...this.previousId];
     target.nextId = this.nextId;
+    target.inScopeId = this.inScopeId;
 
     return target;
   }

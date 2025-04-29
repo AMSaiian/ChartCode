@@ -1,6 +1,6 @@
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { NodeDto } from '../../common/dto/layout.dto';
+import { EdgeDto, InsertionDto, NodeDto } from '../../common/dto/layout.dto';
 import {
   ConditionElement,
   ForLoopElement,
@@ -25,7 +25,7 @@ import { Observable, switchMap, tap } from 'rxjs';
 })
 export class EditorComponent implements OnInit {
   state = inject(AppStateService);
-  elements$!: Observable<{ nodes: NodeDto[], edges: any[] }>;
+  elements$!: Observable<{ nodes: NodeDto[], edges: EdgeDto[], insertions: InsertionDto[] }>;
 
   getConditionPoints(width: number, height: number): string {
     const hw = width / 2;
