@@ -17,8 +17,6 @@ export interface NodeDto {
   body?: BranchDto;
   left?: BranchDto;
   right?: BranchDto;
-  // inPort: Point;
-  // outPorts: Record<string, Point>;
 }
 
 export interface BranchDto {
@@ -38,7 +36,7 @@ export interface Margin {
 }
 
 export const MARGIN_MAP = new Map<Function, Margin>([
-  [ProcedureElement, { top: 40, bottom: 50, left: 10, right: 10 }],
+  [ProcedureElement, { top: 40, bottom: 50, left: -60, right: 60 }],
   [AssignElement, { top: 16, bottom: 10, left: 10, right: 10 }],
   [InputElement, { top: 16, bottom: 10, left: 10, right: 10 }],
   [OutputElement, { top: 16, bottom: 10, left: 10, right: 10 }],
