@@ -11,6 +11,7 @@ import { IElement } from '../models/element/element.interface';
 import {
   ConditionElement,
   ProcedureElement,
+  TerminalElement,
 } from '../models/element/element.model';
 import { AppState } from '../services/app-state.service';
 import { isLoop } from './element.utils';
@@ -88,7 +89,7 @@ export class ProcedureLayoutBuilder {
       x: -Infinity,
       y: -Infinity,
       element: element,
-      height: DEFAULT_HEIGHT,
+      height: element instanceof TerminalElement ? DEFAULT_HEIGHT / 2 : DEFAULT_HEIGHT,
       width: DEFAULT_WIDTH
     };
 
