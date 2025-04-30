@@ -1,0 +1,17 @@
+<svg:g transform="translate(0, 0)">
+  <polygon
+    [attr.points]="getDiamondPoints(DEFAULT_WIDTH, DEFAULT_HEIGHT)"
+    fill="#fff3cd"
+    stroke="#664d03"
+    stroke-width="2"
+  />
+  <text
+    [attr.x]="120/2"
+    [attr.y]="60/2"
+    text-anchor="middle"
+    dominant-baseline="central"
+    font-family="Arial"
+    font-size="12">
+    {{info()}}
+  </text>
+</svg:g>

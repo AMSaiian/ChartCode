@@ -1,0 +1,17 @@
+<svg:g transform="translate(0, 0)">
+  <polygon
+    [attr.points]="getParallelogramPoints(DEFAULT_WIDTH, DEFAULT_HEIGHT)"
+    fill="#fff3cd"
+    stroke="#664d03"
+    stroke-width="2"
+  />
+  <text
+    [attr.x]="DEFAULT_WIDTH/2"
+    [attr.y]="DEFAULT_HEIGHT/2"
+    text-anchor="middle"
+    dominant-baseline="central"
+    font-family="Arial"
+    font-size="12">
+    {{info()}}
+  </text>
+</svg:g>
