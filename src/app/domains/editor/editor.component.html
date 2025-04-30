@@ -5,83 +5,89 @@
     <p>или короткий</p>
   </div>
   <div class="flex-grow h-full overflow-scroll border border-gray-500">
-    <div class="w-full">
-      <!-- 1. Забираем сразу и nodes, и edges -->
-      <ng-container *ngIf="elements$ | async as elements">
-
-        <svg [attr.width]="elements.nodes[0].width" [attr.height]="elements.nodes[0].height" class="mx-auto!">
-          <!-- 2. Определяем маркер стрелки -->
+    @if (elements$ | async; as elements) {
+      <div class="w-full">
+        <svg
+          [attr.width]="elements.nodes[0].width"
+          [attr.height]="elements.nodes[0].height"
+          class="mx-auto!"
+        >
           <defs>
-            <marker id="arrow" markerWidth="6" markerHeight="6"
-                    refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
-              <path d="M0,0 L6,3 L0,6 Z" fill="black"/>
+            <marker
+              id="arrow"
+              [attr.markerWidth]="DEFAULT_ARROW_SIZE"
+              [attr.markerHeight]="DEFAULT_ARROW_SIZE"
+              [attr.refX]="DEFAULT_ARROW_SIZE - 1"
+              [attr.refY]="DEFAULT_ARROW_SIZE / 2"
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <path
+                [attr.d]="`M0,0 L${DEFAULT_ARROW_SIZE},${DEFAULT_ARROW_SIZE / 2} L0,${DEFAULT_ARROW_SIZE} Z`"
+                fill="black"
+              />
             </marker>
           </defs>
 
-          <!-- 3. Рисуем сначала все линии -->
-          <ng-container *ngFor="let e of elements.edges">
+          @for (edge of elements.edges; track edge.path) {
             <path
-              [attr.d]="e.path"
+              [attr.d]="edge.path"
               stroke="black"
               fill="none"
-              [attr.marker-end]="!e.isSupport ? 'url(#arrow)' : null" />
-          </ng-container>
+              [attr.marker-end]="!edge.isSupport ? 'url(#arrow)' : null"
+            />
+          }
 
-          <!-- 4. А потом поверх линии — узлы -->
-          <ng-container *ngFor="let node of elements.nodes">
-            <g [attr.transform]="'translate(' + node.x + ',' + node.y + ')'" (dblclick)="deleteNode(node.element.id)">
-              <!-- Терминал -->
-              <ellipse *ngIf="node.element | instanceOf: TerminalElement"
-                       [attr.cx]="120/2" [attr.cy]="60/2"
-                       [attr.rx]="120/2" [attr.ry]="60/2"
-                       fill="#d1e7dd" stroke="#0f5132" stroke-width="2" />
-
-              <!-- Условие -->
-              <polygon *ngIf="node.element | instanceOf: ConditionElement"
-                       [attr.points]="getConditionPoints(120, 60)"
-                       fill="#fff3cd" stroke="#664d03" stroke-width="2" />
-
-              <rect *ngIf="node.element | instanceOf: ForLoopElement"
-                    [attr.width]="120"
-                    [attr.height]="60"
-                    fill="#FAA0A0"
-                    stroke="#880808"
-                    stroke-width="2" />
-
-              <rect *ngIf="node.element | instanceOf: AssignElement"
-                    [attr.width]="120"
-                    [attr.height]="60"
-                    fill="#800080"
-                    stroke="#5D3f6a"
-                    stroke-width="2" />
-
-              <!-- Всё остальное -->
-              <rect *ngIf="!((node.element | instanceOf: TerminalElement)
-                         || (node.element | instanceOf: ConditionElement)
-                         || (node.element | instanceOf: ProcedureElement)
-                         || (node.element | instanceOf: ForLoopElement)
-                         || (node.element | instanceOf: AssignElement))"
-                    [attr.width]="120"
-                    [attr.height]="60"
-                    fill="#cff4fc"
-                    stroke="#055160"
-                    stroke-width="2" />
-
-              <text
-                [attr.x]="120/2"
-                [attr.y]="60/2"
-                text-anchor="middle"
-                dominant-baseline="central"
-                font-family="Arial"
-                font-size="12">
-                {{ node.element.id.slice(0, 8) }}
-              </text>
-            </g>
-          </ng-container>
-
-          <g *ngFor="let point of elements.insertions" [attr.transform]="'translate(' + point.x + ',' + point.y + ')'">
+          @for (node of elements.nodes; track node.element.id) {
+            @if (node.element | instanceOf: TerminalElement) {
+              <g terminal-shape
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 (dblclick)="deleteNode(node.element.id)"
+                 [info]="node.element.id.slice(0, 8)"
+              />
+            }
+            @if (node.element | instanceOf: ConditionElement) {
+              <g condition-shape
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 (dblclick)="deleteNode(node.element.id)"
+                 [info]="node.element.id.slice(0, 8)"
+              />
+            }
+            @if (node.element | instanceOf: InputElement) {
+              <g input-shape
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 (dblclick)="deleteNode(node.element.id)"
+                 [info]="node.element.id.slice(0, 8)"
+              />
+            }
+            @if (node.element | instanceOf: ForLoopElement) {
+              <g for-loop-shape
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 (dblclick)="deleteNode(node.element.id)"
+                 [info]="node.element.id.slice(0, 8)"
+              />
+            }
+            @if (node.element | instanceOf: WhileLoopElement) {
+              <g while-loop-shape
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 (dblclick)="deleteNode(node.element.id)"
+                 [info]="node.element.id.slice(0, 8)"
+              />
+            }
+            @if (node.element | instanceOf: AssignElement) {
+              <g process-shape
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 (dblclick)="deleteNode(node.element.id)"
+                 [info]="node.element.id.slice(0, 8)"
+              />
+            }
+          }
+          <g *ngFor="let point of elements.insertions"
+             [attr.transform]="`translate(${point.x},${point.y})`">
             <circle
-              cx="0" cy="0" r="4"
+              cx="0"
+              cy="0"
+              [attr.r]="DEFAULT_INSERT_RADIUS"
               fill="red"
               stroke="black"
               stroke-width="1"
@@ -89,8 +95,8 @@
             />
           </g>
         </svg>
-      </ng-container>
-    </div>
+      </div>
+    }
   </div>
 </div>
 

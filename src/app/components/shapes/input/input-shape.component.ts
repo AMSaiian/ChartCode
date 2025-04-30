@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
 import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '../../../common/dto/layout.dto';
+import { ShapeDirective } from '../shape.directive';
 
 @Component({
   selector: '[input-shape]',
@@ -7,23 +8,17 @@ import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '../../../common/dto/layout.dto';
   templateUrl: './input-shape.component.html',
   styleUrl: './input-shape.component.css'
 })
-export class InputShapeComponent {
-  displayInfo!: string;
-  info = input.required<string>();
-
+export class InputShapeComponent extends ShapeDirective {
   getParallelogramPoints(width: number, height: number, offsetRatio: number = 0.25): string {
     const offset = width * offsetRatio;
 
     const points = [
-      `${offset},0`,               // top-left
-      `${width},0`,                // top-right
-      `${width - offset},${height}`, // bottom-right
-      `0,${height}`                // bottom-left
+      `${offset},0`,
+      `${width},0`,
+      `${width - offset},${height}`,
+      `0,${height}`
     ];
 
     return points.join(' ');
   }
-
-  protected readonly DEFAULT_WIDTH = DEFAULT_WIDTH;
-  protected readonly DEFAULT_HEIGHT = DEFAULT_HEIGHT;
 }

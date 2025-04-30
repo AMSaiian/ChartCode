@@ -1,17 +1,25 @@
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { Observable, switchMap, tap } from 'rxjs';
-import { EdgeDto, InsertionDto, NodeDto } from '../../common/dto/layout.dto';
+import { DEFAULT_ARROW_SIZE, DEFAULT_INSERT_RADIUS, EdgeDto, InsertionDto, NodeDto } from '../../common/dto/layout.dto';
 import {
   AssignElement,
   ConditionElement,
   ForLoopElement,
+  InputElement,
   ProcedureElement,
   TerminalElement,
+  WhileLoopElement,
 } from '../../common/models/element/element.model';
 import { BoolExpression, BoolExpressionType } from '../../common/models/expression/expression.model';
 import { InstanceofPipe } from '../../common/pipes/instance-of.pipe';
 import { AppStateService } from '../../common/services/app-state.service';
+import { ConditionShapeComponent } from '../../components/shapes/condition/condition-shape.component';
+import { ForLoopShapeComponent } from '../../components/shapes/for-loop/for-loop-shape.component';
+import { InputShapeComponent } from '../../components/shapes/input/input-shape.component';
+import { ProcessShapeComponent } from '../../components/shapes/process/process-shape.component';
+import { TerminalShapeComponent } from '../../components/shapes/terminal/terminal-shape.component';
+import { WhileLoopShapeComponent } from '../../components/shapes/while-loop/while-loop-shape.component';
 
 @Component({
   selector: 'app-editor',
@@ -20,6 +28,12 @@ import { AppStateService } from '../../common/services/app-state.service';
     NgIf,
     NgForOf,
     AsyncPipe,
+    TerminalShapeComponent,
+    ConditionShapeComponent,
+    InputShapeComponent,
+    ForLoopShapeComponent,
+    WhileLoopShapeComponent,
+    ProcessShapeComponent,
   ],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css'
@@ -59,4 +73,9 @@ export class EditorComponent implements OnInit {
   public deleteNode(id: string) {
     this.state.deleteElement(id);
   }
+
+  protected readonly DEFAULT_ARROW_SIZE = DEFAULT_ARROW_SIZE;
+  protected readonly DEFAULT_INSERT_RADIUS = DEFAULT_INSERT_RADIUS;
+  protected readonly InputElement = InputElement;
+  protected readonly WhileLoopElement = WhileLoopElement;
 }
