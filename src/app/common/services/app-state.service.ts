@@ -105,6 +105,72 @@ export class AppStateService {
     this.state$.next(snapshot);
   }
 
+  public deleteElement(elementId: string) {
+    const snapshot = this.getStateSnapshot();
+
+    const element = snapshot.elements[elementId];
+    if (!element) {
+      throw new Error(`Element with id ${elementId} doesn't exist`);
+    }
+
+    const scopeId = element.inScopeId;
+    if (!scopeId || !snapshot.scopes[scopeId]) {
+      throw new Error(`Scope for element with id ${elementId} doesn't exist`);
+    }
+
+    const scope = snapshot.scopes[scopeId];
+    if (!scope.elementsId.includes(elementId)) {
+      throw new Error(`Scope with id ${scopeId} doesn't contain element with id ${elementId}`);
+    }
+
+    const updatedScope = scope.clone();
+    snapshot.scopes[scopeId] = updatedScope;
+    updatedScope.elementsId = updatedScope.elementsId.filter(id => id !== elementId);
+
+    if (element.previousId.length > 0) {
+      for (const prevId of element.previousId) {
+        const prev = snapshot.elements[prevId].clone();
+        snapshot.elements[prev.id] = prev;
+        prev.nextId = element.nextId;
+      }
+    }
+
+    if (element.nextId) {
+      const next = snapshot.elements[element.nextId].clone();
+      snapshot.elements[next.id] = next;
+
+      next.previousId = next.previousId.filter(id => id !== elementId);
+      next.previousId = [...new Set([...next.previousId, ...element.previousId])];
+    }
+
+    if (updatedScope.startId === elementId) {
+      updatedScope.startId = element.nextId;
+    }
+    if (updatedScope.endId === elementId) {
+      updatedScope.endId = element.previousId.length > 0 ? element.previousId[0] : null;
+    }
+
+    if (element instanceof ConditionElement) {
+      if (element.positiveWayId) {
+        this.deleteScopeRecursively(element.positiveWayId, snapshot);
+        updatedScope.childrenId = updatedScope.childrenId.filter(id => id !== element.positiveWayId);
+      }
+      if (element.negativeWayId) {
+        this.deleteScopeRecursively(element.negativeWayId, snapshot);
+        updatedScope.childrenId = updatedScope.childrenId.filter(id => id !== element.negativeWayId);
+      }
+    } else if (isLoop(element)) {
+      if (element.scopeId) {
+        this.deleteScopeRecursively(element.scopeId, snapshot);
+        updatedScope.childrenId = updatedScope.childrenId.filter(id => id !== element.scopeId);
+      }
+    }
+
+    delete snapshot.elements[elementId];
+
+    this.state$.next(snapshot);
+  }
+
   public getProcedureElements(procedureId: string): Observable<{ nodes: NodeDto[]; edges: EdgeDto[], insertions: InsertionDto[] }> {
     return this.state$.pipe(
       map(snapshot => {
@@ -155,4 +221,43 @@ export class AppStateService {
       elements: { ...value.elements }
     };
   };
+
+  private deleteScopeRecursively(scopeId: string, snapshot: AppState) {
+    const scopeToDelete = snapshot.scopes[scopeId];
+
+    if (!scopeToDelete) {
+      return;
+    }
+
+    for (const elId of scopeToDelete.elementsId) {
+      const child = snapshot.elements[elId];
+      if (!child) {
+        console.warn(`Scope with id ${scopeId} does not have element with id ${elId}`)
+        continue;
+      }
+
+      if (child instanceof ConditionElement) {
+        if (child.positiveWayId) {
+          this.deleteScopeRecursively(child.positiveWayId, snapshot);
+        } else {
+          console.warn(`Condition with id ${child.id} does not have positive scope`)
+        }
+        if (child.negativeWayId) {
+          this.deleteScopeRecursively(child.negativeWayId, snapshot);
+        } else {
+          console.warn(`Condition with id ${child.id} does not have negative scope`)
+        }
+      } else if (isLoop(child)) {
+        if (child.scopeId) {
+          this.deleteScopeRecursively(child.scopeId, snapshot);
+        } else {
+          console.warn(`Loop with id ${child.id} does not have body scope`)
+        }
+      }
+
+      delete snapshot.elements[elId];
+    }
+
+    delete snapshot.scopes[scopeId];
+  }
 }
