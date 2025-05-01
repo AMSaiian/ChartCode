@@ -1,0 +1,21 @@
+<p-button
+  (click)="menu.toggle($event)"
+  icon="pi pi-language"
+  severity="secondary" />
+<p-menu
+  #menu
+  [model]="languages"
+  popup="true"
+>
+  <ng-template #item let-language>
+    <a
+      [ngClass]="{
+        'font-bold': currentLanguage() === language.code
+      }"
+      pRipple class="justify-center p-menu-item-link"
+      (click)="switchLanguage(language.code)"
+    >
+      {{ language.name | translate }}
+    </a>
+  </ng-template>
+</p-menu>

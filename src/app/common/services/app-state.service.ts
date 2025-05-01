@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { EdgeDto, InsertionDto, NodeDto, Point } from '../dto/layout.dto';
-import { IElement } from '../models/element/element.interface';
+import { ElementType, IElement } from '../models/element/element.interface';
 import { ConditionElement, ProcedureElement, TerminalElement } from '../models/element/element.model';
 import { Procedure } from '../models/scope/procedure/procedure.model';
 import { IScope } from '../models/scope/scope.interface';
@@ -25,8 +25,7 @@ export class AppStateService {
   });
 
   selectedProcedureId$ = new BehaviorSubject<string>('');
-
-  selectedElementType$ = new BehaviorSubject<string | null>(null);
+  selectedElementType$ = new BehaviorSubject<ElementType | null>(null);
 
   public addElement(element: IElement, scopeId: string, previousId: string | null) {
     const snapshot = this.getStateSnapshot();

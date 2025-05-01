@@ -1,0 +1,21 @@
+{
+  "ELEMENTS_DEFAULT": {
+    "START": "Start",
+    "END": "End",
+    "INPUT": "Input",
+    "OUTPUT": "Output",
+    "ASSIGN": "Assign",
+    "CONDITION": "Condition",
+    "FOR-LOOP": "For Loop",
+    "PRE-LOOP": "While Loop"
+  },
+  "EDITOR": {
+    "SIDEBAR": {
+      "CHOOSE": "Choose a New Element"
+    }
+  },
+  "LANGUAGES": {
+    "EN": "English",
+    "UA": "Ukrainian"
+  }
+}

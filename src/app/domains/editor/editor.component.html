@@ -1,10 +1,13 @@
-<div class="flex flex-grow h-full">
-  <div class="flex-shrink-0">
-    <app-sidebar></app-sidebar>
+<div class="flex flex-col h-screen">
+  <div class="flex shrink-0 bg-gray-100 p-4">
+    <app-language-switcher></app-language-switcher>
   </div>
-  <div class="flex-grow h-full overflow-scroll border border-gray-500">
-    @if (elements$ | async; as elements) {
-      <div class="w-full">
+  <div class="flex flex-grow overflow-hidden">
+    <div class="flex flex-shrink-0">
+      <app-sidebar></app-sidebar>
+    </div>
+    <div class="flex-grow overflow-scroll border border-gray-500">
+      @if (elements$ | async; as elements) {
         <svg
           [attr.width]="elements.nodes[0].width"
           [attr.height]="elements.nodes[0].height"
@@ -93,8 +96,8 @@
             />
           </g>
         </svg>
-      </div>
-    }
+      }
+    </div>
   </div>
 </div>
 

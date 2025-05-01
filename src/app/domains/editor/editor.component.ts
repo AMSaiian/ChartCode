@@ -14,6 +14,7 @@ import {
 import { BoolExpression, BoolExpressionType } from '../../common/models/expression/expression.model';
 import { InstanceofPipe } from '../../common/pipes/instance-of.pipe';
 import { AppStateService } from '../../common/services/app-state.service';
+import { LanguageSwitcherComponent } from '../../components/misc/language-switcher/language-switcher.component';
 import { ConditionShapeComponent } from '../../components/shapes/condition/condition-shape.component';
 import { ForLoopShapeComponent } from '../../components/shapes/for-loop/for-loop-shape.component';
 import { InputShapeComponent } from '../../components/shapes/input/input-shape.component';
@@ -35,6 +36,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     WhileLoopShapeComponent,
     ProcessShapeComponent,
     SidebarComponent,
+    LanguageSwitcherComponent,
   ],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css'

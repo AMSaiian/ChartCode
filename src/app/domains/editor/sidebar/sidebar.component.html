@@ -1,50 +1,70 @@
-<div class="mb-4!">
+<div class="mb-2! w-full justify-items-start">
   <p-button
     severity="secondary"
     icon="pi pi-bars"
+    [fluid]="true"
+    styleClass="w-full! px-3!"
     (onClick)="onIsOpenClick()"
   ></p-button>
 </div>
 
-@if (isOpen) {
+@if (isOpen()) {
+  <div class="mb-8!">
+    <h3 class="mb-2! font-semibold">
+      {{ "EDITOR.SIDEBAR.CHOOSE" | translate }}
+    </h3>
+    <p-divider styleClass="border! border-x-0! border-y! border-y-gray-300!"></p-divider>
+  </div>
   <div class="mb-4!">
     <svg input-shape
-         [info]="'Input >>'"
+         [info]="`${(translate.get('ELEMENTS_DEFAULT.INPUT') | async)} >>`"
+         [isSelected]="selectedType() === 'input'"
+         (click)="onElementSelect('input')"
          [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
          viewBox="-1 -1 122 62">
     </svg>
   </div>
   <div class="mb-4!">
     <svg input-shape
-         [info]="'Output <<'"
+         [info]="`${(translate.get('ELEMENTS_DEFAULT.OUTPUT') | async)} <<`"
+         [isSelected]="selectedType() === 'output'"
+         (click)="onElementSelect('output')"
          [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
          viewBox="-1 -1 122 62">
     </svg>
   </div>
   <div class="mb-4!">
     <svg process-shape
-         [info]="'Assign :='"
+         [info]="`${(translate.get('ELEMENTS_DEFAULT.ASSIGN') | async)} :=`"
+         [isSelected]="selectedType() === 'assign'"
+         (click)="onElementSelect('assign')"
          [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
          viewBox="-1 -1 122 62">
     </svg>
   </div>
   <div class="mb-4!">
     <svg condition-shape
-         [info]="'Condition ?'"
+         [info]="`${(translate.get('ELEMENTS_DEFAULT.CONDITION') | async)} ?`"
+         [isSelected]="selectedType() === 'condition'"
+         (click)="onElementSelect('condition')"
          [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
          viewBox="-1 -1 122 62">
     </svg>
   </div>
   <div class="mb-4!">
     <svg for-loop-shape
-         [info]="'For Loop ⟳'"
+         [info]="`${(translate.get('ELEMENTS_DEFAULT.FOR-LOOP') | async)}`"
+         [isSelected]="selectedType() === 'for-loop'"
+         (click)="onElementSelect('for-loop')"
          [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
          viewBox="-1 -1 122 62">
     </svg>
   </div>
   <div>
     <svg condition-shape
-         [info]="'Pre Loop ⟳'"
+         [info]="`${(translate.get('ELEMENTS_DEFAULT.PRE-LOOP') | async)}`"
+         [isSelected]="selectedType() === 'while-loop'"
+         (click)="onElementSelect('while-loop')"
          [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
          viewBox="-1 -1 122 62">
     </svg>
