@@ -6,3 +6,15 @@ export interface IElement extends Clonable<IElement> {
   nextId: string | null;
   inScopeId: string | null;
 }
+
+export type ElementType =
+  | 'procedure'
+  | 'input'
+  | 'output'
+  | 'terminal'
+  | 'assign'
+  | 'process'
+  | 'for-loop'
+  | 'do-loop'
+  | 'while-loop'
+  | 'condition';

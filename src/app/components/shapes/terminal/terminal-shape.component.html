@@ -1,11 +1,14 @@
-<svg:g transform="translate(0, 0)">
+<svg:g
+  transform="translate(0, 0)"
+  (mouseenter)="isHovered.set(true)"
+  (mouseleave)="isHovered.set(false)">
   <rect
     [attr.width]="DEFAULT_WIDTH"
     [attr.height]="DEFAULT_HEIGHT/2"
     [attr.rx]="DEFAULT_HEIGHT/4"
     [attr.ry]="DEFAULT_HEIGHT/4"
-    fill="#d1e7dd"
-    stroke="#0f5132"
+    [attr.stroke]="strokeColor()"
+    fill="#FFFFFF"
     stroke-width="2"
   />
   <text

@@ -20,12 +20,12 @@ import { InputShapeComponent } from '../../components/shapes/input/input-shape.c
 import { ProcessShapeComponent } from '../../components/shapes/process/process-shape.component';
 import { TerminalShapeComponent } from '../../components/shapes/terminal/terminal-shape.component';
 import { WhileLoopShapeComponent } from '../../components/shapes/while-loop/while-loop-shape.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @Component({
   selector: 'app-editor',
   imports: [
     InstanceofPipe,
-    NgIf,
     NgForOf,
     AsyncPipe,
     TerminalShapeComponent,
@@ -34,6 +34,7 @@ import { WhileLoopShapeComponent } from '../../components/shapes/while-loop/whil
     ForLoopShapeComponent,
     WhileLoopShapeComponent,
     ProcessShapeComponent,
+    SidebarComponent,
   ],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css'

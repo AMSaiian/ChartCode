@@ -1,13 +1,16 @@
-<svg:g transform="translate(0, 0)">
+<svg:g
+  transform="translate(0, 0)"
+  (mouseenter)="isHovered.set(true)"
+  (mouseleave)="isHovered.set(false)">
   <polygon
     [attr.points]="getDiamondPoints(DEFAULT_WIDTH, DEFAULT_HEIGHT)"
-    fill="#fff3cd"
-    stroke="#664d03"
+    [attr.stroke]="strokeColor()"
+    fill="#FFFFFF"
     stroke-width="2"
   />
   <text
-    [attr.x]="120/2"
-    [attr.y]="60/2"
+    [attr.x]="DEFAULT_WIDTH/2"
+    [attr.y]="DEFAULT_HEIGHT/2"
     text-anchor="middle"
     dominant-baseline="central"
     font-family="Arial"

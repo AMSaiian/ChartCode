@@ -1,0 +1,53 @@
+<div class="mb-4!">
+  <p-button
+    severity="secondary"
+    icon="pi pi-bars"
+    (onClick)="onIsOpenClick()"
+  ></p-button>
+</div>
+
+@if (isOpen) {
+  <div class="mb-4!">
+    <svg input-shape
+         [info]="'Input >>'"
+         [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
+         viewBox="-1 -1 122 62">
+    </svg>
+  </div>
+  <div class="mb-4!">
+    <svg input-shape
+         [info]="'Output <<'"
+         [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
+         viewBox="-1 -1 122 62">
+    </svg>
+  </div>
+  <div class="mb-4!">
+    <svg process-shape
+         [info]="'Assign :='"
+         [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
+         viewBox="-1 -1 122 62">
+    </svg>
+  </div>
+  <div class="mb-4!">
+    <svg condition-shape
+         [info]="'Condition ?'"
+         [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
+         viewBox="-1 -1 122 62">
+    </svg>
+  </div>
+  <div class="mb-4!">
+    <svg for-loop-shape
+         [info]="'For Loop ⟳'"
+         [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
+         viewBox="-1 -1 122 62">
+    </svg>
+  </div>
+  <div>
+    <svg condition-shape
+         [info]="'Pre Loop ⟳'"
+         [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
+         viewBox="-1 -1 122 62">
+    </svg>
+  </div>
+}
+

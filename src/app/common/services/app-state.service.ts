@@ -26,9 +26,16 @@ export class AppStateService {
 
   selectedProcedureId$ = new BehaviorSubject<string>('');
 
+  selectedElementType$ = new BehaviorSubject<string | null>(null);
+
   public addElement(element: IElement, scopeId: string, previousId: string | null) {
     const snapshot = this.getStateSnapshot();
     // element = element.clone();
+    if (element.id) {
+      throw new Error(`Cannot insert initialised element. Id ${element.id}`);
+    } else {
+      element.id = crypto.randomUUID();
+    }
 
     if (!snapshot.scopes[scopeId]) {
       throw new Error(`Scope with id ${scopeId} doesn't exists`);
@@ -190,9 +197,16 @@ export class AppStateService {
     const snapshot = this.getStateSnapshot();
 
     const mainScope = new Procedure('Main', true);
+
     const mainElement = new ProcedureElement(mainScope.id);
+    mainElement.id = crypto.randomUUID();
+
     const start = new TerminalElement(true);
+    start.id = crypto.randomUUID();
+
     const end = new TerminalElement(false);
+    end.id = crypto.randomUUID();
+
     mainScope.startId = start.id;
     mainScope.endId = end.id;
     mainScope.elementsId = [mainScope.startId, mainScope.endId];

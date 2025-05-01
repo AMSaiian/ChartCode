@@ -2,13 +2,12 @@ import { AssignExpression, BoolExpression } from '../expression/expression.model
 import { IElement } from './element.interface';
 
 export abstract class BaseElement implements IElement {
-  id: string;
+  id: string = '';
   previousId: string[];
   nextId: string | null;
   inScopeId: string | null;
 
   constructor() {
-    this.id = crypto.randomUUID();
     this.previousId = [];
     this.nextId = null;
     this.inScopeId = null;

@@ -1,8 +1,6 @@
 <div class="flex flex-grow h-full">
-  <div class="flex-shrink-0 p-4 border-r bg-gray-100">
-    <p>Контент</p>
-    <p>длинный</p>
-    <p>или короткий</p>
+  <div class="flex-shrink-0">
+    <app-sidebar></app-sidebar>
   </div>
   <div class="flex-grow h-full overflow-scroll border border-gray-500">
     @if (elements$ | async; as elements) {
