@@ -1,4 +1,11 @@
-import { AssignExpression, BoolExpression } from '../expression/expression.model';
+import {
+  AssignExpression,
+  BoolExpression,
+  BoolExpressionType,
+  DataType,
+  ValueType,
+} from '../expression/expression.model';
+import { Procedure } from '../scope/procedure/procedure.model';
 import { IElement } from './element.interface';
 
 export abstract class BaseElement implements IElement {
@@ -26,6 +33,10 @@ export abstract class BaseElement implements IElement {
 }
 
 export class ProcedureElement extends BaseElement {
+  static readonly type = 'procedure';
+  static getDefault = () => this.DEFAULT.clone();
+  private static readonly DEFAULT = new Procedure('Main', true);
+
   constructor(public scopeId: string) {
     super();
   }
@@ -38,6 +49,10 @@ export class ProcedureElement extends BaseElement {
 }
 
 export class InputElement extends BaseElement {
+  static readonly type = 'input';
+  static getDefault = () => this.DEFAULT.clone();
+  private static readonly DEFAULT = new InputElement('x');
+
   constructor(
     public destination: string,
     public isOutside: boolean = true
@@ -53,6 +68,10 @@ export class InputElement extends BaseElement {
 }
 
 export class OutputElement extends BaseElement {
+  static readonly type = 'output';
+  static getDefault = () => this.DEFAULT.clone();
+  private static readonly DEFAULT = new OutputElement('x');
+
   constructor(
     public source: string,
     public isOutside: boolean = true
@@ -68,6 +87,10 @@ export class OutputElement extends BaseElement {
 }
 
 export class TerminalElement extends BaseElement {
+  static readonly type = 'terminal';
+  static getDefault = () => this.DEFAULT.clone();
+  private static readonly DEFAULT = new TerminalElement(true);
+
   constructor(
     public isStart: boolean
   ) {
@@ -82,6 +105,17 @@ export class TerminalElement extends BaseElement {
 }
 
 export class AssignElement extends BaseElement {
+  static readonly type = 'assign';
+  static getDefault = () => this.DEFAULT.clone();
+  private static readonly DEFAULT = new AssignElement(
+    new AssignExpression(
+      'x',
+      '0',
+      true,
+      new ValueType(DataType.Integer, false)
+    )
+  );
+
   constructor(
     public expression: AssignExpression
   ) {
@@ -96,10 +130,22 @@ export class AssignElement extends BaseElement {
 }
 
 export class ForLoopElement extends BaseElement {
+  static readonly type = 'for-loop';
+  static getDefault = () => this.DEFAULT.clone();
+  private static readonly DEFAULT = new ForLoopElement(
+    new BoolExpression('i', BoolExpressionType.LessThan, '10'),
+    new AssignExpression(
+      'x',
+      '0',
+      true,
+      new ValueType(DataType.Integer, false)
+    )
+  );
+
   constructor(
     public checkExpression: BoolExpression,
     public accumulator?: AssignExpression,
-    public increment?: AssignExpression,
+    public isIncrement: boolean = true,
     public scopeId: string = ''
   ) {
     super();
@@ -109,25 +155,7 @@ export class ForLoopElement extends BaseElement {
     const element = new ForLoopElement(
       this.checkExpression.clone(),
       this.accumulator?.clone(),
-      this.increment?.clone(),
-      this.scopeId
-    );
-
-    return this.copyBaseTo(element);
-  }
-}
-
-export class DoLoopElement extends BaseElement {
-  constructor(
-    public checkExpression: BoolExpression,
-    public scopeId: string = ''
-  ) {
-    super();
-  }
-
-  override clone(): DoLoopElement {
-    const element = new DoLoopElement(
-      this.checkExpression.clone(),
+      this.isIncrement,
       this.scopeId
     );
 
@@ -136,6 +164,12 @@ export class DoLoopElement extends BaseElement {
 }
 
 export class WhileLoopElement extends BaseElement {
+  static readonly type = 'while-loop';
+  static getDefault = () => this.DEFAULT.clone();
+  private static readonly DEFAULT = new WhileLoopElement(
+    new BoolExpression('true', BoolExpressionType.Equals, 'true')
+  );
+
   constructor(
     public checkExpression: BoolExpression,
     public scopeId: string = ''
@@ -154,6 +188,12 @@ export class WhileLoopElement extends BaseElement {
 }
 
 export class ConditionElement extends BaseElement {
+  static readonly type = 'condition';
+  static getDefault = () => this.DEFAULT.clone();
+  private static readonly DEFAULT = new ConditionElement(
+    new BoolExpression('true', BoolExpressionType.Equals, 'true')
+  );
+
   constructor(
     public conditionExpression: BoolExpression,
     public positiveWayId: string = '',

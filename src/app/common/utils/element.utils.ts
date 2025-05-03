@@ -1,9 +1,8 @@
 import { IElement } from '../models/element/element.interface';
-import { ConditionElement, DoLoopElement, ForLoopElement, WhileLoopElement } from '../models/element/element.model';
+import { ConditionElement, ForLoopElement, WhileLoopElement } from '../models/element/element.model';
 
 export const isLoop = (element: IElement) =>
-  element instanceof DoLoopElement
-  || element instanceof WhileLoopElement
+  element instanceof WhileLoopElement
   || element instanceof ForLoopElement;
 
 export const isScopable = (element: IElement) =>

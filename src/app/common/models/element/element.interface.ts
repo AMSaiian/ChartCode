@@ -15,6 +15,5 @@ export type ElementType =
   | 'assign'
   | 'process'
   | 'for-loop'
-  | 'do-loop'
   | 'while-loop'
   | 'condition';

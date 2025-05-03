@@ -40,22 +40,17 @@ export class SidebarComponent {
       const selectedType = this.selectedType();
 
       if (!isOpen && selectedType) {
-        this.state.selectedElementType$.next(null);
+        this.state.clearElementTypeSelection();
       }
     });
   }
-
 
   onIsOpenClick() {
     this.isOpen.update((value) => !value);
   }
 
   onElementSelect(elementType: ElementType) {
-    if (this.state.selectedElementType$.value === elementType) {
-      this.state.selectedElementType$.next(null);
-    } else {
-      this.state.selectedElementType$.next(elementType);
-    }
+    this.state.selectElementType(elementType);
   }
 
   protected readonly DEFAULT_WIDTH = DEFAULT_WIDTH;

@@ -1,5 +1,6 @@
 import { AsyncPipe, NgForOf } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, inject, OnInit, viewChild, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, viewChild } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
 import { Observable, switchMap, tap } from 'rxjs';
 import { DEFAULT_ARROW_SIZE, DEFAULT_INSERT_RADIUS, EdgeDto, InsertionDto, NodeDto } from '../../common/dto/layout.dto';
 import { ElementType } from '../../common/models/element/element.interface';
@@ -7,11 +8,10 @@ import {
   AssignElement,
   ConditionElement,
   ForLoopElement,
-  InputElement,
+  InputElement, OutputElement,
   TerminalElement,
   WhileLoopElement,
 } from '../../common/models/element/element.model';
-import { BoolExpression, BoolExpressionType } from '../../common/models/expression/expression.model';
 import { InstanceofPipe } from '../../common/pipes/instance-of.pipe';
 import { AppStateService } from '../../common/services/app-state.service';
 import { LanguageSwitcherComponent } from '../../components/misc/language-switcher/language-switcher.component';
@@ -40,6 +40,7 @@ import { SourceCodeSectionComponent } from './source-code-section/source-code-se
     SidebarComponent,
     LanguageSwitcherComponent,
     SourceCodeSectionComponent,
+    ButtonModule,
   ],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css'
@@ -48,6 +49,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
   state = inject(AppStateService);
 
   selectedElementType$!: Observable<ElementType | null>;
+  selectedElementId$!: Observable<string | null>;
   elements$!: Observable<{ nodes: NodeDto[], edges: EdgeDto[], insertions: InsertionDto[] }>;
 
   editorSceneRef = viewChild<ElementRef<SVGSVGElement>>('editorScene');
@@ -62,17 +64,19 @@ export class EditorComponent implements OnInit, AfterViewInit {
     );
 
     this.selectedElementType$ = this.state.selectedElementType$.asObservable();
+    this.selectedElementId$ = this.state.selectedElementId$.asObservable();
   }
 
-  public handleInsert(point: InsertionDto) {
-    // const element = new AssignElement(new AssignExpression('x', '1', false));
-    const element = new ConditionElement(new BoolExpression('x', BoolExpressionType.Equals, 'x'))
-    this.state.addElement(element, point.scopeId, point.fromId);
-    this.state.selectedElementType$.next(null);
+  public onInsert(point: InsertionDto) {
+    this.state.insert(point);
   }
 
-  public deleteNode(id: string) {
-    this.state.deleteElement(id);
+  public onSelect(id: string) {
+    this.state.selectElement(id);
+  }
+
+  public onDeleteSelected() {
+    this.state.deleteSelected();
   }
 
   ngAfterViewInit(): void {
@@ -81,9 +85,12 @@ export class EditorComponent implements OnInit, AfterViewInit {
       dblClickZoomEnabled: false,
       zoomScaleSensitivity: 0.3,
       fit: true,
+      minZoom: 0.1,
       center: true,
       contain: true,
     });
+
+    this.sceneManipulator.zoomOut();
   }
 
   exportSvg(): void {
@@ -126,4 +133,5 @@ export class EditorComponent implements OnInit, AfterViewInit {
   protected readonly AssignElement = AssignElement;
   protected readonly DEFAULT_ARROW_SIZE = DEFAULT_ARROW_SIZE;
   protected readonly DEFAULT_INSERT_RADIUS = DEFAULT_INSERT_RADIUS;
+  protected readonly OutputElement = OutputElement;
 }

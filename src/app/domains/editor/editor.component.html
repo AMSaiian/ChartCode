@@ -1,13 +1,21 @@
+@let selectedType = selectedElementType$ | async;
+@let selectedId = selectedElementId$ | async;
+
 <div class="flex flex-col h-screen pb-8 bg-gray-100">
-  <div class="flex shrink-0 bg-gray-100 p-4">
+  <div class="flex shrink-0 bg-gray-100 p-4 gap-4">
     <app-language-switcher></app-language-switcher>
+    <p-button
+      severity="secondary"
+      icon="pi pi-trash"
+      (onClick)="onDeleteSelected()"
+      [disabled]="!selectedId"
+    ></p-button>
   </div>
   <div class="flex flex-grow overflow-hidden">
     <div class="flex flex-shrink-0">
       <app-sidebar></app-sidebar>
     </div>
     <div class="flex-grow overflow-hidden border border-gray-300 rounded-2xl">
-      @let selectedType = selectedElementType$ | async;
       @if (elements$ | async; as elements) {
         <svg
           #editorScene
@@ -45,42 +53,54 @@
             @if (node.element | instanceOf: TerminalElement) {
               <g terminal-shape
                  [attr.transform]="`translate(${node.x},${node.y})`"
-                 (dblclick)="deleteNode(node.element.id)"
                  [info]="node.element.id.slice(0, 8)"
               />
             }
             @if (node.element | instanceOf: ConditionElement) {
               <g condition-shape
                  [attr.transform]="`translate(${node.x},${node.y})`"
-                 (dblclick)="deleteNode(node.element.id)"
+                 [isSelected]="selectedId === node.element.id"
+                 (click)="onSelect(node.element.id)"
                  [info]="node.element.id.slice(0, 8)"
               />
             }
             @if (node.element | instanceOf: InputElement) {
               <g input-shape
                  [attr.transform]="`translate(${node.x},${node.y})`"
-                 (dblclick)="deleteNode(node.element.id)"
+                 [isSelected]="selectedId === node.element.id"
+                 (click)="onSelect(node.element.id)"
+                 [info]="node.element.id.slice(0, 8)"
+              />
+            }
+            @if (node.element | instanceOf: OutputElement) {
+              <g input-shape
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 [isSelected]="selectedId === node.element.id"
+                 (click)="onSelect(node.element.id)"
                  [info]="node.element.id.slice(0, 8)"
               />
             }
             @if (node.element | instanceOf: ForLoopElement) {
               <g for-loop-shape
                  [attr.transform]="`translate(${node.x},${node.y})`"
-                 (dblclick)="deleteNode(node.element.id)"
+                 [isSelected]="selectedId === node.element.id"
+                 (click)="onSelect(node.element.id)"
                  [info]="node.element.id.slice(0, 8)"
               />
             }
             @if (node.element | instanceOf: WhileLoopElement) {
               <g while-loop-shape
                  [attr.transform]="`translate(${node.x},${node.y})`"
-                 (dblclick)="deleteNode(node.element.id)"
+                 [isSelected]="selectedId === node.element.id"
+                 (click)="onSelect(node.element.id)"
                  [info]="node.element.id.slice(0, 8)"
               />
             }
             @if (node.element | instanceOf: AssignElement) {
               <g process-shape
                  [attr.transform]="`translate(${node.x},${node.y})`"
-                 (dblclick)="deleteNode(node.element.id)"
+                 [isSelected]="selectedId === node.element.id"
+                 (click)="onSelect(node.element.id)"
                  [info]="node.element.id.slice(0, 8)"
               />
             }
@@ -97,9 +117,10 @@
               style="cursor: pointer;"
               onmouseover="this.setAttribute('fill', 'darkred')"
               onmouseout="this.setAttribute('fill', 'red')"
+              (mouseup)="onInsert(point)"
               stroke="black"
               stroke-width="1"
-              (click)="handleInsert(point)"
+              (click)="onInsert(point)"
             />
           </g>
         </svg>
