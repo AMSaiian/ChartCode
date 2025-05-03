@@ -22,7 +22,7 @@ import { ProcessShapeComponent } from '../../../components/shapes/process/proces
     ForLoopShapeComponent,
     DividerModule,
     TranslatePipe,
-    AsyncPipe,
+    AsyncPipe
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
