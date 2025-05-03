@@ -23,6 +23,7 @@ import { TerminalShapeComponent } from '../../components/shapes/terminal/termina
 import { WhileLoopShapeComponent } from '../../components/shapes/while-loop/while-loop-shape.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import svgPanZoom from 'svg-pan-zoom';
+import { SourceCodeSectionComponent } from './source-code-section/source-code-section.component';
 
 @Component({
   selector: 'app-editor',
@@ -38,6 +39,7 @@ import svgPanZoom from 'svg-pan-zoom';
     ProcessShapeComponent,
     SidebarComponent,
     LanguageSwitcherComponent,
+    SourceCodeSectionComponent,
   ],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css'

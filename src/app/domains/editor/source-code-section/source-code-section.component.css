@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-gray-100);
+  width: 100%;
+  height: 100%;
+  justify-content: start;
+  align-items: stretch;
+  gap: 16px;
+  overflow: hidden;
+  padding-top: 4px;
+}
