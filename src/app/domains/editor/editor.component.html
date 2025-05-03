@@ -1,4 +1,4 @@
-<div class="flex flex-col h-screen">
+<div class="flex flex-col h-screen pb-8 bg-gray-100">
   <div class="flex shrink-0 bg-gray-100 p-4">
     <app-language-switcher></app-language-switcher>
   </div>
@@ -6,12 +6,14 @@
     <div class="flex flex-shrink-0">
       <app-sidebar></app-sidebar>
     </div>
-    <div class="flex-grow overflow-scroll border border-gray-500">
+    <div class="flex-grow overflow-hidden border border-gray-300 rounded-2xl">
+      @let selectedType = selectedElementType$ | async;
       @if (elements$ | async; as elements) {
         <svg
-          [attr.width]="elements.nodes[0].width"
-          [attr.height]="elements.nodes[0].height"
-          class="mx-auto!"
+          #editorScene
+          [attr.width]="'100%'"
+          [attr.height]="'100%'"
+          class="mx-auto! bg-white"
         >
           <defs>
             <marker
@@ -83,13 +85,18 @@
               />
             }
           }
-          <g *ngFor="let point of elements.insertions"
-             [attr.transform]="`translate(${point.x},${point.y})`">
+          <g
+            *ngFor="let point of elements.insertions"
+            [attr.transform]="`translate(${point.x},${point.y})`"
+            [attr.display]="!selectedType ? 'none' : null">
             <circle
               cx="0"
               cy="0"
               [attr.r]="DEFAULT_INSERT_RADIUS"
               fill="red"
+              style="cursor: pointer;"
+              onmouseover="this.setAttribute('fill', 'darkred')"
+              onmouseout="this.setAttribute('fill', 'red')"
               stroke="black"
               stroke-width="1"
               (click)="handleInsert(point)"
