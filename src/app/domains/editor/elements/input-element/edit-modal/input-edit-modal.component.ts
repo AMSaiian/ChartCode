@@ -1,7 +1,7 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Button } from 'primeng/button';
+import { ButtonModule } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputText } from 'primeng/inputtext';
 import { IdentifierOrArrayAccess } from '../../../../../common/const/field-regex.const';
@@ -14,7 +14,7 @@ import { FlowchartService } from '../../../../../common/services/flowchart.servi
     InputText,
     TranslatePipe,
     ReactiveFormsModule,
-    Button,
+    ButtonModule,
   ],
   templateUrl: './input-edit-modal.component.html',
   styleUrl: './input-edit-modal.component.css'

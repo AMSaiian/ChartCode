@@ -18,7 +18,7 @@ export class AssignElementComponent extends ElementDirective<AssignElement> {
 
   openDetailsModal(event: MouseEvent): void {
     event.preventDefault();
-    console.log("modal condition");
+    this.modalService.openAssignEditModal(this.element());
   }
 
 

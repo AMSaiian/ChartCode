@@ -2,12 +2,15 @@ import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from 'primeng/dynamicdialog';
 import {
+  AssignEditModalComponent
+} from '../../domains/editor/elements/assign-element/edit-modal/assign-edit-modal.component';
+import {
   InputEditModalComponent
 } from '../../domains/editor/elements/input-element/edit-modal/input-edit-modal.component';
 import {
   OutputEditModalComponent
 } from '../../domains/editor/elements/output-element/edit-modal/output-edit-modal.component';
-import { InputElement, OutputElement } from '../models/element/element.model';
+import { AssignElement, InputElement, OutputElement } from '../models/element/element.model';
 
 const defaultDialogOptions = {
   modal: true,
@@ -44,6 +47,16 @@ export class ElementsModalService {
         element: element,
       },
       header: this.translate.instant('MODALS.OUTPUT.HEADER')
+    })
+  }
+
+  openAssignEditModal(element: AssignElement) {
+    return this.dialog.open(AssignEditModalComponent, {
+      ...defaultDialogOptions,
+      inputValues: {
+        element: element,
+      },
+      header: this.translate.instant('MODALS.ASSIGN.HEADER')
     })
   }
 }

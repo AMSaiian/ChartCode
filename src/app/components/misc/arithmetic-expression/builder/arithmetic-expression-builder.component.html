@@ -1,0 +1,10 @@
+<div>
+  <h2>{{ 'EXPRESSION_BUILDER.ARITHMETIC' | translate }}</h2>
+  <app-arithmetic-expression-preview [expression]="root()" (expressionSelected)="selectExpression($event)">
+  </app-arithmetic-expression-preview>
+
+  <app-arithmetic-expression-editor
+    [expression]="selected"
+    (expressionChanged)="onExpressionChanged($event)">
+  </app-arithmetic-expression-editor>
+</div>

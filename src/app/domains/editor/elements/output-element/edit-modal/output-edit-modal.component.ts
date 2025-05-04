@@ -4,7 +4,9 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputText } from 'primeng/inputtext';
-import { IdentifierOrArrayAccess } from '../../../../../common/const/field-regex.const';
+import {
+  IdentifierOrArrayAccessOrLiteral,
+} from '../../../../../common/const/field-regex.const';
 import { OutputElement } from '../../../../../common/models/element/element.model';
 import { FlowchartService } from '../../../../../common/services/flowchart.service';
 
@@ -33,7 +35,7 @@ export class OutputEditModalComponent implements OnInit {
       source: new FormControl(
         this.element().source, [
           Validators.required,
-          Validators.pattern(IdentifierOrArrayAccess),
+          Validators.pattern(IdentifierOrArrayAccessOrLiteral),
         ]
       ),
     });

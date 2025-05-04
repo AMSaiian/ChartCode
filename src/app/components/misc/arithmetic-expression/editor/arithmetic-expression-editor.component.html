@@ -1,0 +1,52 @@
+<div class="flex flex-col gap-4 border border-gray-300 rounded-2xl p-4">
+  <div class="flex flex-col gap-2">
+    <label for="left">{{ 'EXPRESSION_BUILDER.LEFT' | translate }}</label>
+    <span class="inline-flex justify-between gap-2">
+      @if (isNested(expression().leftOperand)) {
+        <span class="content-center">{{ $any(expression().leftOperand).toReadable() }}</span>
+        <p-button (click)="makeSimple('left')"
+                  severity="secondary">{{ 'EXPRESSION_BUILDER.REMOVE' | translate }}</p-button>
+      } @else {
+        <input id="left"
+               pInputText
+               [(ngModel)]="expression().leftOperand"
+               (ngModelChange)="expression().leftOperand = $event; expressionChanged.emit(expression())"
+        />
+        <p-button (click)="makeNested('left')"
+                  severity="secondary">{{ 'EXPRESSION_BUILDER.ADD' | translate }}</p-button>
+      }
+    </span>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label>{{ 'EXPRESSION_BUILDER.OPERATION' | translate }}:</label>
+    <p-select
+      [options]="operators"
+      optionLabel="symbol"
+      optionValue="type"
+      [overlayOptions]="{ mode: 'modal' }"
+      [ngModel]="expression().expressionType"
+      (ngModelChange)="expression().expressionType = $event; expressionChanged.emit(expression())"
+    >
+    </p-select>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="right">{{ 'EXPRESSION_BUILDER.RIGHT' | translate }}</label>
+    <span class="inline-flex justify-between gap-2">
+      @if (isNested(expression().rightOperand)) {
+        <span class="content-center">{{ $any(expression().rightOperand).toReadable() }}</span>
+        <p-button (click)="makeSimple('right')"
+                  severity="secondary">{{ 'EXPRESSION_BUILDER.REMOVE' | translate }}</p-button>
+      } @else {
+        <input id="right"
+               pInputText
+               [(ngModel)]="expression().rightOperand"
+               (ngModelChange)="expression().rightOperand = $event; expressionChanged.emit(expression())"
+        />
+        <p-button (click)="makeNested('right')"
+                  severity="secondary">{{ 'EXPRESSION_BUILDER.ADD' | translate }}</p-button>
+      }
+    </span>
+  </div>
+</div>

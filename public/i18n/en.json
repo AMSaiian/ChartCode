@@ -8,6 +8,9 @@
       "HEADER": "Edit Output Element",
       "SOURCE": "Enter Output Source"
     },
+    "ASSIGN": {
+      "HEADER": "Edit Assign Element"
+    },
     "SAVE": "Save",
     "CANCEL": "Cancel"
   },
@@ -25,6 +28,14 @@
     "SIDEBAR": {
       "CHOOSE": "Choose a New Element"
     }
+  },
+  "EXPRESSION_BUILDER": {
+    "ARITHMETIC": "Arithmetic Expression Builder",
+    "LEFT": "Left Operand",
+    "RIGHT": "Right Operand",
+    "OPERATION": "Operation",
+    "ADD": "Add Nested",
+    "REMOVE": "Remove Nested"
   },
   "LANGUAGES": {
     "EN": "English",
