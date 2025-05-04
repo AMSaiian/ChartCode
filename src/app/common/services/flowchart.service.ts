@@ -169,6 +169,27 @@ export class FlowchartService {
     this.current$.next(snapshot);
   }
 
+  public editElement(element: IElement) {
+    const snapshot = this.getStateSnapshot();
+    let currentElement = snapshot.elements[element.id];
+
+    if (!currentElement) {
+      throw new Error(`Element with id ${element.id} doesn't exist`);
+    }
+    if (currentElement.constructor !== element.constructor) {
+      throw new Error(
+        `Cannot update elements with not matching types. Current: ${currentElement.constructor}, Edit: ${element.constructor}`
+      );
+    }
+
+    currentElement = currentElement.clone();
+    Object.assign(currentElement, element)
+
+    snapshot.elements[currentElement.id] = currentElement;
+
+    this.current$.next(snapshot);
+  }
+
   public getStateSnapshot(): AppState {
     const value = this.current$.value;
 

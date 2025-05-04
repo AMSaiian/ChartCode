@@ -1,6 +1,18 @@
 {
+  "MODALS": {
+    "INPUT": {
+      "HEADER": "Edit Input Element",
+      "DESTINATION": "Enter Input Destination"
+    },
+    "OUTPUT": {
+      "HEADER": "Edit Output Element",
+      "SOURCE": "Enter Output Source"
+    },
+    "SAVE": "Save",
+    "CANCEL": "Cancel"
+  },
   "ELEMENTS_DEFAULT": {
-    "START": "Start",
+    "START": "Begin",
     "END": "End",
     "INPUT": "Input",
     "OUTPUT": "Output",

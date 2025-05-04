@@ -53,55 +53,39 @@
             @if (node.element | instanceOf: TerminalElement) {
               <g terminal-shape
                  [attr.transform]="`translate(${node.x},${node.y})`"
-                 [info]="node.element.id.slice(0, 8)"
+                 [info]="($any(node.element).isStart ? 'ELEMENTS_DEFAULT.START' : 'ELEMENTS_DEFAULT.END') | translate"
               />
             }
             @if (node.element | instanceOf: ConditionElement) {
-              <g condition-shape
+              <g condition-element
                  [attr.transform]="`translate(${node.x},${node.y})`"
-                 [isSelected]="selectedId === node.element.id"
-                 (click)="onSelect(node.element.id)"
-                 [info]="node.element.id.slice(0, 8)"
+                 [element]="$any(node.element)"
               />
             }
             @if (node.element | instanceOf: InputElement) {
-              <g input-shape
+              <g input-element
                  [attr.transform]="`translate(${node.x},${node.y})`"
-                 [isSelected]="selectedId === node.element.id"
-                 (click)="onSelect(node.element.id)"
-                 [info]="node.element.id.slice(0, 8)"
-              />
+                 [element]="$any(node.element)" />
             }
             @if (node.element | instanceOf: OutputElement) {
-              <g input-shape
+              <g output-element
                  [attr.transform]="`translate(${node.x},${node.y})`"
-                 [isSelected]="selectedId === node.element.id"
-                 (click)="onSelect(node.element.id)"
-                 [info]="node.element.id.slice(0, 8)"
-              />
+                 [element]="$any(node.element)" />
             }
             @if (node.element | instanceOf: ForLoopElement) {
-              <g for-loop-shape
+              <g for-loop-element
                  [attr.transform]="`translate(${node.x},${node.y})`"
-                 [isSelected]="selectedId === node.element.id"
-                 (click)="onSelect(node.element.id)"
-                 [info]="node.element.id.slice(0, 8)"
-              />
+                 [element]="$any(node.element)" />
             }
             @if (node.element | instanceOf: WhileLoopElement) {
-              <g while-loop-shape
+              <g while-loop-element
                  [attr.transform]="`translate(${node.x},${node.y})`"
-                 [isSelected]="selectedId === node.element.id"
-                 (click)="onSelect(node.element.id)"
-                 [info]="node.element.id.slice(0, 8)"
-              />
+                 [element]="$any(node.element)" />
             }
             @if (node.element | instanceOf: AssignElement) {
-              <g process-shape
+              <g assign-element
                  [attr.transform]="`translate(${node.x},${node.y})`"
-                 [isSelected]="selectedId === node.element.id"
-                 (click)="onSelect(node.element.id)"
-                 [info]="node.element.id.slice(0, 8)"
+                 [element]="$any(node.element)" />
               />
             }
           }
@@ -117,7 +101,6 @@
               style="cursor: pointer;"
               onmouseover="this.setAttribute('fill', 'darkred')"
               onmouseout="this.setAttribute('fill', 'red')"
-              (mouseup)="onInsert(point)"
               stroke="black"
               stroke-width="1"
               (click)="onInsert(point)"

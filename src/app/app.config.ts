@@ -6,9 +6,12 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
+import { DialogService } from 'primeng/dynamicdialog';
 import { AppStateService } from './common/services/app-state.service';
 
 import { routes } from './app.routes';
+import { ElementsModalService } from './common/services/elements-modal.service';
+import { FlowchartService } from './common/services/flowchart.service';
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (http: HttpClient) =>
   new TranslateHttpLoader(http, './i18n/', '.json');
@@ -34,6 +37,9 @@ export const appConfig: ApplicationConfig = {
         deps: [HttpClient],
       },
     })]),
-    AppStateService
+    DialogService,
+    AppStateService,
+    FlowchartService,
+    ElementsModalService
   ]
 };

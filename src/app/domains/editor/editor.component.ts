@@ -1,5 +1,6 @@
 import { AsyncPipe, NgForOf } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, inject, OnInit, viewChild } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { Observable, switchMap, tap } from 'rxjs';
 import { DEFAULT_ARROW_SIZE, DEFAULT_INSERT_RADIUS, EdgeDto, InsertionDto, NodeDto } from '../../common/dto/layout.dto';
@@ -15,12 +16,13 @@ import {
 import { InstanceofPipe } from '../../common/pipes/instance-of.pipe';
 import { AppStateService } from '../../common/services/app-state.service';
 import { LanguageSwitcherComponent } from '../../components/misc/language-switcher/language-switcher.component';
-import { ConditionShapeComponent } from '../../components/shapes/condition/condition-shape.component';
-import { ForLoopShapeComponent } from '../../components/shapes/for-loop/for-loop-shape.component';
-import { InputShapeComponent } from '../../components/shapes/input/input-shape.component';
-import { ProcessShapeComponent } from '../../components/shapes/process/process-shape.component';
 import { TerminalShapeComponent } from '../../components/shapes/terminal/terminal-shape.component';
-import { WhileLoopShapeComponent } from '../../components/shapes/while-loop/while-loop-shape.component';
+import { AssignElementComponent } from './elements/assign-element/assign-element.component';
+import { ConditionElementComponent } from './elements/condition-element/condition-element.component';
+import { ForLoopElementComponent } from './elements/for-loop-element/for-loop-element.component';
+import { InputElementComponent } from './elements/input-element/input-element.component';
+import { OutputElementComponent } from './elements/output-element/output-element.component';
+import { WhileLoopElementComponent } from './elements/while-loop-element/while-loop-element.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import svgPanZoom from 'svg-pan-zoom';
 import { SourceCodeSectionComponent } from './source-code-section/source-code-section.component';
@@ -32,15 +34,17 @@ import { SourceCodeSectionComponent } from './source-code-section/source-code-se
     NgForOf,
     AsyncPipe,
     TerminalShapeComponent,
-    ConditionShapeComponent,
-    InputShapeComponent,
-    ForLoopShapeComponent,
-    WhileLoopShapeComponent,
-    ProcessShapeComponent,
     SidebarComponent,
     LanguageSwitcherComponent,
     SourceCodeSectionComponent,
     ButtonModule,
+    InputElementComponent,
+    OutputElementComponent,
+    ConditionElementComponent,
+    ForLoopElementComponent,
+    WhileLoopElementComponent,
+    AssignElementComponent,
+    TranslatePipe,
   ],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css'
