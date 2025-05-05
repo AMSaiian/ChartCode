@@ -183,7 +183,7 @@ export class FlowchartService {
     }
 
     currentElement = currentElement.clone();
-    Object.assign(currentElement, element)
+    currentElement = Object.assign(currentElement, element)
 
     snapshot.elements[currentElement.id] = currentElement;
 

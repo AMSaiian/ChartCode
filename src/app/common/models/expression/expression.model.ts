@@ -18,6 +18,10 @@ export class BoolExpression {
 
     return new BoolExpression(newLeftOperand, this.expressionType, newRightOperand);
   }
+
+  isValid() {
+    return true;
+  }
 }
 
 export class ArithmeticExpression {
@@ -104,7 +108,7 @@ export class AssignExpression {
     public destination: string,
     public assign: string | ArithmeticExpression | BoolExpression,
     public isNew: boolean = false,
-    public type?: ValueType,
+    public type: ValueType,
   ) {}
 
   clone(): AssignExpression {
@@ -112,7 +116,7 @@ export class AssignExpression {
                       ? this.assign
                       : this.assign.clone();
 
-    return new AssignExpression(this.destination, newAssign, this.isNew, this.type?.clone());
+    return new AssignExpression(this.destination, newAssign, this.isNew, this.type.clone());
   }
 }
 
@@ -123,14 +127,17 @@ export enum DataType {
   Boolean = 'Boolean'
 }
 
+export const DataTypeList: DataType[] = Object.values(DataType);
+
 export class ValueType {
   constructor(
     public type: DataType,
-    public isCollection: boolean = false
+    public isCollection: boolean = false,
+    public length?: number
   ) {}
 
   clone() {
-    return new ValueType(this.type, this.isCollection);
+    return new ValueType(this.type, this.isCollection, this.length);
   }
 }
 
