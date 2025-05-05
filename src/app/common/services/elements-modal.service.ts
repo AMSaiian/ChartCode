@@ -16,7 +16,7 @@ const defaultDialogOptions = {
   modal: true,
   closeOnEscape: true,
   closable: true,
-  draggable: true,
+  draggable: false,
   maximizable: false,
   resizable: false,
   position: 'center',

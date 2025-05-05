@@ -1,10 +1,15 @@
-<div>
-  <h2>{{ 'EXPRESSION_BUILDER.ARITHMETIC' | translate }}</h2>
-  <app-arithmetic-expression-preview [expression]="root()" (expressionSelected)="selectExpression($event)">
-  </app-arithmetic-expression-preview>
+<h2>{{ 'EXPRESSION_BUILDER.ARITHMETIC' | translate }}</h2>
 
-  <app-arithmetic-expression-editor
-    [expression]="selected"
-    (expressionChanged)="onExpressionChanged($event)">
-  </app-arithmetic-expression-editor>
-</div>
+<p-divider></p-divider>
+
+<app-arithmetic-expression-preview
+  [expression]="root()"
+  (expressionSelected)="selectExpression($event)">
+</app-arithmetic-expression-preview>
+
+<p-divider></p-divider>
+
+<app-arithmetic-expression-editor
+  [expression]="selected"
+  (expressionChanged)="onExpressionChanged($event)">
+</app-arithmetic-expression-editor>

@@ -1,6 +1,7 @@
 import { Component, input, OnInit, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Divider } from 'primeng/divider';
 import { ArithmeticExpression } from '../../../../common/models/expression/expression.model';
 import {
   ArithmeticExpressionEditorComponent
@@ -16,6 +17,7 @@ import {
     ArithmeticExpressionPreviewComponent,
     ArithmeticExpressionEditorComponent,
     TranslatePipe,
+    Divider,
   ],
   templateUrl: './arithmetic-expression-builder.component.html',
   styleUrl: './arithmetic-expression-builder.component.css'

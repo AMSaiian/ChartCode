@@ -3,7 +3,7 @@
   (mouseenter)="$event.stopPropagation(); hovered = true"
   (mouseleave)="$event.stopPropagation(); hovered = false"
   (click)="$event.stopPropagation(); expressionSelected.emit(expression())"
-  class="text-2xl"
+  class="text-xl"
 >
   (
   @if (isNested(expression().leftOperand)) {
