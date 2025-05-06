@@ -42,4 +42,10 @@ export class ArithmeticExpressionEditorComponent {
     this.expression()[`${side}Operand`] = '';
     this.expressionChanged.emit(this.expression());
   }
+
+  public onOperatorChanged($event: ArithmeticExpressionType) {
+    this.expression().expressionType = $event;
+
+    this.expressionChanged.emit(this.expression());
+  }
 }

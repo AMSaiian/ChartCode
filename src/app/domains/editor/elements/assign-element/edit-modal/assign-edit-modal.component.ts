@@ -79,6 +79,7 @@ export class AssignEditModalComponent implements OnInit {
         this.expression = undefined;
         this.isExpressionValid = undefined;
       }
+      this.form.controls['assign'].setValue('');
     });
 
     this.form.controls['isCollection'].valueChanges.pipe(
@@ -144,6 +145,7 @@ export class AssignEditModalComponent implements OnInit {
   public onDeleteExpression() {
     this.expression = undefined;
     this.isExpressionValid = undefined;
+    this.form.controls['assign'].setValue('');
   }
 
   public isValidAssigning(): boolean {
