@@ -20,10 +20,19 @@
       "LENGTH": "New Collection Length"
     },
     "CONDITION": {
-      "HEADER": "Edit Condition Element"
+      "HEADER": "Edit Condition Element",
+      "CHECK": "Construct Condition Expression"
     },
     "WHILE_LOOP": {
-      "HEADER": "Edit While Loop Element"
+      "HEADER": "Edit While Loop Element",
+      "CHECK": "Construct Check Expression"
+    },
+    "FOR_LOOP": {
+      "HEADER": "Edit For Loop Element",
+      "CHECK": "Construct Check Expression",
+      "DESTINATION": "Enter accumulator variable name",
+      "START": "Enter accumulator initial value",
+      "INCREMENT": "Is increment"
     },
     "SAVE": "Save",
     "CANCEL": "Cancel"

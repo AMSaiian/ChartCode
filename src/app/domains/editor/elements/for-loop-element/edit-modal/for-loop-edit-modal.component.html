@@ -1,0 +1,38 @@
+<form [formGroup]="form" class="flex flex-col gap-6">
+  <div class="flex flex-col gap-2">
+    <label for="destination">{{ 'MODALS.FOR_LOOP.DESTINATION' | translate }}</label>
+    <input id="destination"
+      pInputText
+      formControlName="destination"
+    />
+    <label for="startValue">{{ 'MODALS.FOR_LOOP.START' | translate }}</label>
+    <input id="startValue"
+           pInputText
+           formControlName="startValue"
+    />
+
+    <label for="checkExpression">{{ 'MODALS.FOR_LOOP.CHECK' | translate }}</label>
+    <app-bool-expression-builder
+      id="checkExpression"
+      [root]="$any(expression)"
+      (rootChanged)="onExpressionChanged($event)"
+    />
+
+    <label for="isIncrement">{{ 'MODALS.FOR_LOOP.INCREMENT' | translate }}</label>
+    <p-checkbox
+      id="isIncrement"
+      [binary]="true"
+      formControlName="isIncrement"
+    />
+  </div>
+  <div class="flex gap-2 justify-end">
+    <p-button
+      [label]="'MODALS.SAVE' | translate"
+      (click)="onSave()"
+      [disabled]="!isValid" />
+    <p-button
+      [label]="'MODALS.CANCEL' | translate"
+      severity="secondary"
+      (click)="onCancel()" />
+  </div>
+</form>

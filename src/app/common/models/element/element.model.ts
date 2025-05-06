@@ -135,7 +135,7 @@ export class ForLoopElement extends BaseElement {
   private static readonly DEFAULT = new ForLoopElement(
     new BoolExpression('i', BoolExpressionType.LessThan, '10'),
     new AssignExpression(
-      'x',
+      'i',
       '0',
       true,
       new ValueType(DataType.Integer, false)
@@ -144,7 +144,7 @@ export class ForLoopElement extends BaseElement {
 
   constructor(
     public checkExpression: BoolExpression,
-    public accumulator?: AssignExpression,
+    public accumulator: AssignExpression,
     public isIncrement: boolean = true,
     public scopeId: string = ''
   ) {
@@ -154,7 +154,7 @@ export class ForLoopElement extends BaseElement {
   override clone(): ForLoopElement {
     const element = new ForLoopElement(
       this.checkExpression.clone(),
-      this.accumulator?.clone(),
+      this.accumulator.clone(),
       this.isIncrement,
       this.scopeId
     );

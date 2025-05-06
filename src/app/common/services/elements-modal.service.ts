@@ -8,6 +8,9 @@ import {
   ConditionEditModalComponent
 } from '../../domains/editor/elements/condition-element/edit-modal/condition-edit-modal.component';
 import {
+  ForLoopEditModalComponent
+} from '../../domains/editor/elements/for-loop-element/edit-modal/for-loop-edit-modal.component';
+import {
   InputEditModalComponent
 } from '../../domains/editor/elements/input-element/edit-modal/input-edit-modal.component';
 import {
@@ -19,6 +22,7 @@ import {
 import {
   AssignElement,
   ConditionElement,
+  ForLoopElement,
   InputElement,
   OutputElement,
   WhileLoopElement,
@@ -89,6 +93,16 @@ export class ElementsModalService {
         element: element,
       },
       header: this.translate.instant('MODALS.WHILE_LOOP.HEADER')
+    })
+  }
+
+  openForLoopEditModal(element: ForLoopElement) {
+    return this.dialog.open(ForLoopEditModalComponent, {
+      ...defaultDialogOptions,
+      inputValues: {
+        element: element,
+      },
+      header: this.translate.instant('MODALS.FOR_LOOP.HEADER')
     })
   }
 }

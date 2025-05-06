@@ -3,7 +3,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { InputText } from 'primeng/inputtext';
 import { ConditionElement } from '../../../../../common/models/element/element.model';
 import { FlowchartService } from '../../../../../common/services/flowchart.service';
 import { BoolExpression } from '../../../../../common/models/expression/expression.model';
@@ -16,7 +15,6 @@ import {
   imports: [
     Button,
     FormsModule,
-    InputText,
     ReactiveFormsModule,
     TranslatePipe,
     BoolExpressionBuilderComponent,

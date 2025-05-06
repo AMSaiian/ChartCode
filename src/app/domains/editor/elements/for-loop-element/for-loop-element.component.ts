@@ -19,10 +19,13 @@ export class ForLoopElementComponent extends ElementDirective<ForLoopElement> {
 
   openDetailsModal(event: MouseEvent): void {
     event.preventDefault();
-    console.log("modal condition");
+    this.modalService.openForLoopEditModal(this.element());
   }
 
   override transformElementData(element: ForLoopElement): string {
-    return element.id.slice(0, 8);
+    return `
+    ${element.accumulator.destination} := ${element.accumulator.assign};
+    ${element.checkExpression.toReadable(true)};
+    ${element.accumulator.destination}${element.isIncrement ? '++' : '--'}`;
   }
 }
