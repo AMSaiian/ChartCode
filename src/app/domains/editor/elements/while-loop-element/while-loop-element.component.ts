@@ -19,10 +19,10 @@ export class WhileLoopElementComponent extends ElementDirective<WhileLoopElement
 
   openDetailsModal(event: MouseEvent): void {
     event.preventDefault();
-    console.log("modal while");
+    this.modalService.openWhileLoopEditModal(this.element());
   }
 
   override transformElementData(element: WhileLoopElement): string {
-    return element.id.slice(0, 8);
+    return element.checkExpression.toReadable(true);
   }
 }

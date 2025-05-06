@@ -5,12 +5,24 @@ import {
   AssignEditModalComponent
 } from '../../domains/editor/elements/assign-element/edit-modal/assign-edit-modal.component';
 import {
+  ConditionEditModalComponent
+} from '../../domains/editor/elements/condition-element/edit-modal/condition-edit-modal.component';
+import {
   InputEditModalComponent
 } from '../../domains/editor/elements/input-element/edit-modal/input-edit-modal.component';
 import {
   OutputEditModalComponent
 } from '../../domains/editor/elements/output-element/edit-modal/output-edit-modal.component';
-import { AssignElement, InputElement, OutputElement } from '../models/element/element.model';
+import {
+  WhileLoopEditModalComponent
+} from '../../domains/editor/elements/while-loop-element/edit-modal/while-loop-edit-modal.component';
+import {
+  AssignElement,
+  ConditionElement,
+  InputElement,
+  OutputElement,
+  WhileLoopElement,
+} from '../models/element/element.model';
 
 const defaultDialogOptions = {
   modal: true,
@@ -57,6 +69,26 @@ export class ElementsModalService {
         element: element,
       },
       header: this.translate.instant('MODALS.ASSIGN.HEADER')
+    })
+  }
+
+  openConditionEditModal(element: ConditionElement) {
+    return this.dialog.open(ConditionEditModalComponent, {
+      ...defaultDialogOptions,
+      inputValues: {
+        element: element,
+      },
+      header: this.translate.instant('MODALS.CONDITION.HEADER')
+    })
+  }
+
+  openWhileLoopEditModal(element: WhileLoopElement) {
+    return this.dialog.open(WhileLoopEditModalComponent, {
+      ...defaultDialogOptions,
+      inputValues: {
+        element: element,
+      },
+      header: this.translate.instant('MODALS.WHILE_LOOP.HEADER')
     })
   }
 }

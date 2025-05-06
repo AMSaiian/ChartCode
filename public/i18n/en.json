@@ -19,6 +19,12 @@
       "COLLECTION": "Is Collection",
       "LENGTH": "New Collection Length"
     },
+    "CONDITION": {
+      "HEADER": "Edit Condition Element"
+    },
+    "WHILE_LOOP": {
+      "HEADER": "Edit While Loop Element"
+    },
     "SAVE": "Save",
     "CANCEL": "Cancel"
   },

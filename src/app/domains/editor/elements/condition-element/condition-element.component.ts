@@ -19,10 +19,10 @@ export class ConditionElementComponent extends ElementDirective<ConditionElement
 
   openDetailsModal(event: MouseEvent): void {
     event.preventDefault();
-    console.log("modal condition");
+    this.modalService.openConditionEditModal(this.element());
   }
 
   override transformElementData(element: ConditionElement): string {
-    return element.id.slice(0, 8);
+    return element.conditionExpression.toReadable(true);
   }
 }
