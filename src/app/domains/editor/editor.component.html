@@ -1,5 +1,7 @@
 @let selectedType = selectedElementType$ | async;
 @let selectedId = selectedElementId$ | async;
+@let undoStepsCount = undoSteps$ | async;
+@let redoStepsCount = redoSteps$ | async;
 
 <div class="flex flex-col h-screen pb-8 bg-gray-100">
   <div class="flex shrink-0 bg-gray-100 p-4 gap-4">
@@ -10,6 +12,20 @@
       (onClick)="onDeleteSelected()"
       [disabled]="!selectedId"
     ></p-button>
+    <p-button
+      severity="secondary"
+      icon="pi pi-chevron-left"
+      (click)="onUndo()"
+      [disabled]="!(undoStepsCount! > 0)">
+      {{ undoStepsCount }}
+    </p-button>
+    <p-button
+      severity="secondary"
+      icon="pi pi-chevron-right"
+      (click)="onRedo()"
+      [disabled]="!(redoStepsCount! > 0)">
+      {{ redoStepsCount }}
+    </p-button>
   </div>
   <div class="flex flex-grow overflow-hidden">
     <div class="flex flex-shrink-0">

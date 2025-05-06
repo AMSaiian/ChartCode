@@ -13,7 +13,7 @@ import {
   ProcedureElement,
   TerminalElement,
 } from '../models/element/element.model';
-import { AppState } from '../services/app-state.service';
+import { FlowchartState } from '../services/flowchart.service';
 import { isLoop } from './element.utils';
 
 export class ProcedureLayoutBuilder {
@@ -21,7 +21,7 @@ export class ProcedureLayoutBuilder {
 
   constructor(
     private procedureId: string,
-    private snapshot: AppState,
+    private snapshot: FlowchartState,
     private originX = 0,
     private originY = 0
   ) {}

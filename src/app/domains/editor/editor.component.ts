@@ -55,6 +55,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
   selectedElementType$!: Observable<ElementType | null>;
   selectedElementId$!: Observable<string | null>;
   elements$!: Observable<{ nodes: NodeDto[], edges: EdgeDto[], insertions: InsertionDto[] }>;
+  undoSteps$!: Observable<number>;
+  redoSteps$!: Observable<number>;
 
   editorSceneRef = viewChild<ElementRef<SVGSVGElement>>('editorScene');
   sceneManipulator!: SvgPanZoom.Instance;
@@ -69,18 +71,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
     this.selectedElementType$ = this.state.selectedElementType$.asObservable();
     this.selectedElementId$ = this.state.selectedElementId$.asObservable();
-  }
-
-  public onInsert(point: InsertionDto) {
-    this.state.insert(point);
-  }
-
-  public onSelect(id: string) {
-    this.state.selectElement(id);
-  }
-
-  public onDeleteSelected() {
-    this.state.deleteSelected();
+    this.undoSteps$ = this.state.undoSteps$;
+    this.redoSteps$ = this.state.redoSteps$;
   }
 
   ngAfterViewInit(): void {
@@ -95,6 +87,26 @@ export class EditorComponent implements OnInit, AfterViewInit {
     });
 
     this.sceneManipulator.zoomOut();
+  }
+
+  public onInsert(point: InsertionDto) {
+    this.state.insert(point);
+  }
+
+  public onSelect(id: string) {
+    this.state.selectElement(id);
+  }
+
+  public onDeleteSelected() {
+    this.state.deleteSelected();
+  }
+
+  public onUndo() {
+    this.state.undo()
+  }
+
+  public onRedo() {
+    this.state.redo();
   }
 
   exportSvg(): void {

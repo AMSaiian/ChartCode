@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { EdgeDto, InsertionDto, NodeDto, Point } from '../dto/layout.dto';
-import { ElementType, IElement } from '../models/element/element.interface';
+import { EdgeDto, InsertionDto, NodeDto } from '../dto/layout.dto';
+import { ElementType } from '../models/element/element.interface';
 import {
   AssignElement,
   ConditionElement,
@@ -10,15 +10,9 @@ import {
   OutputElement,
   WhileLoopElement,
 } from '../models/element/element.model';
-import { IScope } from '../models/scope/scope.interface';
 import { ProcedureLayoutBuilder } from '../utils/layout.builder';
 import { ProcedureEdgeBuilder } from '../utils/edging.builder';
 import { FlowchartService } from './flowchart.service';
-
-export interface AppState {
-  scopes: Record<string, IScope>;
-  elements: Record<string, IElement>;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +23,19 @@ export class AppStateService {
   selectedProcedureId$ = new BehaviorSubject<string>('');
   selectedElementType$ = new BehaviorSubject<ElementType | null>(null);
   selectedElementId$ = new BehaviorSubject<string | null>(null);
+
+  undoSteps$: Observable<number>;
+  redoSteps$: Observable<number>;
+
+  constructor() {
+    this.undoSteps$ = this.flowchart.history$.pipe(
+      map(x => x.undoStack.length)
+    );
+
+    this.redoSteps$ = this.flowchart.history$.pipe(
+      map(x => x.redoStack.length)
+    );
+  }
 
   public getProcedureElements(procedureId: string): Observable<{
     nodes: NodeDto[];
@@ -114,5 +121,27 @@ export class AppStateService {
 
     this.flowchart.deleteElement(selectedId);
     this.clearElementSelection();
+  }
+
+  public undo() {
+    if (this.selectedElementId$.value) {
+      this.selectedElementId$.next(null);
+    }
+    if (this.selectedElementType$.value) {
+      this.selectedElementType$.next(null);
+    }
+
+    this.flowchart.goBackHistory();
+  }
+
+  public redo() {
+    if (this.selectedElementId$.value) {
+      this.selectedElementId$.next(null);
+    }
+    if (this.selectedElementType$.value) {
+      this.selectedElementType$.next(null);
+    }
+
+    this.flowchart.goForwardHistory();
   }
 }

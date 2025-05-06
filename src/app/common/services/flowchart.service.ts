@@ -3,22 +3,38 @@ import { BehaviorSubject } from 'rxjs';
 import { IElement } from '../models/element/element.interface';
 import { ConditionElement, ProcedureElement, TerminalElement } from '../models/element/element.model';
 import { Procedure } from '../models/scope/procedure/procedure.model';
+import { IScope } from '../models/scope/scope.interface';
 import { Scope } from '../models/scope/scope.model';
-import { isLoop } from '../utils/element.utils';
-import { AppState } from './app-state.service';
+import { deepCloneMap, isLoop } from '../utils/element.utils';
+
+export interface FlowchartState {
+  scopes: Record<string, IScope>;
+  elements: Record<string, IElement>;
+}
+
+export interface HistoryState {
+  undoStack: FlowchartState[],
+  redoStack: FlowchartState[]
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class FlowchartService {
-  current$: BehaviorSubject<AppState> = new BehaviorSubject({
+  current$: BehaviorSubject<FlowchartState> = new BehaviorSubject({
     scopes: {},
     elements: {},
   });
+
+  history$: BehaviorSubject<HistoryState> = new BehaviorSubject({
+    undoStack: [] as FlowchartState[],
+    redoStack: [] as FlowchartState[]
+  });
+
   constructor() { }
 
   public addElement(element: IElement, scopeId: string, previousId: string | null): string {
-    const snapshot = this.getStateSnapshot();
+    const snapshot = this.getStateSnapshot(true);
     // element = element.clone();
     if (element.id) {
       throw new Error(`Cannot insert initialised element. Id ${element.id}`);
@@ -98,13 +114,13 @@ export class FlowchartService {
       }
     }
 
-    this.current$.next(snapshot);
+    this.updateState(snapshot);
 
     return element.id;
   }
 
   public deleteElement(elementId: string) {
-    const snapshot = this.getStateSnapshot();
+    const snapshot = this.getStateSnapshot(true);
 
     const element = snapshot.elements[elementId];
     if (!element) {
@@ -166,11 +182,11 @@ export class FlowchartService {
 
     delete snapshot.elements[elementId];
 
-    this.current$.next(snapshot);
+    this.updateState(snapshot);
   }
 
   public editElement(element: IElement) {
-    const snapshot = this.getStateSnapshot();
+    const snapshot = this.getStateSnapshot(true);
     let currentElement = snapshot.elements[element.id];
 
     if (!currentElement) {
@@ -187,15 +203,18 @@ export class FlowchartService {
 
     snapshot.elements[currentElement.id] = currentElement;
 
-    this.current$.next(snapshot);
+    this.updateState(snapshot);
   }
 
-  public getStateSnapshot(): AppState {
+  public getStateSnapshot(isCopied: boolean = false): FlowchartState {
     const value = this.current$.value;
 
-    return {
+    return !isCopied ? {
       scopes: { ...value.scopes },
-      elements: { ...value.elements }
+      elements: { ...value.elements },
+    } : {
+      scopes: deepCloneMap(value.scopes),
+      elements: deepCloneMap(value.elements),
     };
   };
 
@@ -234,7 +253,7 @@ export class FlowchartService {
     return mainElement.id;
   }
 
-  private deleteScopeRecursively(scopeId: string, snapshot: AppState) {
+  private deleteScopeRecursively(scopeId: string, snapshot: FlowchartState) {
     const scopeToDelete = snapshot.scopes[scopeId];
 
     if (!scopeToDelete) {
@@ -271,5 +290,53 @@ export class FlowchartService {
     }
 
     delete snapshot.scopes[scopeId];
+  }
+
+  public goBackHistory() {
+    const { undoStack, redoStack } = this.history$.value;
+    const current = this.current$.value;
+
+    if (undoStack.length === 0) {
+      return;
+    }
+
+    const previous = undoStack[undoStack.length - 1];
+
+    this.history$.next({
+      undoStack: undoStack.slice(0, -1),
+      redoStack: [...redoStack, current]
+    });
+
+    this.current$.next(previous);
+  }
+
+  public goForwardHistory() {
+    const { undoStack, redoStack } = this.history$.value;
+    const current = this.current$.value;
+
+    if (redoStack.length === 0) {
+      return;
+    }
+
+    const next = redoStack[redoStack.length - 1];
+
+    this.history$.next({
+      undoStack: [...undoStack, current],
+      redoStack: redoStack.slice(0, -1)
+    });
+
+    this.current$.next(next);
+  }
+
+  private updateState(newState: FlowchartState) {
+    const current = this.getStateSnapshot(true);
+    const history = this.history$.value;
+
+    this.history$.next({
+      undoStack: [...history.undoStack, current],
+      redoStack: []
+    });
+
+    this.current$.next(newState);
   }
 }
