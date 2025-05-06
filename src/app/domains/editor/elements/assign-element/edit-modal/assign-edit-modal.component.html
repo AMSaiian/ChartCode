@@ -22,24 +22,23 @@
             (rootChanged)="onExpressionChanged($event)"
           />
       } @else if (expression | instanceOf: BoolExpression) {
-<!--        <app-arithmetic-expression-builder-->
-<!--          [root]="$any(expression)"-->
-<!--          (rootChanged)="isExpressionValid = $event.isValid"-->
-<!--        />-->
-        <p>Bool editor</p>
+        <app-bool-expression-builder
+          [root]="$any(expression)"
+          (rootChanged)="onExpressionChanged($event)"
+        />
       }
       @if (
         form.value['isCollection'] === false &&
         form.value['dataType'] !== DataType.String &&
         !expression
       ) {
-        <p-button severity="secondary" (click)="onAddExpression()">{{ 'MODALS.ASSIGN.ADD_EXPRESSION' }}</p-button>
+        <p-button severity="secondary" (click)="onAddExpression()">{{ 'MODALS.ASSIGN.ADD_EXPRESSION' | translate }}</p-button>
       } @else if (
         form.value['isCollection'] === false &&
         form.value['dataType'] !== DataType.String &&
         expression
       ) {
-        <p-button severity="secondary" (click)="onDeleteExpression()">{{ 'MODALS.ASSIGN.REMOVE_EXPRESSION' }}</p-button>
+        <p-button severity="secondary" (click)="onDeleteExpression()">{{ 'MODALS.ASSIGN.REMOVE_EXPRESSION' | translate }}</p-button>
       }
       <label>{{ 'MODALS.ASSIGN.DATATYPE' | translate }}:</label>
       <p-select

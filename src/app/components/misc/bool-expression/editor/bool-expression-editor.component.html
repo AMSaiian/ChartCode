@@ -26,27 +26,29 @@
       optionValue="type"
       [overlayOptions]="{ mode: 'modal' }"
       [ngModel]="expression().expressionType"
-      (ngModelChange)="expression().expressionType = $event; expressionChanged.emit(expression())"
+      (ngModelChange)="onOperatorChanged($event)"
     >
     </p-select>
   </div>
 
-  <div class="flex flex-col gap-2">
-    <label for="right">{{ 'EXPRESSION_BUILDER.RIGHT' | translate }}</label>
-    <span class="inline-flex justify-between gap-2">
-      @if (isNested(expression().rightOperand)) {
-        <span class="content-center">{{ $any(expression().rightOperand).toReadable(true) }}</span>
-        <p-button (click)="makeSimple('right')"
-                  severity="secondary">{{ 'EXPRESSION_BUILDER.REMOVE' | translate }}</p-button>
-      } @else {
-        <input id="right"
-               pInputText
-               [(ngModel)]="expression().rightOperand"
-               (ngModelChange)="expression().rightOperand = $event; expressionChanged.emit(expression())"
-        />
-        <p-button (click)="makeNested('right')"
-                  severity="secondary">{{ 'EXPRESSION_BUILDER.ADD' | translate }}</p-button>
-      }
-    </span>
-  </div>
+  @if (expression().expressionType !== BoolExpressionType.Not) {
+    <div class="flex flex-col gap-2">
+      <label for="right">{{ 'EXPRESSION_BUILDER.RIGHT' | translate }}</label>
+      <span class="inline-flex justify-between gap-2">
+        @if (isNested(expression().rightOperand)) {
+          <span class="content-center">{{ $any(expression().rightOperand).toReadable(true) }}</span>
+          <p-button (click)="makeSimple('right')"
+                    severity="secondary">{{ 'EXPRESSION_BUILDER.REMOVE' | translate }}</p-button>
+        } @else {
+          <input id="right"
+                 pInputText
+                 [(ngModel)]="expression().rightOperand"
+                 (ngModelChange)="expression().rightOperand = $event; expressionChanged.emit(expression())"
+          />
+          <p-button (click)="makeNested('right')"
+                    severity="secondary">{{ 'EXPRESSION_BUILDER.ADD' | translate }}</p-button>
+        }
+      </span>
+    </div>
+  }
 </div>

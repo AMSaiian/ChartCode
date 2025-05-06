@@ -16,6 +16,7 @@ import {
 })
 export class ArithmeticExpressionPreviewComponent {
   expression = input.required<ArithmeticExpression>();
+  isRoot = input.required<boolean>();
   expressionSelected = output<ArithmeticExpression>();
   hovered = false;
   leftHovered = false;

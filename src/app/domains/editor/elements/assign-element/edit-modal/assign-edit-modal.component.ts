@@ -26,6 +26,9 @@ import { FlowchartService } from '../../../../../common/services/flowchart.servi
 import {
   ArithmeticExpressionBuilderComponent
 } from '../../../../../components/misc/arithmetic-expression/builder/arithmetic-expression-builder.component';
+import {
+  BoolExpressionBuilderComponent
+} from '../../../../../components/misc/bool-expression/builder/bool-expression-builder.component';
 
 @Component({
   selector: 'app-assign-edit-modal',
@@ -39,6 +42,7 @@ import {
     InputNumberModule,
     InstanceofPipe,
     ArithmeticExpressionBuilderComponent,
+    BoolExpressionBuilderComponent,
   ],
   templateUrl: './assign-edit-modal.component.html',
   styleUrl: './assign-edit-modal.component.css'
@@ -132,7 +136,7 @@ export class AssignEditModalComponent implements OnInit {
     this.isExpressionValid = this.expression!.isValid();
   }
 
-  public onExpressionChanged(event: { expression: ArithmeticExpression, isValid: boolean }) {
+  public onExpressionChanged(event: { expression: ArithmeticExpression | BoolExpression, isValid: boolean }) {
     this.isExpressionValid = event.isValid
     this.isValid = this.isValidAssigning();
   }

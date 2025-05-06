@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AssignElement } from '../../../../common/models/element/element.model';
+import { isNestedExpression } from '../../../../common/models/expression/expression.model';
 import { ProcessShapeComponent } from '../../../../components/shapes/process/process-shape.component';
 import { ElementDirective } from '../element.directive';
 
@@ -23,6 +24,12 @@ export class AssignElementComponent extends ElementDirective<AssignElement> {
 
 
   override transformElementData(element: AssignElement): string {
-    return element.id.slice(0, 8);
+    const assignPart = isNestedExpression(element.expression.assign)
+                       ? element.expression.assign.toReadable(true)
+                       : element.expression.type.isCollection && element.expression.isNew
+                         ? `[ ] L=${element.expression.type.length}`
+                         : element.expression.assign;
+
+    return `${element.expression.destination} := ${assignPart}`
   }
 }

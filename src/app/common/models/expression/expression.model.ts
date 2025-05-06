@@ -1,4 +1,4 @@
-import { ArithmeticExpressionMember } from '../../const/field-regex.const';
+import { ArithmeticExpressionMember, IdentifierOrArrayAccessOrLiteral } from '../../const/field-regex.const';
 
 export class BoolExpression {
   constructor(
@@ -19,8 +19,33 @@ export class BoolExpression {
     return new BoolExpression(newLeftOperand, this.expressionType, newRightOperand);
   }
 
-  isValid() {
-    return true;
+  isValid(): boolean {
+    const left = this.leftOperand instanceof BoolExpression
+                 ? this.leftOperand.isValid()
+                 : this.leftOperand.match(IdentifierOrArrayAccessOrLiteral) !== null;
+
+    const right = this.rightOperand instanceof BoolExpression
+                  ? this.rightOperand.isValid()
+                  : (this.expressionType === BoolExpressionType.Not && !this.rightOperand) ||
+                    this.rightOperand?.match(IdentifierOrArrayAccessOrLiteral) !== null;
+
+    return left && right;
+  }
+
+  toReadable(isRoot: boolean = false): string {
+    const left = this.leftOperand instanceof BoolExpression
+                 ? this.leftOperand.toReadable()
+                 : this.leftOperand;
+
+    const right = this.rightOperand instanceof BoolExpression
+                  ? this.rightOperand.toReadable()
+                  : this.rightOperand;
+
+    const readableString = this.expressionType === BoolExpressionType.Not
+                           ? `${isRoot ? '' : '('}!${left}${isRoot ? '' : ')'}`
+                           : `${isRoot ? '' : '('}${left} ${BoolExpressionTypeMap[this.expressionType]} ${right}${isRoot ? '' : ')'}`;
+
+    return readableString;
   }
 }
 
@@ -55,7 +80,7 @@ export class ArithmeticExpression {
     return left && right;
   }
 
-  toReadable(): string {
+  toReadable(isRoot: boolean = false): string {
     const left = this.leftOperand instanceof ArithmeticExpression
                  ? this.leftOperand.toReadable()
                  : this.leftOperand;
@@ -64,7 +89,7 @@ export class ArithmeticExpression {
                  ? this.rightOperand.toReadable()
                  : this.rightOperand;
 
-    return `(${left} ${ArithmeticExpressionTypeMap[this.expressionType]} ${right})`;
+    return `${isRoot ? '' : '('}${left} ${ArithmeticExpressionTypeMap[this.expressionType]} ${right}${isRoot ? '' : ')'}`;
   }
 }
 
@@ -81,6 +106,25 @@ export enum BoolExpressionType {
   LessThanOrEqualTo = 'LessThanOrEqualTo'
 }
 
+export const BoolExpressionTypeMap: Record<BoolExpressionType, string> = {
+  [BoolExpressionType.And]: '&',
+  [BoolExpressionType.Or]: '|',
+  [BoolExpressionType.Not]: '!',
+  [BoolExpressionType.Xor]: '⊕',
+  [BoolExpressionType.Equals]: '=',
+  [BoolExpressionType.NotEquals]: '!=',
+  [BoolExpressionType.GreaterThan]: '>',
+  [BoolExpressionType.GreaterThanOrEqualTo]: '>=',
+  [BoolExpressionType.LessThan]: '<',
+  [BoolExpressionType.LessThanOrEqualTo]: '<='
+}
+
+export const BoolExpressionTypeList: {
+  type: BoolExpressionType;
+  symbol: string
+}[] = Object.entries(BoolExpressionTypeMap)
+            .map(x => ({type: x[0] as BoolExpressionType, symbol: x[1]}))
+
 export enum ArithmeticExpressionType {
   Add = 'Add',
   Subtract = 'Subtract',
@@ -90,11 +134,11 @@ export enum ArithmeticExpressionType {
 }
 
 export const ArithmeticExpressionTypeMap: Record<ArithmeticExpressionType, string> = {
-  Add: '+',
-  Subtract: '-',
-  Multiply: '*',
-  Divide: '/',
-  Modulus: '%'
+  [ArithmeticExpressionType.Add]: '+',
+  [ArithmeticExpressionType.Subtract]: '-',
+  [ArithmeticExpressionType.Multiply]: '*',
+  [ArithmeticExpressionType.Divide]: '/',
+  [ArithmeticExpressionType.Modulus]: '%'
 }
 
 export const ArithmeticExpressionTypeList: {
@@ -142,4 +186,5 @@ export class ValueType {
 }
 
 export const isNestedExpression =
-  (v: BoolExpression | ArithmeticExpression | string) => typeof v !== 'string';
+  (v: BoolExpression | ArithmeticExpression | string | undefined) =>
+    v instanceof BoolExpression || v instanceof ArithmeticExpression;

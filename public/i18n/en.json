@@ -9,7 +9,15 @@
       "SOURCE": "Enter Output Source"
     },
     "ASSIGN": {
-      "HEADER": "Edit Assign Element"
+      "HEADER": "Edit Assign Element",
+      "DESTINATION": "Enter Assigning Destination",
+      "ASSIGN": "Enter Assigning Source",
+      "ADD_EXPRESSION": "Add Nested Expression",
+      "REMOVE_EXPRESSION": "Remove Nested Expression",
+      "DATATYPE": "Data Type",
+      "NEW": "Is New",
+      "COLLECTION": "Is Collection",
+      "LENGTH": "New Collection Length"
     },
     "SAVE": "Save",
     "CANCEL": "Cancel"
@@ -31,6 +39,7 @@
   },
   "EXPRESSION_BUILDER": {
     "ARITHMETIC": "Arithmetic Expression Builder",
+    "BOOL": "Boolean Expression Builder",
     "LEFT": "Left Operand",
     "RIGHT": "Right Operand",
     "OPERATION": "Operation",
