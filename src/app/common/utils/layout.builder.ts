@@ -79,7 +79,7 @@ export class ProcedureLayoutBuilder {
   }
 
   private measureElement(id: string): NodeDto {
-    const element = this.snapshot.elements[id].clone();
+    const element = this.snapshot.elements[id];
 
     if (!element) {
       throw new Error(`Element with id ${id} not found`);

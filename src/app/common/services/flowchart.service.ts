@@ -49,8 +49,7 @@ export class FlowchartService {
       throw new Error(`Scope with id ${scopeId} doesn't have element with id ${previousId}`);
     }
 
-    const scope = snapshot.scopes[scopeId].clone();
-    snapshot.scopes[scope.id] = scope;
+    const scope = snapshot.scopes[scopeId];
     scope.elementsId = [...scope.elementsId, element.id];
     element.inScopeId = scope.id;
 
@@ -78,19 +77,16 @@ export class FlowchartService {
     }
 
     if (previousId) {
-      const previous = snapshot.elements[previousId].clone();
-      snapshot.elements[previous.id] = previous;
+      const previous = snapshot.elements[previousId];
 
       element.previousId = [...element.previousId, previous.id];
       element.nextId = previous.nextId;
 
       if (previous.nextId) {
-        const next = snapshot.elements[previous.nextId].clone();
+        const next = snapshot.elements[previous.nextId];
 
         next.previousId = next.previousId.filter(x => x !== previous.id);
         next.previousId = [...next.previousId, element.id];
-
-        snapshot.elements[next.id] = next;
       }
 
       previous.nextId = element.id;
@@ -101,8 +97,7 @@ export class FlowchartService {
 
     } else {
       if (scope.startId) {
-        const start = snapshot.elements[scope.startId].clone()
-        snapshot.elements[start.id] = start;
+        const start = snapshot.elements[scope.startId];
 
         start.previousId = [...start.previousId, element.id];
         element.nextId = start.id;
@@ -137,9 +132,7 @@ export class FlowchartService {
       throw new Error(`Scope with id ${scopeId} doesn't contain element with id ${elementId}`);
     }
 
-    const updatedScope = scope.clone();
-    snapshot.scopes[scopeId] = updatedScope;
-    updatedScope.elementsId = updatedScope.elementsId.filter(id => id !== elementId);
+    scope.elementsId = scope.elementsId.filter(id => id !== elementId);
 
     if (element.previousId.length > 0) {
       for (const prevId of element.previousId) {
@@ -157,26 +150,26 @@ export class FlowchartService {
       next.previousId = [...new Set([...next.previousId, ...element.previousId])];
     }
 
-    if (updatedScope.startId === elementId) {
-      updatedScope.startId = element.nextId;
+    if (scope.startId === elementId) {
+      scope.startId = element.nextId;
     }
-    if (updatedScope.endId === elementId) {
-      updatedScope.endId = element.previousId.length > 0 ? element.previousId[0] : null;
+    if (scope.endId === elementId) {
+      scope.endId = element.previousId.length > 0 ? element.previousId[0] : null;
     }
 
     if (element instanceof ConditionElement) {
       if (element.positiveWayId) {
         this.deleteScopeRecursively(element.positiveWayId, snapshot);
-        updatedScope.childrenId = updatedScope.childrenId.filter(id => id !== element.positiveWayId);
+        scope.childrenId = scope.childrenId.filter(id => id !== element.positiveWayId);
       }
       if (element.negativeWayId) {
         this.deleteScopeRecursively(element.negativeWayId, snapshot);
-        updatedScope.childrenId = updatedScope.childrenId.filter(id => id !== element.negativeWayId);
+        scope.childrenId = scope.childrenId.filter(id => id !== element.negativeWayId);
       }
     } else if (isLoop(element)) {
       if (element.scopeId) {
         this.deleteScopeRecursively(element.scopeId, snapshot);
-        updatedScope.childrenId = updatedScope.childrenId.filter(id => id !== element.scopeId);
+        scope.childrenId = scope.childrenId.filter(id => id !== element.scopeId);
       }
     }
 
@@ -198,7 +191,6 @@ export class FlowchartService {
       );
     }
 
-    currentElement = currentElement.clone();
     currentElement = Object.assign(currentElement, element)
 
     snapshot.elements[currentElement.id] = currentElement;

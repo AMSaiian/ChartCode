@@ -10,6 +10,7 @@ import {
   OutputElement,
   WhileLoopElement,
 } from '../models/element/element.model';
+import { deepCloneMap } from '../utils/element.utils';
 import { ProcedureLayoutBuilder } from '../utils/layout.builder';
 import { ProcedureEdgeBuilder } from '../utils/edging.builder';
 import { FlowchartService } from './flowchart.service';
@@ -44,7 +45,12 @@ export class AppStateService {
   }> {
     return this.flowchart.current$.pipe(
       map(snapshot => {
-        const nodes = new ProcedureLayoutBuilder(procedureId, snapshot).build();
+        const copy = {
+          scopes: deepCloneMap(snapshot.scopes),
+          elements: deepCloneMap(snapshot.elements),
+        };
+
+        const nodes = new ProcedureLayoutBuilder(procedureId, copy).build();
         const edgesAndInsertions = new ProcedureEdgeBuilder(nodes).build();
 
         return {
