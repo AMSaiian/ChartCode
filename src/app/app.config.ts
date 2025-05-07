@@ -11,6 +11,7 @@ import { AppStateService } from './common/services/app-state.service';
 
 import { routes } from './app.routes';
 import { ElementsModalService } from './common/services/elements-modal.service';
+import { FileService } from './common/services/file.service';
 import { FlowchartService } from './common/services/flowchart.service';
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (http: HttpClient) =>
@@ -40,6 +41,7 @@ export const appConfig: ApplicationConfig = {
     DialogService,
     AppStateService,
     FlowchartService,
-    ElementsModalService
+    ElementsModalService,
+    FileService
   ]
 };

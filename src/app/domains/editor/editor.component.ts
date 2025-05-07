@@ -2,7 +2,7 @@ import { AsyncPipe, NgForOf } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, inject, OnInit, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
-import { Observable, switchMap, tap } from 'rxjs';
+import { distinctUntilChanged, map, Observable, switchMap, tap } from 'rxjs';
 import { DEFAULT_ARROW_SIZE, DEFAULT_INSERT_RADIUS, EdgeDto, InsertionDto, NodeDto } from '../../common/dto/layout.dto';
 import { ElementType } from '../../common/models/element/element.interface';
 import {
@@ -62,7 +62,9 @@ export class EditorComponent implements OnInit, AfterViewInit {
   sceneManipulator!: SvgPanZoom.Instance;
 
   ngOnInit(): void {
-    this.elements$ = this.state.selectedProcedureId$.pipe(
+    this.elements$ = this.state.flowchart.current$.pipe(
+      map(x => x.selectedProcedureId),
+      distinctUntilChanged(),
       switchMap(
         procedureId => this.state.getProcedureElements(procedureId),
       ),
@@ -93,10 +95,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.state.insert(point);
   }
 
-  public onSelect(id: string) {
-    this.state.selectElement(id);
-  }
-
   public onDeleteSelected() {
     this.state.deleteSelected();
   }
@@ -107,6 +105,14 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   public onRedo() {
     this.state.redo();
+  }
+
+  public async onSave() {
+    await this.state.saveFlowchart();
+  }
+
+  public async onLoad() {
+    await this.state.loadFlowchart();
   }
 
   exportSvg(): void {

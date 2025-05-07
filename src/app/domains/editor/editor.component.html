@@ -26,6 +26,16 @@
       [disabled]="!(redoStepsCount! > 0)">
       {{ redoStepsCount }}
     </p-button>
+    <p-button
+      severity="secondary"
+      icon="pi pi-save"
+      (click)="onSave()">
+    </p-button>
+    <p-button
+      severity="secondary"
+      icon="pi pi-download"
+      (click)="onLoad()">
+    </p-button>
   </div>
   <div class="flex flex-grow overflow-hidden">
     <div class="flex flex-shrink-0">

@@ -14,14 +14,15 @@ import { deepCloneMap } from '../utils/element.utils';
 import { ProcedureLayoutBuilder } from '../utils/layout.builder';
 import { ProcedureEdgeBuilder } from '../utils/edging.builder';
 import { FlowchartService } from './flowchart.service';
+import { FileService } from './file.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppStateService {
   readonly flowchart = inject(FlowchartService);
+  readonly fileService = inject(FileService);
 
-  selectedProcedureId$ = new BehaviorSubject<string>('');
   selectedElementType$ = new BehaviorSubject<ElementType | null>(null);
   selectedElementId$ = new BehaviorSubject<string | null>(null);
 
@@ -46,6 +47,7 @@ export class AppStateService {
     return this.flowchart.current$.pipe(
       map(snapshot => {
         const copy = {
+          selectedProcedureId: snapshot.selectedProcedureId,
           scopes: deepCloneMap(snapshot.scopes),
           elements: deepCloneMap(snapshot.elements),
         };
@@ -91,8 +93,8 @@ export class AppStateService {
   }
 
   public initializeFlowchart() {
-    const mainProcedureId = this.flowchart.initializeDefault();
-    this.selectedProcedureId$.next(mainProcedureId);
+    const state = this.flowchart.initializeDefault();
+    this.flowchart.current$.next(state);
   }
 
   public insert(point: InsertionDto): string {
@@ -149,5 +151,20 @@ export class AppStateService {
     }
 
     this.flowchart.goForwardHistory();
+  }
+
+  public saveFlowchart() {
+    const current = this.flowchart.current$.value;
+
+    return this.fileService.saveFlowchartToFile(current);
+  }
+
+  public async loadFlowchart() {
+    const fromFile = await this.fileService.loadFlowchartFromFile();
+    this.flowchart.resetHistory();
+
+    if (fromFile) {
+      this.flowchart.current$.next(fromFile);
+    }
   }
 }

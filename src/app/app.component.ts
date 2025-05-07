@@ -1,13 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import {
-  ConditionElement,
-  ForLoopElement,
-  InputElement,
-  WhileLoopElement,
-} from './common/models/element/element.model';
-import { BoolExpression, BoolExpressionType } from './common/models/expression/expression.model';
+import { distinctUntilChanged, map } from 'rxjs';
 import { AppStateService } from './common/services/app-state.service';
 
 @Component({
@@ -29,7 +23,10 @@ export class AppComponent implements OnInit {
       this.state.initializeFlowchart();
       // this.mock();
 
-      this.state.selectedProcedureId$.subscribe(id => {
+      this.state.flowchart.current$.pipe(
+        map(x => x.selectedProcedureId),
+        distinctUntilChanged()
+      ).subscribe(id => {
         if (id) {
           this.router.navigate(['/editor', id]);
         }

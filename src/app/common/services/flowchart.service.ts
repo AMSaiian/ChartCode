@@ -8,6 +8,7 @@ import { Scope } from '../models/scope/scope.model';
 import { deepCloneMap, isLoop } from '../utils/element.utils';
 
 export interface FlowchartState {
+  selectedProcedureId: string;
   scopes: Record<string, IScope>;
   elements: Record<string, IElement>;
 }
@@ -22,6 +23,7 @@ export interface HistoryState {
 })
 export class FlowchartService {
   current$: BehaviorSubject<FlowchartState> = new BehaviorSubject({
+    selectedProcedureId:  '',
     scopes: {},
     elements: {},
   });
@@ -202,15 +204,17 @@ export class FlowchartService {
     const value = this.current$.value;
 
     return !isCopied ? {
+      selectedProcedureId: value.selectedProcedureId,
       scopes: { ...value.scopes },
       elements: { ...value.elements },
     } : {
+      selectedProcedureId: value.selectedProcedureId,
       scopes: deepCloneMap(value.scopes),
       elements: deepCloneMap(value.elements),
     };
   };
 
-  public initializeDefault(): string {
+  public initializeDefault(): FlowchartState {
     const snapshot = this.getStateSnapshot();
 
     const mainScope = new Procedure('Main', true);
@@ -240,9 +244,9 @@ export class FlowchartService {
     snapshot.elements[start.id] = start;
     snapshot.elements[end.id] = end;
 
-    this.current$.next(snapshot);
+    snapshot.selectedProcedureId = mainElement.id;
 
-    return mainElement.id;
+    return snapshot;
   }
 
   private deleteScopeRecursively(scopeId: string, snapshot: FlowchartState) {
@@ -318,6 +322,13 @@ export class FlowchartService {
     });
 
     this.current$.next(next);
+  }
+
+  public resetHistory() {
+    this.history$.next({
+      undoStack: [],
+      redoStack: []
+    });
   }
 
   private updateState(newState: FlowchartState) {
