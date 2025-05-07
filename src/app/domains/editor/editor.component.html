@@ -8,10 +8,20 @@
     <app-language-switcher></app-language-switcher>
     <p-button
       severity="secondary"
+      icon="pi pi-save"
+      (click)="onSave()">
+    </p-button>
+    <p-button
+      severity="secondary"
+      icon="pi pi-download"
+      (click)="onLoad()">
+    </p-button>
+    <p-button
+      severity="secondary"
       icon="pi pi-trash"
       (onClick)="onDeleteSelected()"
       [disabled]="!selectedId"
-    ></p-button>
+    />
     <p-button
       severity="secondary"
       icon="pi pi-chevron-left"
@@ -27,16 +37,24 @@
       {{ redoStepsCount }}
     </p-button>
     <p-button
+      icon="pi pi-plus"
       severity="secondary"
-      icon="pi pi-save"
-      (click)="onSave()">
-    </p-button>
-    <p-button
-      severity="secondary"
-      icon="pi pi-download"
-      (click)="onLoad()">
-    </p-button>
+      [label]="'EDITOR.ADD_PROCEDURE' | translate"
+      (click)="onAddProcedure()"
+    />
   </div>
+  <p-tabs
+    [value]="(selectedProcedureId$ | async)!"
+    [scrollable]="true"
+    class="bg-white"
+  >
+    <p-tablist>
+      @for (procedure of procedures$ | async; track procedure.id) {
+        <p-tab [value]="procedure.id" (click)="onSelectProcedure(procedure.id)">{{ procedure.name }}</p-tab>
+      }
+    </p-tablist>
+  </p-tabs>
+  <p-divider></p-divider>
   <div class="flex flex-grow overflow-hidden">
     <div class="flex flex-shrink-0">
       <app-sidebar></app-sidebar>

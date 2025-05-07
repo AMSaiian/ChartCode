@@ -61,11 +61,10 @@
 
       @if (form.value['isCollection'] === true && form.value['isNew'] === true) {
         <label for="length">{{ 'MODALS.ASSIGN.LENGTH' | translate }}</label>
-        <p-input-number
+        <input
           id="length"
           formControlName="length"
-          [useGrouping]="false"
-          [min]="0"
+          pInputText
         />
       }
     </div>

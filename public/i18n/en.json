@@ -50,7 +50,8 @@
   "EDITOR": {
     "SIDEBAR": {
       "CHOOSE": "Choose a New Element"
-    }
+    },
+    "ADD_PROCEDURE": "Add New Procedure"
   },
   "EXPRESSION_BUILDER": {
     "ARITHMETIC": "Arithmetic Expression Builder",

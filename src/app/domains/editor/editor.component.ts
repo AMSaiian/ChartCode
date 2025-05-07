@@ -2,7 +2,9 @@ import { AsyncPipe, NgForOf } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, inject, OnInit, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
-import { distinctUntilChanged, map, Observable, switchMap, tap } from 'rxjs';
+import { DividerModule } from 'primeng/divider';
+import { TabsModule } from 'primeng/tabs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { DEFAULT_ARROW_SIZE, DEFAULT_INSERT_RADIUS, EdgeDto, InsertionDto, NodeDto } from '../../common/dto/layout.dto';
 import { ElementType } from '../../common/models/element/element.interface';
 import {
@@ -45,6 +47,8 @@ import { SourceCodeSectionComponent } from './source-code-section/source-code-se
     WhileLoopElementComponent,
     AssignElementComponent,
     TranslatePipe,
+    TabsModule,
+    DividerModule,
   ],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.css'
@@ -58,13 +62,16 @@ export class EditorComponent implements OnInit, AfterViewInit {
   undoSteps$!: Observable<number>;
   redoSteps$!: Observable<number>;
 
+  selectedProcedureId$!: Observable<string>;
+  procedures$!: Observable<{ name: string; id: string }[]>;
+
   editorSceneRef = viewChild<ElementRef<SVGSVGElement>>('editorScene');
   sceneManipulator!: SvgPanZoom.Instance;
 
   ngOnInit(): void {
-    this.elements$ = this.state.flowchart.current$.pipe(
-      map(x => x.selectedProcedureId),
-      distinctUntilChanged(),
+    this.selectedProcedureId$ = this.state.selectedProcedureId$;
+
+    this.elements$ = this.state.selectedProcedureId$.pipe(
       switchMap(
         procedureId => this.state.getProcedureElements(procedureId),
       ),
@@ -75,6 +82,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.selectedElementId$ = this.state.selectedElementId$.asObservable();
     this.undoSteps$ = this.state.undoSteps$;
     this.redoSteps$ = this.state.redoSteps$;
+    this.procedures$ = this.state.proceduresList$;
   }
 
   ngAfterViewInit(): void {
@@ -156,4 +164,12 @@ export class EditorComponent implements OnInit, AfterViewInit {
   protected readonly DEFAULT_ARROW_SIZE = DEFAULT_ARROW_SIZE;
   protected readonly DEFAULT_INSERT_RADIUS = DEFAULT_INSERT_RADIUS;
   protected readonly OutputElement = OutputElement;
+
+  public onAddProcedure() {
+    this.state.addProcedure('New Procedure');
+  }
+
+  public onSelectProcedure(procedureId: string) {
+    this.state.selectProcedure(procedureId);
+  }
 }

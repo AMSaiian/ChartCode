@@ -12,7 +12,6 @@ import {
 } from '../models/element/element.model';
 
 import { Scope } from '../models/scope/scope.model'
-import { Procedure } from '../models/scope/procedure/procedure.model';
 
 import {
   ArithmeticExpression,
@@ -31,7 +30,6 @@ superjson.registerClass(TerminalElement, 'TerminalElement');
 superjson.registerClass(WhileLoopElement, 'WhileLoopElement');
 
 superjson.registerClass(Scope, 'Scope');
-superjson.registerClass(Procedure, 'Procedure');
 
 superjson.registerClass(AssignExpression, 'AssignExpression');
 superjson.registerClass(ArithmeticExpression, 'ArithmeticExpression');

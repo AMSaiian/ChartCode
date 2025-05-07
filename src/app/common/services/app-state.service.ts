@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map, Observable } from 'rxjs';
 import { EdgeDto, InsertionDto, NodeDto } from '../dto/layout.dto';
 import { ElementType } from '../models/element/element.interface';
 import {
@@ -7,7 +7,7 @@ import {
   ConditionElement,
   ForLoopElement,
   InputElement,
-  OutputElement,
+  OutputElement, ProcedureElement,
   WhileLoopElement,
 } from '../models/element/element.model';
 import { deepCloneMap } from '../utils/element.utils';
@@ -22,6 +22,18 @@ import { FileService } from './file.service';
 export class AppStateService {
   readonly flowchart = inject(FlowchartService);
   readonly fileService = inject(FileService);
+
+  selectedProcedureId$ = this.flowchart.current$.pipe(
+    map(x => x.selectedProcedureId),
+    distinctUntilChanged()
+  );
+
+  proceduresList$ = this.flowchart.current$.pipe(
+    map(state => Object.values(state.elements)
+                       .filter(x => x instanceof ProcedureElement)
+                       .map(x => ({ name: x.name, id: x.id }))
+    )
+  );
 
   selectedElementType$ = new BehaviorSubject<ElementType | null>(null);
   selectedElementId$ = new BehaviorSubject<string | null>(null);
@@ -93,8 +105,13 @@ export class AppStateService {
   }
 
   public initializeFlowchart() {
-    const state = this.flowchart.initializeDefault();
-    this.flowchart.current$.next(state);
+    const state = this.flowchart.initializeProcedure('Main', true);
+    this.flowchart.updateState(state, false);
+  }
+
+  public addProcedure(name: string) {
+    const snapshot = this.flowchart.initializeProcedure(name, true);
+    this.flowchart.updateState(snapshot);
   }
 
   public insert(point: InsertionDto): string {
@@ -166,5 +183,10 @@ export class AppStateService {
     if (fromFile) {
       this.flowchart.current$.next(fromFile);
     }
+  }
+
+  public selectProcedure(procedureId: string) {
+    this.flowchart.current$.value.selectedProcedureId = procedureId;
+    this.flowchart.current$.next(this.flowchart.current$.value);
   }
 }

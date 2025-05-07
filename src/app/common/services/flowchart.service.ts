@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { IElement } from '../models/element/element.interface';
 import { ConditionElement, ProcedureElement, TerminalElement } from '../models/element/element.model';
-import { Procedure } from '../models/scope/procedure/procedure.model';
 import { IScope } from '../models/scope/scope.interface';
 import { Scope } from '../models/scope/scope.model';
 import { deepCloneMap, isLoop } from '../utils/element.utils';
@@ -214,12 +213,12 @@ export class FlowchartService {
     };
   };
 
-  public initializeDefault(): FlowchartState {
+  public initializeProcedure(name: string, isMain: boolean): FlowchartState {
     const snapshot = this.getStateSnapshot();
 
-    const mainScope = new Procedure('Main', true);
+    const procedureScope = new Scope();
 
-    const mainElement = new ProcedureElement(mainScope.id);
+    const mainElement = new ProcedureElement(name, isMain, procedureScope.id);
     mainElement.id = crypto.randomUUID();
 
     const start = new TerminalElement(true);
@@ -228,17 +227,17 @@ export class FlowchartService {
     const end = new TerminalElement(false);
     end.id = crypto.randomUUID();
 
-    mainScope.startId = start.id;
-    mainScope.endId = end.id;
-    mainScope.elementsId = [mainScope.startId, mainScope.endId];
+    procedureScope.startId = start.id;
+    procedureScope.endId = end.id;
+    procedureScope.elementsId = [procedureScope.startId, procedureScope.endId];
 
     start.nextId = end.id;
     end.previousId.push(start.id);
 
-    start.inScopeId = mainScope.id;
-    end.inScopeId = mainScope.id;
+    start.inScopeId = procedureScope.id;
+    end.inScopeId = procedureScope.id;
 
-    snapshot.scopes[mainScope.id] = mainScope;
+    snapshot.scopes[procedureScope.id] = procedureScope;
 
     snapshot.elements[mainElement.id] = mainElement;
     snapshot.elements[start.id] = start;
@@ -331,14 +330,16 @@ export class FlowchartService {
     });
   }
 
-  private updateState(newState: FlowchartState) {
-    const current = this.getStateSnapshot(true);
-    const history = this.history$.value;
+  public updateState(newState: FlowchartState, withHistory: boolean = true) {
+    if (withHistory) {
+      const current = this.getStateSnapshot(true);
+      const history = this.history$.value;
 
-    this.history$.next({
-      undoStack: [...history.undoStack, current],
-      redoStack: []
-    });
+      this.history$.next({
+        undoStack: [...history.undoStack, current],
+        redoStack: []
+      });
+    }
 
     this.current$.next(newState);
   }

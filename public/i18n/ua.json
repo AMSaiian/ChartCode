@@ -50,7 +50,8 @@
   "EDITOR": {
     "SIDEBAR": {
       "CHOOSE": "Оберіть новий елемент"
-    }
+    },
+    "ADD_PROCEDURE": "Додати нову процедуру"
   },
   "EXPRESSION_BUILDER": {
     "ARITHMETIC": "Конструктор арифметичних виразів",

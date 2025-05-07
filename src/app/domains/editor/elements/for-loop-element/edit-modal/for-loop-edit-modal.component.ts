@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputText } from 'primeng/inputtext';
-import { AccumulatorAssign, Identifier } from '../../../../../common/const/field-regex.const';
+import { Identifier, IdentifierArrayOrIntegerLiteral } from '../../../../../common/const/field-regex.const';
 import { ForLoopElement } from '../../../../../common/models/element/element.model';
 import {
   AssignExpression,
@@ -59,7 +59,7 @@ export class ForLoopEditModalComponent implements OnInit {
       startValue: new FormControl(
         this.element().accumulator.assign as string, [
           Validators.required,
-          Validators.pattern(AccumulatorAssign),
+          Validators.pattern(IdentifierArrayOrIntegerLiteral),
         ]
       ),
       isIncrement: new FormControl(

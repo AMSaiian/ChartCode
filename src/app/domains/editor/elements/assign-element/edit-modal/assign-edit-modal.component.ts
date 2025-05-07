@@ -9,8 +9,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import {
+  getRegexByValueType,
+  IdentifierArrayOrUnsignedIntegerLiteral,
   IdentifierOrArrayAccess,
-  IdentifierOrArrayAccessOrLiteral,
 } from '../../../../../common/const/field-regex.const';
 import { AssignElement } from '../../../../../common/models/element/element.model';
 import {
@@ -79,7 +80,13 @@ export class AssignEditModalComponent implements OnInit {
         this.expression = undefined;
         this.isExpressionValid = undefined;
       }
+
       this.form.controls['assign'].setValue('');
+      this.form.controls['assign'].setValidators([
+        Validators.required,
+        Validators.pattern(getRegexByValueType(value, true))
+      ]);
+      this.form.updateValueAndValidity();
     });
 
     this.form.controls['isCollection'].valueChanges.pipe(
@@ -135,6 +142,7 @@ export class AssignEditModalComponent implements OnInit {
     }
 
     this.isExpressionValid = this.expression!.isValid();
+    this.isValid = this.isValidAssigning();
   }
 
   public onExpressionChanged(event: { expression: ArithmeticExpression | BoolExpression, isValid: boolean }) {
@@ -173,7 +181,7 @@ export class AssignEditModalComponent implements OnInit {
         ? ''
         : this.element().expression.assign as string, [
           Validators.required,
-          Validators.pattern(IdentifierOrArrayAccessOrLiteral),
+          Validators.pattern(getRegexByValueType(this.element().expression.type.type, true)),
         ]
       ),
       isNew: new FormControl(this.element().expression.isNew),
@@ -181,7 +189,7 @@ export class AssignEditModalComponent implements OnInit {
       isCollection: new FormControl(this.element().expression.type.isCollection ),
       length: new FormControl(this.element().expression.type.length, [
         Validators.required,
-        Validators.min(0)
+        Validators.pattern(IdentifierArrayOrUnsignedIntegerLiteral)
       ]),
     });
   }

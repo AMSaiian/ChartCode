@@ -5,7 +5,6 @@ import {
   DataType,
   ValueType,
 } from '../expression/expression.model';
-import { Procedure } from '../scope/procedure/procedure.model';
 import { IElement } from './element.interface';
 
 export abstract class BaseElement implements IElement {
@@ -35,14 +34,18 @@ export abstract class BaseElement implements IElement {
 export class ProcedureElement extends BaseElement {
   static readonly type = 'procedure';
   static getDefault = () => this.DEFAULT.clone();
-  private static readonly DEFAULT = new Procedure('Main', true);
+  private static readonly DEFAULT = new ProcedureElement('Procedure', false);
 
-  constructor(public scopeId: string) {
+  constructor(
+    public name: string,
+    public isMain: boolean = false,
+    public scopeId: string = ''
+  ) {
     super();
   }
 
   override clone(): ProcedureElement {
-    const element = new ProcedureElement(this.scopeId);
+    const element = new ProcedureElement(this.name, this.isMain, this.scopeId);
 
     return this.copyBaseTo(element);
   }

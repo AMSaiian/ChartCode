@@ -1,4 +1,5 @@
-import { ArithmeticExpressionMember, IdentifierOrArrayAccessOrLiteral } from '../../const/field-regex.const';
+import { getRegexByValueType, IdentifierOrArrayAccessOrLiteral } from '../../const/field-regex.const';
+
 
 export class BoolExpression {
   constructor(
@@ -71,11 +72,11 @@ export class ArithmeticExpression {
   isValid(): boolean {
     const left = this.leftOperand instanceof ArithmeticExpression
                  ? this.leftOperand.isValid()
-                 : this.leftOperand.match(ArithmeticExpressionMember) !== null;
+                 : this.leftOperand.match(getRegexByValueType(DataType.Float, true)) !== null;
 
     const right = this.rightOperand instanceof ArithmeticExpression
                  ? this.rightOperand.isValid()
-                 : this.rightOperand.match(ArithmeticExpressionMember) !== null;
+                 : this.rightOperand.match(getRegexByValueType(DataType.Float, true)) !== null;
 
     return left && right;
   }
@@ -177,7 +178,7 @@ export class ValueType {
   constructor(
     public type: DataType,
     public isCollection: boolean = false,
-    public length?: number
+    public length?: string
   ) {}
 
   clone() {
