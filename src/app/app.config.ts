@@ -10,6 +10,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { AppStateService } from './common/services/app-state.service';
 
 import { routes } from './app.routes';
+import { CodegenService } from './common/services/codegen.service';
 import { ElementsModalService } from './common/services/elements-modal.service';
 import { FileService } from './common/services/file.service';
 import { FlowchartService } from './common/services/flowchart.service';
@@ -42,6 +43,7 @@ export const appConfig: ApplicationConfig = {
     AppStateService,
     FlowchartService,
     ElementsModalService,
-    FileService
+    FileService,
+    CodegenService
   ]
 };

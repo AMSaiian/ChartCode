@@ -36,6 +36,7 @@
       [disabled]="!(redoStepsCount! > 0)">
       {{ redoStepsCount }}
     </p-button>
+    <p-button (click)="onExport()">Export Code</p-button>
   </div>
   <p-tabs
     [value]="(selectedProcedureId$ | async)!"

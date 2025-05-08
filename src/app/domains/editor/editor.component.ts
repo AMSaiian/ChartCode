@@ -17,6 +17,7 @@ import {
 } from '../../common/models/element/element.model';
 import { InstanceofPipe } from '../../common/pipes/instance-of.pipe';
 import { AppStateService } from '../../common/services/app-state.service';
+import { CodegenService } from '../../common/services/codegen.service';
 import { LanguageSwitcherComponent } from '../../components/misc/language-switcher/language-switcher.component';
 import { TerminalShapeComponent } from '../../components/shapes/terminal/terminal-shape.component';
 import { AssignElementComponent } from './elements/assign-element/assign-element.component';
@@ -55,6 +56,7 @@ import { SourceCodeSectionComponent } from './source-code-section/source-code-se
 })
 export class EditorComponent implements OnInit, AfterViewInit {
   state = inject(AppStateService);
+  codegen = inject(CodegenService);
 
   selectedElementType$!: Observable<ElementType | null>;
   selectedElementId$!: Observable<string | null>;
@@ -91,7 +93,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
       dblClickZoomEnabled: false,
       zoomScaleSensitivity: 0.3,
       fit: true,
-      minZoom: 0.1,
+      minZoom: 0.05,
       center: true,
       contain: true,
     });
@@ -121,6 +123,17 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   public async onLoad() {
     await this.state.loadFlowchart();
+  }
+
+  public onExport() {
+    const code = this.codegen.generate(
+      'csharp',
+      this.state.flowchart.current$.value.selectedProcedureId,
+      this.state.flowchart.current$.value.elements,
+      this.state.flowchart.current$.value.scopes
+    );
+
+    console.log(code);
   }
 
   exportSvg(): void {

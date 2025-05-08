@@ -1,0 +1,54 @@
+{
+  "language": "csharp",
+  "imports": [
+    "using System;",
+    "using System.Collections.Generic;"
+  ],
+  "main_wrapper": {
+    "signature": "public class Program",
+    "main_signature": "public static void Main(string[] args)"
+  },
+  "assign": {
+    "declare": "{type} {name} = {value};",
+    "declare_array": "{type}[] {name} = new {type}[{length}];",
+    "assign": "{name} = {value};"
+  },
+  "input": "{name} = Console.ReadLine();",
+  "output": "Console.WriteLine({name});",
+  "if": {
+    "start": "if ({condition})",
+    "else": "else"
+  },
+  "while": "while ({condition})",
+  "for": "for ({init}; {condition}; {update})",
+  "increment": "{var}++",
+  "decrement": "{var}--",
+  "block_start": "{",
+  "block_end": "}",
+  "indent": "    ",
+  "types": {
+    "Integer": "int",
+    "Float": "float",
+    "String": "string",
+    "Boolean": "bool"
+  },
+  "bool_expression": {
+    "Not": "!{a}",
+    "And": "({a} && {b})",
+    "Or": "({a} || {b})",
+    "Xor": "({a} ^ {b})",
+    "Equals": "({a} == {b})",
+    "NotEquals": "({a} != {b})",
+    "GreaterThan": "({a} > {b})",
+    "GreaterThanOrEqualTo": "({a} >= {b})",
+    "LessThan": "({a} < {b})",
+    "LessThanOrEqualTo": "({a} <= {b})"
+  },
+  "arithmetic_expression": {
+    "Add": "({a} + {b})",
+    "Subtract": "({a} - {b})",
+    "Multiply": "({a} * {b})",
+    "Divide": "({a} / {b})",
+    "Modulus": "({a} % {b})"
+  }
+}
