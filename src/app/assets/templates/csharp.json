@@ -3,23 +3,23 @@
   "displayName": "C#",
   "extension": ".cs",
   "style": "allman",
-  "indent_size": 4,
-  "indent_char": " ",
+  "indentSize": 4,
+  "indentChar": " ",
   "imports": [
     "using System;",
     "using System.Collections.Generic;"
   ],
-  "main_wrapper": {
+  "mainWrapper": {
     "signature": "public class Program",
-    "main_signature": "public static void Main(string[] args)"
+    "mainSignature": "public static void Main(string[] args)"
   },
   "assign": {
     "declare": "{type} {name} = {value};",
-    "declare_array": "{type}[] {name} = new {type}[{length}];",
+    "declareArray": "{type}[] {name} = new {type}[{length}];",
     "assign": "{name} = {value};"
   },
   "input": "{name} = Console.ReadLine();",
-  "input_by_type": {
+  "inputByType": {
     "Integer": "{name} = int.Parse(Console.ReadLine());",
     "Float": "{name} = float.Parse(Console.ReadLine());",
     "String": "{name} = Console.ReadLine();",
@@ -34,15 +34,15 @@
   "for": "for ({init}; {condition}; {update})",
   "increment": "{var}++",
   "decrement": "{var}--",
-  "block_start": "{",
-  "block_end": "}",
+  "blockStart": "{",
+  "blockEnd": "}",
   "types": {
     "Integer": "int",
     "Float": "float",
     "String": "string",
     "Boolean": "bool"
   },
-  "bool_expression": {
+  "boolExpression": {
     "Not": "!{a}",
     "And": "{a} && {b}",
     "Or": "{a} || {b}",
@@ -54,7 +54,7 @@
     "LessThan": "{a} < {b}",
     "LessThanOrEqualTo": "{a} <= {b}"
   },
-  "arithmetic_expression": {
+  "arithmeticExpression": {
     "Add": "{a} + {b}",
     "Subtract": "{a} - {b}",
     "Multiply": "{a} * {b}",

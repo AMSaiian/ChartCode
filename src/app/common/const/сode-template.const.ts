@@ -10,24 +10,24 @@ export interface CodegenTemplate {
   extension: string;
 
   style: 'allman' | 'kr';
-  indent_size: number;
-  indent_char: string;
+  indentSize: number;
+  indentChar: string;
 
   imports: string[];
 
-  main_wrapper: {
+  mainWrapper: {
     signature: string;
-    main_signature: string;
+    mainSignature: string;
   };
 
   assign: {
     declare: string;
-    declare_array: string;
+    declareArray: string;
     assign: string;
   };
 
   input: string;
-  input_by_type: Record<string, string>;
+  inputByType: Record<string, string>;
 
   output: string;
 
@@ -41,10 +41,11 @@ export interface CodegenTemplate {
   increment: string;
   decrement: string;
 
-  block_start: string;
-  block_end: string;
+  blockStart: string;
+  blockEnd: string;
 
   types: Record<string, string>;
-  bool_expression: Record<string, string>;
-  arithmetic_expression: Record<string, string>;
+  boolExpression: Record<string, string>;
+  arithmeticExpression: Record<string, string>;
 }
+

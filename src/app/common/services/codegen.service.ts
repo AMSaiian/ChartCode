@@ -36,11 +36,11 @@ export class CodegenService {
     const lines = [
       ...template.imports,
       '',
-      this.withBlockStart(template.main_wrapper.signature, template),
+      this.withBlockStart(template.mainWrapper.signature, template),
       this.openBlock(template, 0),
-      this.indent(template, 1) + this.withBlockStart(template.main_wrapper.main_signature, template),
+      this.indent(template, 1) + this.withBlockStart(template.mainWrapper.mainSignature, template),
       this.wrapBlock(template, body, 1),
-      template.block_end,
+      template.blockEnd,
     ];
 
     return lines.join('\n');
@@ -78,7 +78,7 @@ export class CodegenService {
       code = this.indent(template, indentLevel) + this.generateAssignExpression(element.expression, template);
     } else if (element instanceof InputElement) {
       const typeName = element.type;
-      const inputTemplate = template.input_by_type?.[typeName] ?? template.input;
+      const inputTemplate = template.inputByType?.[typeName] ?? template.input;
       code = this.indent(template, indentLevel) + this.format(inputTemplate, { name: element.destination });
     } else if (element instanceof OutputElement) {
       code = this.indent(template, indentLevel) + this.format(template.output, { name: element.source });
@@ -135,7 +135,7 @@ export class CodegenService {
 
     if (expr.isNew) {
       return expr.type.isCollection
-             ? this.format(template.assign.declare_array, { type, name: dst, length: expr.type.length || '0' })
+             ? this.format(template.assign.declareArray, { type, name: dst, length: expr.type.length || '0' })
              : this.format(template.assign.declare, { type, name: dst, value });
     }
 
@@ -143,7 +143,7 @@ export class CodegenService {
   }
 
   private generateBoolExpression(expr: BoolExpression, template: CodegenTemplate, isNested = false): string {
-    const fmt = template.bool_expression[expr.expressionType];
+    const fmt = template.boolExpression[expr.expressionType];
 
     const a = typeof expr.leftOperand === 'string'
               ? expr.leftOperand
@@ -160,7 +160,7 @@ export class CodegenService {
   }
 
   private generateArithmeticExpression(expr: ArithmeticExpression, template: CodegenTemplate, isNested = false): string {
-    const fmt = template.arithmetic_expression[expr.expressionType];
+    const fmt = template.arithmeticExpression[expr.expressionType];
 
     const a = typeof expr.leftOperand === 'string'
               ? expr.leftOperand
@@ -180,7 +180,7 @@ export class CodegenService {
   }
 
   private indent(template: CodegenTemplate, level: number): string {
-    return template.indent_char.repeat(template.indent_size).repeat(level);
+    return template.indentChar.repeat(template.indentSize).repeat(level);
   }
 
   private indentBlock(template: CodegenTemplate, code: string, level: number): string {
@@ -192,21 +192,21 @@ export class CodegenService {
   private wrapBlock(template: CodegenTemplate, code: string, indentLevel: number): string {
     const lines = [
       this.indentBlock(template, code, indentLevel),
-      this.indent(template, indentLevel) + template.block_end
+      this.indent(template, indentLevel) + template.blockEnd
     ];
 
     if (template.style === 'allman') {
-      lines.unshift(this.indent(template, indentLevel) + template.block_start);
+      lines.unshift(this.indent(template, indentLevel) + template.blockStart);
     }
 
     return lines.join('\n');
   }
 
   private withBlockStart(line: string, template: CodegenTemplate): string {
-    return template.style === 'kr' ? `${line} ${template.block_start}` : line;
+    return template.style === 'kr' ? `${line} ${template.blockStart}` : line;
   }
 
   private openBlock(template: CodegenTemplate, indentLevel: number): string {
-    return template.style === 'allman' ? this.indent(template, indentLevel) + template.block_start : '';
+    return template.style === 'allman' ? this.indent(template, indentLevel) + template.blockStart : '';
   }
 }
