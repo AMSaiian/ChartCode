@@ -11,7 +11,7 @@ import {
 } from '../models/element/element.model';
 import { ArithmeticExpression, AssignExpression, BoolExpression } from '../models/expression/expression.model';
 import { IScope } from '../models/scope/scope.interface';
-import { CodegenTemplate, CodegenTemplates } from '../const/сode-template.const';
+import { CodegenTemplate, CodegenTemplates, FormatOptions } from '../const/сode-template.const';
 
 @Injectable({ providedIn: 'root' })
 export class CodegenService {
@@ -19,12 +19,20 @@ export class CodegenService {
     language: string,
     procedureId: string,
     elements: Record<string, IElement>,
-    scopes: Record<string, IScope>
+    scopes: Record<string, IScope>,
+    formatOptions?: FormatOptions
   ): string {
-    const template = CodegenTemplates[language];
-    if (!template) {
+    const baseTemplate = CodegenTemplates[language];
+    if (!baseTemplate) {
       throw new Error(`Template for '${language}' not found.`);
     }
+
+    const template: CodegenTemplate = {
+      ...baseTemplate,
+      style: formatOptions?.style ?? baseTemplate.style,
+      indentSize: formatOptions?.indentSize ?? baseTemplate.indentSize,
+      indentChar: formatOptions?.indentChar ?? baseTemplate.indentChar,
+    };
 
     const procedure = elements[procedureId];
     if (!(procedure instanceof ProcedureElement)) {

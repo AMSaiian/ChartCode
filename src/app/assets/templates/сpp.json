@@ -1,0 +1,64 @@
+{
+  "language": "cpp",
+  "displayName": "C++",
+  "extension": ".cpp",
+  "style": "allman",
+  "indentSize": 4,
+  "indentChar": " ",
+  "imports": [
+    "#include <iostream>",
+    "using namespace std;"
+  ],
+  "mainWrapper": {
+    "signature": "int main()",
+    "mainSignature": ""
+  },
+  "assign": {
+    "declare": "{type} {name} = {value};",
+    "declareArray": "{type} {name}[{length}];",
+    "assign": "{name} = {value};"
+  },
+  "input": "cin >> {name};",
+  "inputByType": {
+    "Integer": "cin >> {name};",
+    "Float": "cin >> {name};",
+    "String": "cin >> {name};",
+    "Boolean": "cin >> {name};"
+  },
+  "output": "cout << {name};",
+  "if": {
+    "start": "if ({condition})",
+    "else": "else"
+  },
+  "while": "while ({condition})",
+  "for": "for ({init}; {condition}; {update})",
+  "increment": "{var}++",
+  "decrement": "{var}--",
+  "blockStart": "{",
+  "blockEnd": "}",
+  "types": {
+    "Integer": "int",
+    "Float": "float",
+    "String": "string",
+    "Boolean": "bool"
+  },
+  "boolExpression": {
+    "Not": "!{a}",
+    "And": "{a} && {b}",
+    "Or": "{a} || {b}",
+    "Xor": "{a} ^ {b}",
+    "Equals": "{a} == {b}",
+    "NotEquals": "{a} != {b}",
+    "GreaterThan": "{a} > {b}",
+    "GreaterThanOrEqualTo": "{a} >= {b}",
+    "LessThan": "{a} < {b}",
+    "LessThanOrEqualTo": "{a} <= {b}"
+  },
+  "arithmeticExpression": {
+    "Add": "{a} + {b}",
+    "Subtract": "{a} - {b}",
+    "Multiply": "{a} * {b}",
+    "Divide": "{a} / {b}",
+    "Modulus": "{a} % {b}"
+  }
+}

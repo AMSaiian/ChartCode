@@ -1,0 +1,61 @@
+{
+  "language": "javascript",
+  "displayName": "JavaScript",
+  "extension": ".js",
+  "style": "kr",
+  "indentSize": 2,
+  "indentChar": " ",
+  "imports": [],
+  "mainWrapper": {
+    "signature": "",
+    "mainSignature": ""
+  },
+  "assign": {
+    "declare": "let {name} = {value};",
+    "declareArray": "let {name} = new Array({length});",
+    "assign": "{name} = {value};"
+  },
+  "input": "let {name} = prompt();",
+  "inputByType": {
+    "Integer": "let {name} = parseInt(prompt(), 10);",
+    "Float": "let {name} = parseFloat(prompt());",
+    "String": "let {name} = prompt();",
+    "Boolean": "let {name} = prompt() === 'true';"
+  },
+  "output": "console.log({name});",
+  "if": {
+    "start": "if ({condition})",
+    "else": "else"
+  },
+  "while": "while ({condition})",
+  "for": "for (let {init}; {condition}; {update})",
+  "increment": "{var}++",
+  "decrement": "{var}--",
+  "blockStart": "{",
+  "blockEnd": "}",
+  "types": {
+    "Integer": "",
+    "Float": "",
+    "String": "",
+    "Boolean": ""
+  },
+  "boolExpression": {
+    "Not": "!{a}",
+    "And": "{a} && {b}",
+    "Or": "{a} || {b}",
+    "Xor": "{a} ^ {b}",
+    "Equals": "{a} === {b}",
+    "NotEquals": "{a} !== {b}",
+    "GreaterThan": "{a} > {b}",
+    "GreaterThanOrEqualTo": "{a} >= {b}",
+    "LessThan": "{a} < {b}",
+    "LessThanOrEqualTo": "{a} <= {b}"
+  },
+  "arithmeticExpression": {
+    "Add": "{a} + {b}",
+    "Subtract": "{a} - {b}",
+    "Multiply": "{a} * {b}",
+    "Divide": "{a} / {b}",
+    "Modulus": "{a} % {b}"
+  }
+}

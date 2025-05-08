@@ -1,8 +1,26 @@
 import csharpTemplate from '../../assets/templates/csharp.json';
+import javaTemplate from '../../assets/templates/java.json';
+import cppTemplate from '../../assets/templates/сpp.json';
+import jsTemplate from '../../assets/templates/js.json';
 
 export const CodegenTemplates: Record<string, CodegenTemplate> = {
-  csharp: csharpTemplate as CodegenTemplate
+  csharp: csharpTemplate as CodegenTemplate,
+  java: javaTemplate as CodegenTemplate,
+  cpp: cppTemplate as CodegenTemplate,
+  js: jsTemplate as CodegenTemplate
 };
+
+export const codegenTemplateList = Object.entries(CodegenTemplates)
+                                         .map(([key, value]) =>
+                                           ({ key, displayName: value.displayName })
+                                         );
+
+export interface FormatOptions {
+  style?: 'allman' | 'kr';
+  indentSize?: number;
+  indentChar?: string;
+}
+
 
 export interface CodegenTemplate {
   language: string;
