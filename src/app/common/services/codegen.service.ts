@@ -39,17 +39,32 @@ export class CodegenService {
       throw new Error(`'${procedureId}' is not a ProcedureElement.`);
     }
 
-    const body = this.generateScopeBody(procedure.scopeId, elements, scopes, template, 1);
-
-    const lines = [
+    let lines = [
       ...template.imports,
-      '',
-      this.withBlockStart(template.mainWrapper.signature, template),
-      this.openBlock(template, 0),
-      this.indent(template, 1) + this.withBlockStart(template.mainWrapper.mainSignature, template),
-      this.wrapBlock(template, body, 1),
-      template.blockEnd,
+      ''
     ];
+
+    if (template.mainWrapper.signature && template.mainWrapper.mainSignature) {
+      const body = this.generateScopeBody(procedure.scopeId, elements, scopes, template, 1);
+
+      lines = [...lines,
+        this.withBlockStart(template.mainWrapper.signature, template),
+        this.openBlock(template, 0),
+        this.indent(template, 1) + this.withBlockStart(template.mainWrapper.mainSignature, template),
+        this.wrapBlock(template, body, 1),
+        template.blockEnd
+      ];
+    } else if (!template.mainWrapper.signature && template.mainWrapper.mainSignature) {
+      const body = this.generateScopeBody(procedure.scopeId, elements, scopes, template, 1);
+
+      lines = [...lines,
+        this.withBlockStart(template.mainWrapper.mainSignature, template),
+        this.wrapBlock(template, body, 0),
+      ];
+    } else {
+      const body = this.generateScopeBody(procedure.scopeId, elements, scopes, template, 1);
+      lines = [...lines, body]
+    }
 
     return lines.join('\n');
   }
@@ -122,7 +137,7 @@ export class CodegenService {
       code = [
         this.withBlockStart(this.indent(template, indentLevel) + template.if.start.replace('{condition}', cond), template),
         this.wrapBlock(template, positive, indentLevel),
-        this.indent(template, indentLevel) + template.if.else,
+        this.withBlockStart(this.indent(template, indentLevel) + template.if.else, template),
         this.wrapBlock(template, negative, indentLevel)
       ].join('\n');
     }
