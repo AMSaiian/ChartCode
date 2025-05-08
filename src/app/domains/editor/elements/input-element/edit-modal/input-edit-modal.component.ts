@@ -4,8 +4,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputText } from 'primeng/inputtext';
+import { Select } from 'primeng/select';
 import { IdentifierOrArrayAccess } from '../../../../../common/const/field-regex.const';
 import { InputElement } from '../../../../../common/models/element/element.model';
+import { DataType, DataTypeList } from '../../../../../common/models/expression/expression.model';
 import { FlowchartService } from '../../../../../common/services/flowchart.service';
 
 @Component({
@@ -15,6 +17,7 @@ import { FlowchartService } from '../../../../../common/services/flowchart.servi
     TranslatePipe,
     ReactiveFormsModule,
     ButtonModule,
+    Select,
   ],
   templateUrl: './input-edit-modal.component.html',
   styleUrl: './input-edit-modal.component.css'
@@ -26,6 +29,7 @@ export class InputEditModalComponent implements OnInit {
 
   form!: FormGroup<{
     destination: FormControl<string | null>;
+    type: FormControl<DataType | null>;
   }>;
 
   ngOnInit(): void {
@@ -36,6 +40,7 @@ export class InputEditModalComponent implements OnInit {
           Validators.pattern(IdentifierOrArrayAccess),
         ]
       ),
+      type: new FormControl(this.element().type, [Validators.required]),
     });
   }
 
@@ -51,4 +56,6 @@ export class InputEditModalComponent implements OnInit {
   public onCancel() {
     this.dialogRef.close();
   }
+
+  protected readonly dataTypes = DataTypeList;
 }

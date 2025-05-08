@@ -5,6 +5,12 @@
       pInputText
       formControlName="destination"
     />
+    <label>{{ 'MODALS.INPUT.DATATYPE' | translate }}:</label>
+    <p-select
+      [options]="dataTypes"
+      [overlayOptions]="{ mode: 'modal' }"
+      formControlName="type"
+    />
   </div>
   <div class="flex gap-2 justify-end">
     <p-button

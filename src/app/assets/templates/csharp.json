@@ -1,8 +1,10 @@
 {
   "language": "csharp",
-  "style": "kr",
-  "indent_size": 1,
-  "indent_char": "\t",
+  "displayName": "C#",
+  "extension": ".cs",
+  "style": "allman",
+  "indent_size": 4,
+  "indent_char": " ",
   "imports": [
     "using System;",
     "using System.Collections.Generic;"
@@ -17,7 +19,13 @@
     "assign": "{name} = {value};"
   },
   "input": "{name} = Console.ReadLine();",
-  "output": "Console.WriteLine({name});",
+  "input_by_type": {
+    "Integer": "{name} = int.Parse(Console.ReadLine());",
+    "Float": "{name} = float.Parse(Console.ReadLine());",
+    "String": "{name} = Console.ReadLine();",
+    "Boolean": "{name} = bool.Parse(Console.ReadLine());"
+  },
+  "output": "Console.Write({name});",
   "if": {
     "start": "if ({condition})",
     "else": "else"

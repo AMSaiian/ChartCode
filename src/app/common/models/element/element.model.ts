@@ -54,17 +54,18 @@ export class ProcedureElement extends BaseElement {
 export class InputElement extends BaseElement {
   static readonly type = 'input';
   static getDefault = () => this.DEFAULT.clone();
-  private static readonly DEFAULT = new InputElement('x');
+  private static readonly DEFAULT = new InputElement('x', DataType.Integer);
 
   constructor(
     public destination: string,
+    public type: DataType,
     public isOutside: boolean = true
   ) {
     super();
   }
 
   override clone(): InputElement {
-    const element = new InputElement(this.destination, this.isOutside);
+    const element = new InputElement(this.destination, this.type, this.isOutside);
 
     return this.copyBaseTo(element);
   }

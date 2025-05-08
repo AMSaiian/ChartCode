@@ -2,7 +2,8 @@
   "MODALS": {
     "INPUT": {
       "HEADER": "Edit Input Element",
-      "DESTINATION": "Enter Input Destination"
+      "DESTINATION": "Enter Input Destination",
+      "DATATYPE": "Data Type of Input"
     },
     "OUTPUT": {
       "HEADER": "Edit Output Element",

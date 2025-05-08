@@ -77,7 +77,9 @@ export class CodegenService {
     if (element instanceof AssignElement) {
       code = this.indent(template, indentLevel) + this.generateAssignExpression(element.expression, template);
     } else if (element instanceof InputElement) {
-      code = this.indent(template, indentLevel) + this.format(template.input, { name: element.destination });
+      const typeName = element.type;
+      const inputTemplate = template.input_by_type?.[typeName] ?? template.input;
+      code = this.indent(template, indentLevel) + this.format(inputTemplate, { name: element.destination });
     } else if (element instanceof OutputElement) {
       code = this.indent(template, indentLevel) + this.format(template.output, { name: element.source });
     } else if (element instanceof WhileLoopElement) {
