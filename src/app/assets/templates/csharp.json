@@ -1,5 +1,8 @@
 {
   "language": "csharp",
+  "style": "kr",
+  "indent_size": 1,
+  "indent_char": "\t",
   "imports": [
     "using System;",
     "using System.Collections.Generic;"
@@ -25,7 +28,6 @@
   "decrement": "{var}--",
   "block_start": "{",
   "block_end": "}",
-  "indent": "    ",
   "types": {
     "Integer": "int",
     "Float": "float",
@@ -34,21 +36,21 @@
   },
   "bool_expression": {
     "Not": "!{a}",
-    "And": "({a} && {b})",
-    "Or": "({a} || {b})",
-    "Xor": "({a} ^ {b})",
-    "Equals": "({a} == {b})",
-    "NotEquals": "({a} != {b})",
-    "GreaterThan": "({a} > {b})",
-    "GreaterThanOrEqualTo": "({a} >= {b})",
-    "LessThan": "({a} < {b})",
-    "LessThanOrEqualTo": "({a} <= {b})"
+    "And": "{a} && {b}",
+    "Or": "{a} || {b}",
+    "Xor": "{a} ^ {b}",
+    "Equals": "{a} == {b}",
+    "NotEquals": "{a} != {b}",
+    "GreaterThan": "{a} > {b}",
+    "GreaterThanOrEqualTo": "{a} >= {b}",
+    "LessThan": "{a} < {b}",
+    "LessThanOrEqualTo": "{a} <= {b}"
   },
   "arithmetic_expression": {
-    "Add": "({a} + {b})",
-    "Subtract": "({a} - {b})",
-    "Multiply": "({a} * {b})",
-    "Divide": "({a} / {b})",
-    "Modulus": "({a} % {b})"
+    "Add": "{a} + {b}",
+    "Subtract": "{a} - {b}",
+    "Multiply": "{a} * {b}",
+    "Divide": "{a} / {b}",
+    "Modulus": "{a} % {b}"
   }
 }

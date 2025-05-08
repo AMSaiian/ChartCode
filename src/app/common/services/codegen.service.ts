@@ -13,7 +13,6 @@ import { ArithmeticExpression, AssignExpression, BoolExpression } from '../model
 import { IScope } from '../models/scope/scope.interface';
 import { CodegenTemplate, CodegenTemplates } from '../const/сode-template.const';
 
-
 @Injectable({ providedIn: 'root' })
 export class CodegenService {
   generate(
@@ -23,21 +22,25 @@ export class CodegenService {
     scopes: Record<string, IScope>
   ): string {
     const template = CodegenTemplates[language];
-    if (!template) throw new Error(`Template for '${language}' not found.`);
+    if (!template) {
+      throw new Error(`Template for '${language}' not found.`);
+    }
 
     const procedure = elements[procedureId];
-    if (!(procedure instanceof ProcedureElement)) throw new Error(`'${procedureId}' is not a ProcedureElement.`);
+    if (!(procedure instanceof ProcedureElement)) {
+      throw new Error(`'${procedureId}' is not a ProcedureElement.`);
+    }
 
     const body = this.generateScopeBody(procedure.scopeId, elements, scopes, template, 1);
 
     const lines = [
       ...template.imports,
       '',
-      template.main_wrapper.signature,
-      this.indent(template, 0) + template.block_start,
-      this.indent(template, 1) + template.main_wrapper.main_signature,
+      this.withBlockStart(template.main_wrapper.signature, template),
+      this.openBlock(template, 0),
+      this.indent(template, 1) + this.withBlockStart(template.main_wrapper.main_signature, template),
       this.wrapBlock(template, body, 1),
-      template.block_end
+      template.block_end,
     ];
 
     return lines.join('\n');
@@ -51,7 +54,9 @@ export class CodegenService {
     indentLevel: number
   ): string {
     const scope = scopes[scopeId];
-    if (!scope?.startId) return '';
+    if (!scope?.startId) {
+      return '';
+    }
     return this.generateElement(scope.startId, elements, scopes, template, indentLevel);
   }
 
@@ -79,7 +84,7 @@ export class CodegenService {
       const cond = this.generateBoolExpression(element.checkExpression, template);
       const body = this.generateScopeBody(element.scopeId, elements, scopes, template, indentLevel);
       code = [
-        this.indent(template, indentLevel) + template.while.replace('{condition}', cond),
+        this.withBlockStart(this.indent(template, indentLevel) + template.while.replace('{condition}', cond), template),
         this.wrapBlock(template, body, indentLevel)
       ].join('\n');
     } else if (element instanceof ForLoopElement) {
@@ -96,7 +101,7 @@ export class CodegenService {
 
       const body = this.generateScopeBody(element.scopeId, elements, scopes, template, indentLevel);
       code = [
-        this.indent(template, indentLevel) + forLine,
+        this.withBlockStart(this.indent(template, indentLevel) + forLine, template),
         this.wrapBlock(template, body, indentLevel)
       ].join('\n');
     } else if (element instanceof ConditionElement) {
@@ -105,7 +110,7 @@ export class CodegenService {
       const negative = this.generateScopeBody(element.negativeWayId, elements, scopes, template, indentLevel);
 
       code = [
-        this.indent(template, indentLevel) + template.if.start.replace('{condition}', cond),
+        this.withBlockStart(this.indent(template, indentLevel) + template.if.start.replace('{condition}', cond), template),
         this.wrapBlock(template, positive, indentLevel),
         this.indent(template, indentLevel) + template.if.else,
         this.wrapBlock(template, negative, indentLevel)
@@ -135,28 +140,37 @@ export class CodegenService {
     return this.format(template.assign.assign, { name: dst, value });
   }
 
-  private generateBoolExpression(expr: BoolExpression, template: CodegenTemplate): string {
+  private generateBoolExpression(expr: BoolExpression, template: CodegenTemplate, isNested = false): string {
     const fmt = template.bool_expression[expr.expressionType];
+
     const a = typeof expr.leftOperand === 'string'
               ? expr.leftOperand
-              : this.generateBoolExpression(expr.leftOperand, template);
+              : this.generateBoolExpression(expr.leftOperand, template, true);
+
     const b = typeof expr.rightOperand === 'string'
               ? expr.rightOperand
               : expr.rightOperand
-                ? this.generateBoolExpression(expr.rightOperand, template)
+                ? this.generateBoolExpression(expr.rightOperand, template, true)
                 : '';
-    return this.format(fmt, { a, b });
+
+    const result = this.format(fmt, { a, b });
+    return isNested ? `(${result})` : result;
   }
 
-  private generateArithmeticExpression(expr: ArithmeticExpression, template: CodegenTemplate): string {
+  private generateArithmeticExpression(expr: ArithmeticExpression, template: CodegenTemplate, isNested = false): string {
     const fmt = template.arithmetic_expression[expr.expressionType];
+
     const a = typeof expr.leftOperand === 'string'
               ? expr.leftOperand
-              : this.generateArithmeticExpression(expr.leftOperand, template);
+              : this.generateArithmeticExpression(expr.leftOperand, template, true);
+
     const b = typeof expr.rightOperand === 'string'
               ? expr.rightOperand
-              : this.generateArithmeticExpression(expr.rightOperand, template);
-    return this.format(fmt, { a, b });
+              : this.generateArithmeticExpression(expr.rightOperand, template, true);
+
+    const result = this.format(fmt, { a, b });
+
+    return isNested ? `(${result})` : result;
   }
 
   private format(template: string, params: Record<string, string>): string {
@@ -164,7 +178,7 @@ export class CodegenService {
   }
 
   private indent(template: CodegenTemplate, level: number): string {
-    return template.indent.repeat(level);
+    return template.indent_char.repeat(template.indent_size).repeat(level);
   }
 
   private indentBlock(template: CodegenTemplate, code: string, level: number): string {
@@ -174,10 +188,23 @@ export class CodegenService {
   }
 
   private wrapBlock(template: CodegenTemplate, code: string, indentLevel: number): string {
-    return [
-      this.indent(template, indentLevel) + template.block_start,
+    const lines = [
       this.indentBlock(template, code, indentLevel),
       this.indent(template, indentLevel) + template.block_end
-    ].join('\n');
+    ];
+
+    if (template.style === 'allman') {
+      lines.unshift(this.indent(template, indentLevel) + template.block_start);
+    }
+
+    return lines.join('\n');
+  }
+
+  private withBlockStart(line: string, template: CodegenTemplate): string {
+    return template.style === 'kr' ? `${line} ${template.block_start}` : line;
+  }
+
+  private openBlock(template: CodegenTemplate, indentLevel: number): string {
+    return template.style === 'allman' ? this.indent(template, indentLevel) + template.block_start : '';
   }
 }
