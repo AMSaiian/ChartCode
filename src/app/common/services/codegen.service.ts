@@ -20,7 +20,7 @@ export class CodegenService {
     language: string,
     procedureId: string,
     elements: Record<string, IElement>,
-    scopes: Record<string, IScope>,
+    scopes: Record<string, IScope>
   ): string {
     const template = CodegenTemplates[language];
     if (!template) {
@@ -32,16 +32,16 @@ export class CodegenService {
       throw new Error(`Element '\${procedureId}' is not a ProcedureElement.`);
     }
 
-    const scopeBody = this.generateScopeBody(procedure.scopeId, elements, scopes, template, 2);
+    const scopeBody = this.generateScopeBody(procedure.scopeId, elements, scopes, template, 0);
 
     const wrapped = [
       ...template.imports,
       '',
-      template.main_wrapper.signature,
+      template.main_wrapper.signature + '' + this.indent(template, 0),
       template.block_start,
       this.indent(template, 1) + template.main_wrapper.main_signature,
       this.wrapBlock(template, scopeBody, 1),
-      template.block_end,
+      template.block_end
     ];
 
     return wrapped.join('\n');
@@ -52,7 +52,7 @@ export class CodegenService {
     elements: Record<string, IElement>,
     scopes: Record<string, IScope>,
     template: CodegenTemplate,
-    indentLevel: number,
+    indentLevel: number
   ): string {
     const scope = scopes[scopeId];
     if (!scope || !scope.startId) {
@@ -66,7 +66,7 @@ export class CodegenService {
     elements: Record<string, IElement>,
     scopes: Record<string, IScope>,
     template: CodegenTemplate,
-    indentLevel: number,
+    indentLevel: number
   ): string {
     if (!id) {
       return '';
@@ -86,10 +86,10 @@ export class CodegenService {
       code = this.indent(template, indentLevel) + this.format(template.output, { name: element.source });
     } else if (element instanceof WhileLoopElement) {
       const condition = this.generateBoolExpression(element.checkExpression, template);
-      const body = this.generateScopeBody(element.scopeId, elements, scopes, template, indentLevel + 1);
+      const body = this.generateScopeBody(element.scopeId, elements, scopes, template, indentLevel);
       code = [
         this.indent(template, indentLevel) + template.while.replace('{condition}', condition),
-        this.wrapBlock(template, body, indentLevel),
+        this.wrapBlock(template, body, indentLevel + 1)
       ].join('\n');
     } else if (element instanceof ForLoopElement) {
       const check = this.generateBoolExpression(element.checkExpression, template);
@@ -104,26 +104,21 @@ export class CodegenService {
                               .replace('{condition}', check)
                               .replace('{update}', update);
 
-      const body = this.generateScopeBody(element.scopeId, elements, scopes, template, indentLevel + 1);
+      const body = this.generateScopeBody(element.scopeId, elements, scopes, template, indentLevel);
       code = [
         this.indent(template, indentLevel) + forLine,
-        this.wrapBlock(template, body, indentLevel),
+        this.wrapBlock(template, body, indentLevel)
       ].join('\n');
     } else if (element instanceof ConditionElement) {
       const cond = this.generateBoolExpression(element.conditionExpression, template);
-      const positive = this.generateElement(element.positiveWayId, elements, scopes, template, indentLevel + 1);
-      const negative = this.generateElement(element.negativeWayId, elements, scopes, template, indentLevel + 1);
+      const positive = this.generateScopeBody(element.positiveWayId, elements, scopes, template, indentLevel);
+      const negative = this.generateScopeBody(element.negativeWayId, elements, scopes, template, indentLevel);
 
       code = [
         this.indent(template, indentLevel) + template.if.start.replace('{condition}', cond),
         this.wrapBlock(template, positive, indentLevel),
-        this.indent(template, indentLevel) + template.block_start,
-        this.indentBlock(template, positive, indentLevel + 1),
-        this.indent(template, indentLevel) + template.block_end,
         this.indent(template, indentLevel) + template.if.else,
-        this.indent(template, indentLevel) + template.block_start,
-        this.indentBlock(template, negative, indentLevel + 1),
-        this.indent(template, indentLevel) + template.block_end,
+        this.wrapBlock(template, negative, indentLevel)
       ].join('\n');
     }
 
@@ -145,13 +140,13 @@ export class CodegenService {
         return this.format(template.assign.declare_array, {
           type,
           name: dst,
-          length: expr.type.length || '0',
+          length: expr.type.length || '0'
         });
       } else {
         return this.format(template.assign.declare, {
           type,
           name: dst,
-          value,
+          value
         });
       }
     } else {
@@ -194,7 +189,7 @@ export class CodegenService {
   private indentBlock(template: CodegenTemplate, code: string, level: number): string {
     return code
       .split('\n')
-      .map(line => this.indent(template, level) + line)
+      .map(line => line.trim() ? this.indent(template, level) + line : '')
       .join('\n');
   }
 
