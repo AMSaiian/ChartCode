@@ -36,12 +36,6 @@
       [disabled]="!(redoStepsCount! > 0)">
       {{ redoStepsCount }}
     </p-button>
-    <p-button
-      icon="pi pi-plus"
-      severity="secondary"
-      [label]="'EDITOR.ADD_PROCEDURE' | translate"
-      (click)="onAddProcedure()"
-    />
   </div>
   <p-tabs
     [value]="(selectedProcedureId$ | async)!"

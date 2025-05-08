@@ -165,9 +165,6 @@ export class EditorComponent implements OnInit, AfterViewInit {
   protected readonly DEFAULT_INSERT_RADIUS = DEFAULT_INSERT_RADIUS;
   protected readonly OutputElement = OutputElement;
 
-  public onAddProcedure() {
-    this.state.addProcedure('New Procedure');
-  }
 
   public onSelectProcedure(procedureId: string) {
     this.state.selectProcedure(procedureId);
