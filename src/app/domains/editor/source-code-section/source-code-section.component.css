@@ -8,5 +8,9 @@
   align-items: stretch;
   gap: 16px;
   overflow: hidden;
-  padding-top: 4px;
+  padding: 0.25rem 0.5rem 0 0.5rem;
+}
+
+.code-preview {
+  scrollbar-width: none;
 }

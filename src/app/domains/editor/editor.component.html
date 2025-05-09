@@ -4,7 +4,7 @@
 @let redoStepsCount = redoSteps$ | async;
 
 <div class="flex flex-col h-screen pb-8 bg-gray-100">
-  <div class="flex shrink-0 bg-gray-100 p-4 gap-4">
+  <div class="flex shrink-0 bg-gray-100 px-2 py-4 gap-4">
     <app-language-switcher></app-language-switcher>
     <p-button
       severity="secondary"
@@ -36,26 +36,18 @@
       [disabled]="!(redoStepsCount! > 0)">
       {{ redoStepsCount }}
     </p-button>
-    <p-button (click)="onExport()">Export Code</p-button>
+    <p-button
+      severity="secondary"
+      icon="pi pi-images"
+      (click)="onGenerateChart()"
+    />
   </div>
-  <p-tabs
-    [value]="(selectedProcedureId$ | async)!"
-    [scrollable]="true"
-    class="bg-white"
-  >
-    <p-tablist>
-      @for (procedure of procedures$ | async; track procedure.id) {
-        <p-tab [value]="procedure.id" (click)="onSelectProcedure(procedure.id)">{{ procedure.name }}</p-tab>
-      }
-    </p-tablist>
-  </p-tabs>
-  <p-divider></p-divider>
   <div class="flex flex-grow overflow-hidden">
     <div class="flex flex-shrink-0">
       <app-sidebar></app-sidebar>
     </div>
     <div class="flex-grow overflow-hidden border border-gray-300 rounded-2xl">
-      @if (elements$ | async; as elements) {
+      @if (elements(); as elements) {
         <svg
           #editorScene
           [attr.width]="'100%'"

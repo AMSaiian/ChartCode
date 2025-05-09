@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, map, Observable } from 'rxjs';
+import { FormatOptions } from '../const/сode-template.const';
 import { EdgeDto, InsertionDto, NodeDto } from '../dto/layout.dto';
 import { ElementType } from '../models/element/element.interface';
 import {
@@ -7,14 +8,16 @@ import {
   ConditionElement,
   ForLoopElement,
   InputElement,
-  OutputElement, ProcedureElement,
+  OutputElement,
+  ProcedureElement,
   WhileLoopElement,
 } from '../models/element/element.model';
+import { ProcedureEdgeBuilder } from '../utils/edging.builder';
 import { deepCloneMap } from '../utils/element.utils';
 import { ProcedureLayoutBuilder } from '../utils/layout.builder';
-import { ProcedureEdgeBuilder } from '../utils/edging.builder';
-import { FlowchartService } from './flowchart.service';
+import { CodegenService } from './codegen.service';
 import { FileService } from './file.service';
+import { FlowchartService } from './flowchart.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +25,7 @@ import { FileService } from './file.service';
 export class AppStateService {
   readonly flowchart = inject(FlowchartService);
   readonly fileService = inject(FileService);
+  readonly codegenService = inject(CodegenService);
 
   selectedProcedureId$ = this.flowchart.current$.pipe(
     map(x => x.selectedProcedureId),
@@ -185,8 +189,18 @@ export class AppStateService {
     }
   }
 
+  public async exportFlowchartAsImage(flowchart: SVGSVGElement, procedureNode: NodeDto) {
+    await this.fileService.exportToJpg(flowchart, procedureNode);
+  }
+
   public selectProcedure(procedureId: string) {
     this.flowchart.current$.value.selectedProcedureId = procedureId;
     this.flowchart.current$.next(this.flowchart.current$.value);
+  }
+
+  public getGeneratedCode(language: string, options?: FormatOptions): Observable<string> {
+    return this.flowchart.current$.pipe(
+      map(x => this.codegenService.generate(language, x.selectedProcedureId, x.elements, x.scopes, options))
+    );
   }
 }

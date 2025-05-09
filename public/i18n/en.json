@@ -52,7 +52,10 @@
     "SIDEBAR": {
       "CHOOSE": "Choose a New Element"
     },
-    "ADD_PROCEDURE": "Add New Procedure"
+    "ADD_PROCEDURE": "Add New Procedure",
+    "CODE": {
+      "LANGUAGE": "Prog. lang"
+    }
   },
   "EXPRESSION_BUILDER": {
     "ARITHMETIC": "Arithmetic Expression Builder",

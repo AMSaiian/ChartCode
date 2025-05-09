@@ -1,5 +1,6 @@
 import { AsyncPipe, NgForOf } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, inject, OnInit, viewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnInit, Signal, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
@@ -56,11 +57,10 @@ import { SourceCodeSectionComponent } from './source-code-section/source-code-se
 })
 export class EditorComponent implements OnInit, AfterViewInit {
   state = inject(AppStateService);
-  codegen = inject(CodegenService);
 
   selectedElementType$!: Observable<ElementType | null>;
   selectedElementId$!: Observable<string | null>;
-  elements$!: Observable<{ nodes: NodeDto[], edges: EdgeDto[], insertions: InsertionDto[] }>;
+  elements!: Signal<{ nodes: NodeDto[], edges: EdgeDto[], insertions: InsertionDto[] }>;
   undoSteps$!: Observable<number>;
   redoSteps$!: Observable<number>;
 
@@ -70,16 +70,17 @@ export class EditorComponent implements OnInit, AfterViewInit {
   editorSceneRef = viewChild<ElementRef<SVGSVGElement>>('editorScene');
   sceneManipulator!: SvgPanZoom.Instance;
 
+  constructor() {
+    this.elements = toSignal(
+      this.state.selectedProcedureId$.pipe(
+        switchMap(
+          procedureId => this.state.getProcedureElements(procedureId))
+      ), { initialValue: { nodes: [], edges: [], insertions: [] } }
+    );
+  }
+
   ngOnInit(): void {
     this.selectedProcedureId$ = this.state.selectedProcedureId$;
-
-    this.elements$ = this.state.selectedProcedureId$.pipe(
-      switchMap(
-        procedureId => this.state.getProcedureElements(procedureId),
-      ),
-      tap(x => console.log(x))
-    );
-
     this.selectedElementType$ = this.state.selectedElementType$.asObservable();
     this.selectedElementId$ = this.state.selectedElementId$.asObservable();
     this.undoSteps$ = this.state.undoSteps$;
@@ -125,47 +126,14 @@ export class EditorComponent implements OnInit, AfterViewInit {
     await this.state.loadFlowchart();
   }
 
-  public onExport() {
-    const code = this.codegen.generate(
-      'csharp',
-      this.state.flowchart.current$.value.selectedProcedureId,
-      this.state.flowchart.current$.value.elements,
-      this.state.flowchart.current$.value.scopes
+  public async onGenerateChart() {
+    const svgElement = this.editorSceneRef()!.nativeElement;
+    const clone = svgElement.cloneNode(true) as SVGSVGElement;
+    const procedureElement = this.elements().nodes.find(
+      x => x.element.id === this.state.flowchart.current$.value.selectedProcedureId
     );
 
-    console.log(code);
-  }
-
-  exportSvg(): void {
-    const svgElement = this.editorSceneRef()!.nativeElement;
-
-    const clone = svgElement.cloneNode(true) as SVGSVGElement;
-
-    clone.setAttribute('width', `${1580}`);
-    clone.setAttribute('height', `${1598}`);
-    clone.setAttribute('viewBox', `0 0 ${1580} ${1598}`);
-
-    const controls = clone.querySelector('.svg-pan-zoom-control');
-    if (controls) controls.remove();
-
-    const viewport = clone.querySelector('.svg-pan-zoom_viewport') as SVGGElement;
-    if (viewport) {
-      viewport.removeAttribute('transform');
-      viewport.removeAttribute('style');
-    }
-
-    const serializer = new XMLSerializer();
-    const svgString = serializer.serializeToString(clone);
-
-    const blob = new Blob([svgString], { type: 'image/svg+xml' });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'flowchart.svg';
-    link.click();
-
-    URL.revokeObjectURL(url);
+    await this.state.exportFlowchartAsImage(clone, procedureElement!);
   }
 
   protected readonly TerminalElement = TerminalElement;

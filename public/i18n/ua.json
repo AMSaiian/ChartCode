@@ -52,6 +52,9 @@
     "SIDEBAR": {
       "CHOOSE": "Оберіть новий елемент"
     },
+    "CODE": {
+      "LANGUAGE": "Мова прогр."
+    },
     "ADD_PROCEDURE": "Додати нову процедуру"
   },
   "EXPRESSION_BUILDER": {
