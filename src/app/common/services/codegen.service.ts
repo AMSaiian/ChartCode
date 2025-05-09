@@ -45,24 +45,24 @@ export class CodegenService {
     ];
 
     if (template.mainWrapper.signature && template.mainWrapper.mainSignature) {
-      const body = this.generateScopeBody(procedure.scopeId, elements, scopes, template, 1);
+      const body = this.generateScopeBody(procedure.scopeId, elements, scopes, template, 0);
 
       lines = [...lines,
         this.withBlockStart(template.mainWrapper.signature, template),
         this.openBlock(template, 0),
         this.indent(template, 1) + this.withBlockStart(template.mainWrapper.mainSignature, template),
-        this.wrapBlock(template, body, 1),
+        this.wrapBlock(template, body, 2),
         template.blockEnd
       ];
     } else if (!template.mainWrapper.signature && template.mainWrapper.mainSignature) {
-      const body = this.generateScopeBody(procedure.scopeId, elements, scopes, template, 1);
+      const body = this.generateScopeBody(procedure.scopeId, elements, scopes, template, 0);
 
       lines = [...lines,
         this.withBlockStart(template.mainWrapper.mainSignature, template),
-        this.wrapBlock(template, body, 0),
+        this.wrapBlock(template, body, 1),
       ];
     } else {
-      const body = this.generateScopeBody(procedure.scopeId, elements, scopes, template, 1);
+      const body = this.generateScopeBody(procedure.scopeId, elements, scopes, template, 0);
       lines = [...lines, body]
     }
 
@@ -110,7 +110,7 @@ export class CodegenService {
       const body = this.generateScopeBody(element.scopeId, elements, scopes, template, indentLevel);
       code = [
         this.withBlockStart(this.indent(template, indentLevel) + template.while.replace('{condition}', cond), template),
-        this.wrapBlock(template, body, indentLevel)
+        this.wrapBlock(template, body, indentLevel + 1)
       ].join('\n');
     } else if (element instanceof ForLoopElement) {
       const cond = this.generateBoolExpression(element.checkExpression, template);
@@ -127,7 +127,7 @@ export class CodegenService {
       const body = this.generateScopeBody(element.scopeId, elements, scopes, template, indentLevel);
       code = [
         this.withBlockStart(this.indent(template, indentLevel) + forLine, template),
-        this.wrapBlock(template, body, indentLevel)
+        this.wrapBlock(template, body, indentLevel + 1)
       ].join('\n');
     } else if (element instanceof ConditionElement) {
       const cond = this.generateBoolExpression(element.conditionExpression, template);
@@ -136,9 +136,9 @@ export class CodegenService {
 
       code = [
         this.withBlockStart(this.indent(template, indentLevel) + template.if.start.replace('{condition}', cond), template),
-        this.wrapBlock(template, positive, indentLevel),
+        this.wrapBlock(template, positive, indentLevel + 1),
         this.withBlockStart(this.indent(template, indentLevel) + template.if.else, template),
-        this.wrapBlock(template, negative, indentLevel)
+        this.wrapBlock(template, negative, indentLevel + 1)
       ].join('\n');
     }
 
@@ -215,11 +215,11 @@ export class CodegenService {
   private wrapBlock(template: CodegenTemplate, code: string, indentLevel: number): string {
     const lines = [
       this.indentBlock(template, code, indentLevel),
-      this.indent(template, indentLevel) + template.blockEnd
+      this.indent(template, indentLevel - 1) + template.blockEnd
     ];
 
     if (template.style === 'allman') {
-      lines.unshift(this.indent(template, indentLevel) + template.blockStart);
+      lines.unshift(this.indent(template, indentLevel - 1) + template.blockStart);
     }
 
     return lines.join('\n');
