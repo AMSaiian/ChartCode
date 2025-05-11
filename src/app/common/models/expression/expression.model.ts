@@ -28,7 +28,7 @@ export class BoolExpression {
     const right = this.rightOperand instanceof BoolExpression
                   ? this.rightOperand.isValid()
                   : (this.expressionType === BoolExpressionType.Not && !this.rightOperand) ||
-                    this.rightOperand?.match(IdentifierOrArrayAccessOrLiteral) !== null;
+                    (!!this.rightOperand && this.rightOperand.match(IdentifierOrArrayAccessOrLiteral) !== null);
 
     return left && right;
   }

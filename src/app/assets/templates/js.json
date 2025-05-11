@@ -28,7 +28,7 @@
     "else": "else"
   },
   "while": "while ({condition})",
-  "for": "for (let {init}; {condition}; {update})",
+  "for": "for ({init}; {condition}; {update})",
   "increment": "{var}++",
   "decrement": "{var}--",
   "blockStart": "{",

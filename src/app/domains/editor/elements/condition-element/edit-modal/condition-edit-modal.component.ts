@@ -48,6 +48,7 @@ export class ConditionEditModalComponent implements OnInit {
   }
 
   public onExpressionChanged($event: { expression: BoolExpression, isValid: boolean }) {
-    this.isExpressionValid = $event.isValid;
+    this.expression = $event.expression;
+    this.isExpressionValid = this.expression.isValid();
   }
 }

@@ -146,7 +146,8 @@ export class AssignEditModalComponent implements OnInit {
   }
 
   public onExpressionChanged(event: { expression: ArithmeticExpression | BoolExpression, isValid: boolean }) {
-    this.isExpressionValid = event.isValid
+    this.expression = event.expression;
+    this.isExpressionValid = this.expression.isValid();
     this.isValid = this.isValidAssigning();
   }
 
