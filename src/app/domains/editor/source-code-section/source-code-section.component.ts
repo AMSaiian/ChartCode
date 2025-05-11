@@ -1,11 +1,12 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
-import { Observable, startWith, switchMap } from 'rxjs';
+import { defer, Observable, startWith, switchMap } from 'rxjs';
 import { codegenTemplateList } from '../../../common/const/сode-template.const';
 import { AppStateService } from '../../../common/services/app-state.service';
 
@@ -33,6 +34,8 @@ export class SourceCodeSectionComponent implements OnInit {
     useTabs: FormControl<boolean | null>
   }>;
 
+  destroyRef = inject(DestroyRef);
+
   ngOnInit(): void {
     this.optionsForm = new FormGroup({
       language: new FormControl(this.languagesList[0].key),
@@ -41,10 +44,12 @@ export class SourceCodeSectionComponent implements OnInit {
       useTabs: new FormControl(false),
     });
 
-    this.currentSourceCode = this.optionsForm.valueChanges.pipe(
-      startWith(this.optionsForm.value),
-      switchMap(x => this.state.getGeneratedCode(x.language!, {  }))
-    );
+    this.currentSourceCode = defer(() =>
+      this.optionsForm.valueChanges.pipe(
+        startWith(this.optionsForm.value),
+        switchMap(x => this.state.getGeneratedCode(x.language!, {}))
+      )
+    ).pipe(takeUntilDestroyed(this.destroyRef));
   }
 
   onIsOpenClick() {
