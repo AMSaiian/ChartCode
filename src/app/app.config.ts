@@ -16,7 +16,7 @@ import { FileService } from './common/services/file.service';
 import { FlowchartService } from './common/services/flowchart.service';
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (http: HttpClient) =>
-  new TranslateHttpLoader(http, './i18n/', '.json');
+  new TranslateHttpLoader(http, 'assets/i18n/', '.json');
 
 export const appConfig: ApplicationConfig = {
   providers: [

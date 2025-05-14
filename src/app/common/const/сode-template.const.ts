@@ -1,7 +1,7 @@
-import csharpTemplate from '../../assets/templates/csharp.json';
-import javaTemplate from '../../assets/templates/java.json';
-import cppTemplate from '../../assets/templates/сpp.json';
-import jsTemplate from '../../assets/templates/js.json';
+import csharpTemplate from '../../../assets/templates/csharp.json';
+import javaTemplate from '../../../assets/templates/java.json';
+import cppTemplate from '../../../assets/templates/сpp.json';
+import jsTemplate from '../../../assets/templates/js.json';
 
 export const CodegenTemplates: Record<string, CodegenTemplate> = {
   csharp: csharpTemplate as CodegenTemplate,
