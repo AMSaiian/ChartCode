@@ -8,7 +8,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { defer, Observable, startWith, switchMap } from 'rxjs';
 import { codegenTemplateList } from '../../../common/const/сode-template.const';
-import { AppStateService } from '../../../common/services/app-state.service';
+import { AppCoordinator } from '../../../common/services/app-coordinator';
 
 @Component({
   selector: 'app-source-code-section',
@@ -24,7 +24,7 @@ import { AppStateService } from '../../../common/services/app-state.service';
   styleUrl: './source-code-section.component.css'
 })
 export class SourceCodeSectionComponent implements OnInit {
-  state = inject(AppStateService);
+  state = inject(AppCoordinator);
   isOpen = signal<boolean>(false);
   currentSourceCode!: Observable<string>;
   optionsForm!: FormGroup<{

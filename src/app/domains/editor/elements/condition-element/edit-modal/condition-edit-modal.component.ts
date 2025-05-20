@@ -4,7 +4,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ConditionElement } from '../../../../../common/models/element/element.model';
-import { FlowchartService } from '../../../../../common/services/flowchart.service';
+import { FlowchartRepository } from '../../../../../common/services/flowchart.repository';
 import { BoolExpression } from '../../../../../common/models/expression/expression.model';
 import {
   BoolExpressionBuilderComponent
@@ -24,7 +24,7 @@ import {
 })
 export class ConditionEditModalComponent implements OnInit {
   element = input.required<ConditionElement>();
-  flowchart = inject(FlowchartService);
+  flowchart = inject(FlowchartRepository);
   dialogRef = inject(DynamicDialogRef);
 
   expression!: BoolExpression;

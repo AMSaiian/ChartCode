@@ -6,7 +6,7 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputText } from 'primeng/inputtext';
 import { IdentifierOrArrayAccessOrLiteral } from '../../../../../common/const/field-regex.const';
 import { OutputElement } from '../../../../../common/models/element/element.model';
-import { FlowchartService } from '../../../../../common/services/flowchart.service';
+import { FlowchartRepository } from '../../../../../common/services/flowchart.repository';
 
 @Component({
   selector: 'app-output-edit-modal',
@@ -21,7 +21,7 @@ import { FlowchartService } from '../../../../../common/services/flowchart.servi
 })
 export class OutputEditModalComponent implements OnInit {
   element = input.required<OutputElement>();
-  flowchart = inject(FlowchartService);
+  flowchart = inject(FlowchartRepository);
   dialogRef = inject(DynamicDialogRef);
 
   form!: FormGroup<{

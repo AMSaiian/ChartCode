@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { AppStateService } from './common/services/app-state.service';
+import { AppCoordinator } from './common/services/app-coordinator';
 
 @Component({
   selector: 'app-root',
@@ -13,17 +13,17 @@ import { AppStateService } from './common/services/app-state.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  private state: AppStateService = inject(AppStateService);
+  private state: AppCoordinator = inject(AppCoordinator);
   private router = inject(Router);
 
   ngOnInit(): void {
 
     try {
-      this.state.initializeFlowchart();
-
       this.state.selectedProcedureId$.subscribe(id => {
         if (id) {
           this.router.navigate(['/editor', id]);
+        } else {
+          this.router.navigate(['/welcome']);
         }
       });
     } catch (error) {

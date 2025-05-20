@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { NodeDto } from '../dto/layout.dto';
-import { FlowchartState } from './flowchart.service';
+import { NodeVm } from '../vm/layout.vm';
+import { FlowchartState } from './flowchart.repository';
 import serializer from '../utils/flowchart-serializer';
 
 @Injectable({
@@ -53,7 +53,7 @@ export class FileService {
     }
   }
 
-  async exportToJpg(flowchart: SVGSVGElement, procedureElement: NodeDto) {
+  async exportToJpg(flowchart: SVGSVGElement, procedureElement: NodeVm) {
     flowchart.setAttribute('width', `${procedureElement.width}`);
     flowchart.setAttribute('height', `${procedureElement.height}`);
     flowchart.setAttribute('viewBox', `0 0 ${procedureElement.width} ${procedureElement.height}`);

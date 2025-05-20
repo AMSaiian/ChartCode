@@ -1,5 +1,5 @@
 import { computed, Directive, input, signal } from '@angular/core';
-import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '../../common/dto/layout.dto';
+import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '../../common/vm/layout.vm';
 
 @Directive()
 export class ShapeDirective {

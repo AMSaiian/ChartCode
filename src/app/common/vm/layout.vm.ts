@@ -8,24 +8,24 @@ import {
 } from '../models/element/element.model';
 import { IScope } from '../models/scope/scope.interface';
 
-export interface NodeDto {
+export interface NodeVm {
   element: IElement;
   x: number;
   y: number;
   width: number;
   height: number;
-  body?: BranchDto;
-  left?: BranchDto;
-  right?: BranchDto;
+  body?: BranchVm;
+  left?: BranchVm;
+  right?: BranchVm;
 }
 
-export interface BranchDto {
+export interface BranchVm {
   scope: IScope;
   x: number;
   y: number;
   width: number;
   height: number;
-  nodes: NodeDto[];
+  nodes: NodeVm[];
 }
 
 export interface Margin {
@@ -62,7 +62,7 @@ export interface Point {
   y: number;
 }
 
-export interface EdgeDto {
+export interface EdgeVm {
   fromId: string | null;
   toId: string | null;
   isSupport: boolean;
@@ -75,7 +75,7 @@ export const DEFAULT_LINE_TOP_MARGIN = 1;
 export const DEFAULT_LINE_BOTTOM_MARGIN = 2;
 export const DEFAULT_INSERT_RADIUS = 4;
 
-export interface InsertionDto {
+export interface InsertionVm {
   x: number;
   y: number;
   scopeId: string;

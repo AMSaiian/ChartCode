@@ -7,13 +7,13 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { DialogService } from 'primeng/dynamicdialog';
-import { AppStateService } from './common/services/app-state.service';
+import { AppCoordinator } from './common/services/app-coordinator';
 
 import { routes } from './app.routes';
 import { CodegenService } from './common/services/codegen.service';
 import { ElementsModalService } from './common/services/elements-modal.service';
 import { FileService } from './common/services/file.service';
-import { FlowchartService } from './common/services/flowchart.service';
+import { FlowchartRepository } from './common/services/flowchart.repository';
 
 const httpLoaderFactory: (http: HttpClient) => TranslateHttpLoader = (http: HttpClient) =>
   new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -40,8 +40,8 @@ export const appConfig: ApplicationConfig = {
       },
     })]),
     DialogService,
-    AppStateService,
-    FlowchartService,
+    AppCoordinator,
+    FlowchartRepository,
     ElementsModalService,
     FileService,
     CodegenService

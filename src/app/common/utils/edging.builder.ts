@@ -1,14 +1,14 @@
 import {
-  BranchDto,
+  BranchVm,
   DEFAULT_HEIGHT, DEFAULT_INSERT_RADIUS,
   DEFAULT_LINE_BOTTOM_MARGIN,
   DEFAULT_WIDTH,
-  EdgeDto,
-  getMargins, InsertionDto,
+  EdgeVm,
+  getMargins, InsertionVm,
   MIN_BRANCH_HEIGHT,
-  NodeDto,
+  NodeVm,
   Point,
-} from '../dto/layout.dto';
+} from '../vm/layout.vm';
 import { ConditionElement, ForLoopElement, WhileLoopElement } from '../models/element/element.model';
 import { isLoop, isScopable } from './element.utils';
 
@@ -36,7 +36,7 @@ export class LinePathBuilder {
   }
 }
 
-function getNodeBottomY(node: NodeDto): number {
+function getNodeBottomY(node: NodeVm): number {
   const bottomMargin = isScopable(node.element) ? 0 : getMargins(node.element).bottom;
   return node.y
          + node.height
@@ -45,18 +45,18 @@ function getNodeBottomY(node: NodeDto): number {
 }
 
 export class ProcedureEdgeBuilder {
-  private edges!: EdgeDto[];
-  private insertPoints!: InsertionDto[];
-  private nodeMap: Record<string, NodeDto>;
+  private edges!: EdgeVm[];
+  private insertPoints!: InsertionVm[];
+  private nodeMap: Record<string, NodeVm>;
 
-  constructor(private nodes: NodeDto[]) {
-    this.nodeMap = nodes.reduce<Record<string, NodeDto>>((acc, node) => {
+  constructor(private nodes: NodeVm[]) {
+    this.nodeMap = nodes.reduce<Record<string, NodeVm>>((acc, node) => {
       acc[node.element.id] = node;
       return acc;
     }, {});
   }
 
-  public build(): { edges: EdgeDto[], insertions: InsertionDto[] } {
+  public build(): { edges: EdgeVm[], insertions: InsertionVm[] } {
     this.edges = [];
     this.insertPoints = [];
 
@@ -66,7 +66,7 @@ export class ProcedureEdgeBuilder {
     return { edges: [...this.edges], insertions: [...this.insertPoints] } ;
   }
 
-  private processNode(node: NodeDto): void {
+  private processNode(node: NodeVm): void {
     if (node.element.nextId) {
       const nextNode = this.nodeMap[node.element.nextId];
       const startPosition: Point = {
@@ -193,7 +193,7 @@ export class ProcedureEdgeBuilder {
   }
 
   private handleBranch(
-    branch: BranchDto,
+    branch: BranchVm,
     shoulderStart: Point,
     shoulderEnd: Point,
     finishingEnd: Point
@@ -240,7 +240,7 @@ export class ProcedureEdgeBuilder {
     }
   }
 
-  private buildLoopBodyConnections(node: NodeDto, labelPosition: Point) {
+  private buildLoopBodyConnections(node: NodeVm, labelPosition: Point) {
     let loopBodyEnd: Point;
     let loopEnd: Point;
 
@@ -304,7 +304,7 @@ export class ProcedureEdgeBuilder {
     return { loopBodyEnd, loopEnd };
   }
 
-  private buildReturnLine(node: NodeDto, loopEnd: Point, loopBodyEnd: Point) {
+  private buildReturnLine(node: NodeVm, loopEnd: Point, loopBodyEnd: Point) {
     let loopReturn: Point;
     let isSupport: boolean;
 
@@ -340,7 +340,7 @@ export class ProcedureEdgeBuilder {
     });
   }
 
-  private buildExitLine(node: NodeDto, loopEnd: Point) {
+  private buildExitLine(node: NodeVm, loopEnd: Point) {
     const exitStart: Point = {
       x: node.x + DEFAULT_WIDTH,
       y: node.y + DEFAULT_HEIGHT / 2

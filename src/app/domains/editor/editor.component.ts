@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { TabsModule } from 'primeng/tabs';
 import { Observable, switchMap, tap } from 'rxjs';
-import { DEFAULT_ARROW_SIZE, DEFAULT_INSERT_RADIUS, EdgeDto, InsertionDto, NodeDto } from '../../common/dto/layout.dto';
+import { DEFAULT_ARROW_SIZE, DEFAULT_INSERT_RADIUS, EdgeVm, InsertionVm, NodeVm } from '../../common/vm/layout.vm';
 import { ElementType } from '../../common/models/element/element.interface';
 import {
   AssignElement,
@@ -17,7 +17,7 @@ import {
   WhileLoopElement,
 } from '../../common/models/element/element.model';
 import { InstanceofPipe } from '../../common/pipes/instance-of.pipe';
-import { AppStateService } from '../../common/services/app-state.service';
+import { AppCoordinator } from '../../common/services/app-coordinator';
 import { CodegenService } from '../../common/services/codegen.service';
 import { LanguageSwitcherComponent } from '../../components/misc/language-switcher/language-switcher.component';
 import { TerminalShapeComponent } from '../../components/shapes/terminal/terminal-shape.component';
@@ -56,11 +56,11 @@ import { SourceCodeSectionComponent } from './source-code-section/source-code-se
   styleUrl: './editor.component.css'
 })
 export class EditorComponent implements OnInit, AfterViewInit {
-  state = inject(AppStateService);
+  state = inject(AppCoordinator);
 
   selectedElementType$!: Observable<ElementType | null>;
   selectedElementId$!: Observable<string | null>;
-  elements!: Signal<{ nodes: NodeDto[], edges: EdgeDto[], insertions: InsertionDto[] }>;
+  elements!: Signal<{ nodes: NodeVm[], edges: EdgeVm[], insertions: InsertionVm[] }>;
   undoSteps$!: Observable<number>;
   redoSteps$!: Observable<number>;
 
@@ -102,7 +102,7 @@ export class EditorComponent implements OnInit, AfterViewInit {
     this.sceneManipulator.zoomOut();
   }
 
-  public onInsert(point: InsertionDto) {
+  public onInsert(point: InsertionVm) {
     this.state.insert(point);
   }
 
@@ -149,5 +149,9 @@ export class EditorComponent implements OnInit, AfterViewInit {
 
   public onSelectProcedure(procedureId: string) {
     this.state.selectProcedure(procedureId);
+  }
+
+  public onExit() {
+    this.state.flowchart.resetState();
   }
 }

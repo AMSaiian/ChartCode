@@ -1,13 +1,13 @@
 import { computed, Directive, inject, input, OnInit, Signal } from '@angular/core';
 import { IElement } from '../../../common/models/element/element.interface';
-import { AppStateService } from '../../../common/services/app-state.service';
+import { AppCoordinator } from '../../../common/services/app-coordinator';
 import { ElementsModalService } from '../../../common/services/elements-modal.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Directive()
 export abstract class ElementDirective<T extends IElement> {
   protected modalService = inject(ElementsModalService);
-  protected state = inject(AppStateService);
+  protected state = inject(AppCoordinator);
 
   element = input.required<T>();
   showInfo!: Signal<string>;

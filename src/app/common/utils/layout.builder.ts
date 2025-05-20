@@ -1,23 +1,23 @@
 import {
-  BranchDto,
+  BranchVm,
   DEFAULT_HEIGHT,
   DEFAULT_WIDTH,
   getMargins,
   MIN_BRANCH_HEIGHT,
   MIN_BRANCH_WIDTH,
-  NodeDto,
-} from '../dto/layout.dto';
+  NodeVm,
+} from '../vm/layout.vm';
 import { IElement } from '../models/element/element.interface';
 import {
   ConditionElement,
   ProcedureElement,
   TerminalElement,
 } from '../models/element/element.model';
-import { FlowchartState } from '../services/flowchart.service';
+import { FlowchartState } from '../services/flowchart.repository';
 import { isLoop } from './element.utils';
 
 export class ProcedureLayoutBuilder {
-  private nodes: NodeDto[] = [];
+  private nodes: NodeVm[] = [];
 
   constructor(
     private procedureId: string,
@@ -26,7 +26,7 @@ export class ProcedureLayoutBuilder {
     private originY = 0
   ) {}
 
-  public build(): NodeDto[] {
+  public build(): NodeVm[] {
     this.nodes = [];
 
     const root: IElement = this.snapshot.elements[this.procedureId];
@@ -46,14 +46,14 @@ export class ProcedureLayoutBuilder {
     return [...this.nodes];
   }
 
-  private measureScope(id: string): BranchDto {
+  private measureScope(id: string): BranchVm {
     const scope = this.snapshot.scopes[id];
 
     if (!scope) {
       throw new Error(`Scope with id ${this.procedureId} not found`);
     }
 
-    const nodes: NodeDto[] = [];
+    const nodes: NodeVm[] = [];
     let maxWidth = 0;
     let totalHeight = 0;
 
@@ -78,14 +78,14 @@ export class ProcedureLayoutBuilder {
     };
   }
 
-  private measureElement(id: string): NodeDto {
+  private measureElement(id: string): NodeVm {
     const element = this.snapshot.elements[id];
 
     if (!element) {
       throw new Error(`Element with id ${id} not found`);
     }
 
-    const node: NodeDto = {
+    const node: NodeVm = {
       x: -Infinity,
       y: -Infinity,
       element: element,
@@ -126,7 +126,7 @@ export class ProcedureLayoutBuilder {
     return node;
   }
 
-  private positionBranch(branch: BranchDto, x: number, y: number): void {
+  private positionBranch(branch: BranchVm, x: number, y: number): void {
     branch.x = x;
     branch.y = y;
 
@@ -138,7 +138,7 @@ export class ProcedureLayoutBuilder {
     }
   }
 
-  private positionNode(node: NodeDto, x: number, y: number): void {
+  private positionNode(node: NodeVm, x: number, y: number): void {
     node.x = x;
     node.y = y;
 

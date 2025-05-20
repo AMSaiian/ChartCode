@@ -23,7 +23,7 @@ import {
   isNestedExpression,
 } from '../../../../../common/models/expression/expression.model';
 import { InstanceofPipe } from '../../../../../common/pipes/instance-of.pipe';
-import { FlowchartService } from '../../../../../common/services/flowchart.service';
+import { FlowchartRepository } from '../../../../../common/services/flowchart.repository';
 import {
   ArithmeticExpressionBuilderComponent
 } from '../../../../../components/misc/arithmetic-expression/builder/arithmetic-expression-builder.component';
@@ -50,7 +50,7 @@ import {
 })
 export class AssignEditModalComponent implements OnInit {
   element = input.required<AssignElement>();
-  flowchart = inject(FlowchartService);
+  flowchart = inject(FlowchartRepository);
 
   expression?: ArithmeticExpression | BoolExpression;
   isExpressionValid?: boolean;

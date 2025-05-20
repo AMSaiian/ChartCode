@@ -57,6 +57,11 @@
       "LANGUAGE": "Prog. lang"
     }
   },
+  "WELCOME": {
+    "SALUTATION": "Welcome to ChartCode by AMSaiian",
+    "NEW": "Create a new flowchart",
+    "LOAD": "Load an existed flowchart"
+  },
   "EXPRESSION_BUILDER": {
     "ARITHMETIC": "Arithmetic Expression Builder",
     "BOOL": "Boolean Expression Builder",

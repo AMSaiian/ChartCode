@@ -8,7 +8,7 @@ import { Select } from 'primeng/select';
 import { IdentifierOrArrayAccess } from '../../../../../common/const/field-regex.const';
 import { InputElement } from '../../../../../common/models/element/element.model';
 import { DataType, DataTypeList } from '../../../../../common/models/expression/expression.model';
-import { FlowchartService } from '../../../../../common/services/flowchart.service';
+import { FlowchartRepository } from '../../../../../common/services/flowchart.repository';
 
 @Component({
   selector: 'app-input-edit-modal',
@@ -24,7 +24,7 @@ import { FlowchartService } from '../../../../../common/services/flowchart.servi
 })
 export class InputEditModalComponent implements OnInit {
   element = input.required<InputElement>();
-  flowchart = inject(FlowchartService);
+  flowchart = inject(FlowchartRepository);
   dialogRef = inject(DynamicDialogRef);
 
   form!: FormGroup<{

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, map, Observable } from 'rxjs';
 import { FormatOptions } from '../const/сode-template.const';
-import { EdgeDto, InsertionDto, NodeDto } from '../dto/layout.dto';
+import { EdgeVm, InsertionVm, NodeVm } from '../vm/layout.vm';
 import { ElementType } from '../models/element/element.interface';
 import {
   AssignElement,
@@ -17,13 +17,13 @@ import { deepCloneMap } from '../utils/element.utils';
 import { ProcedureLayoutBuilder } from '../utils/layout.builder';
 import { CodegenService } from './codegen.service';
 import { FileService } from './file.service';
-import { FlowchartService } from './flowchart.service';
+import { FlowchartRepository } from './flowchart.repository';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AppStateService {
-  readonly flowchart = inject(FlowchartService);
+export class AppCoordinator {
+  readonly flowchart = inject(FlowchartRepository);
   readonly fileService = inject(FileService);
   readonly codegenService = inject(CodegenService);
 
@@ -56,9 +56,9 @@ export class AppStateService {
   }
 
   public getProcedureElements(procedureId: string): Observable<{
-    nodes: NodeDto[];
-    edges: EdgeDto[],
-    insertions: InsertionDto[]
+    nodes: NodeVm[];
+    edges: EdgeVm[],
+    insertions: InsertionVm[]
   }> {
     return this.flowchart.current$.pipe(
       map(snapshot => {
@@ -118,7 +118,7 @@ export class AppStateService {
     this.flowchart.updateState(snapshot);
   }
 
-  public insert(point: InsertionDto): string {
+  public insert(point: InsertionVm): string {
     if (!this.selectedElementType$.value) {
       console.warn(`No element type selected but tried to insert. Point: ${JSON.stringify(point, null, 2)}`);
       return '';
@@ -189,7 +189,7 @@ export class AppStateService {
     }
   }
 
-  public async exportFlowchartAsImage(flowchart: SVGSVGElement, procedureNode: NodeDto) {
+  public async exportFlowchartAsImage(flowchart: SVGSVGElement, procedureNode: NodeVm) {
     await this.fileService.exportToJpg(flowchart, procedureNode);
   }
 

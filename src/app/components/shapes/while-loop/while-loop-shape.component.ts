@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '../../../common/dto/layout.dto';
+import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '../../../common/vm/layout.vm';
 import { ShapeDirective } from '../shape.directive';
 
 @Component({

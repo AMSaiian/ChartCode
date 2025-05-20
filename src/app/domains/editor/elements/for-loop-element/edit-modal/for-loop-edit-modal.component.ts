@@ -14,7 +14,7 @@ import {
   DataType,
   ValueType,
 } from '../../../../../common/models/expression/expression.model';
-import { FlowchartService } from '../../../../../common/services/flowchart.service';
+import { FlowchartRepository } from '../../../../../common/services/flowchart.repository';
 import {
   BoolExpressionBuilderComponent
 } from '../../../../../components/misc/bool-expression/builder/bool-expression-builder.component';
@@ -34,7 +34,7 @@ import {
 })
 export class ForLoopEditModalComponent implements OnInit {
   element = input.required<ForLoopElement>();
-  flowchart = inject(FlowchartService);
+  flowchart = inject(FlowchartRepository);
   dialogRef = inject(DynamicDialogRef);
   destroyRef = inject(DestroyRef);
 

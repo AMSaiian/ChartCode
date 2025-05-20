@@ -5,7 +5,7 @@ import { Button } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputText } from 'primeng/inputtext';
 import { ConditionElement, WhileLoopElement } from '../../../../../common/models/element/element.model';
-import { FlowchartService } from '../../../../../common/services/flowchart.service';
+import { FlowchartRepository } from '../../../../../common/services/flowchart.repository';
 import { BoolExpression } from '../../../../../common/models/expression/expression.model';
 import {
   BoolExpressionBuilderComponent
@@ -25,7 +25,7 @@ import {
 })
 export class WhileLoopEditModalComponent implements OnInit {
   element = input.required<WhileLoopElement>();
-  flowchart = inject(FlowchartService);
+  flowchart = inject(FlowchartRepository);
   dialogRef = inject(DynamicDialogRef);
 
   expression!: BoolExpression;

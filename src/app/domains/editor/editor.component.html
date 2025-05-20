@@ -5,6 +5,11 @@
 
 <div class="flex flex-col h-screen pb-8 bg-gray-100">
   <div class="flex shrink-0 bg-gray-100 px-2 py-4 gap-4">
+    <p-button
+      severity="secondary"
+      icon="pi pi-sign-out"
+      (click)="onExit()"
+    />
     <app-language-switcher></app-language-switcher>
     <p-button
       severity="secondary"

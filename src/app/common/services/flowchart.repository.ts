@@ -20,7 +20,7 @@ export interface HistoryState {
 @Injectable({
   providedIn: 'root'
 })
-export class FlowchartService {
+export class FlowchartRepository {
   current$: BehaviorSubject<FlowchartState> = new BehaviorSubject({
     selectedProcedureId:  '',
     scopes: {},
@@ -342,5 +342,18 @@ export class FlowchartService {
     }
 
     this.current$.next(newState);
+  }
+
+  public resetState() {
+    this.current$.next({
+      selectedProcedureId: '',
+      scopes: {},
+      elements: {},
+    });
+
+    this.history$.next({
+      undoStack: [],
+      redoStack: []
+    });
   }
 }

@@ -4,9 +4,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
-import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '../../../common/dto/layout.dto';
+import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '../../../common/vm/layout.vm';
 import { ElementType } from '../../../common/models/element/element.interface';
-import { AppStateService } from '../../../common/services/app-state.service';
+import { AppCoordinator } from '../../../common/services/app-coordinator';
 import { ConditionShapeComponent } from '../../../components/shapes/condition/condition-shape.component';
 import { ForLoopShapeComponent } from '../../../components/shapes/for-loop/for-loop-shape.component';
 import { InputShapeComponent } from '../../../components/shapes/input/input-shape.component';
@@ -28,7 +28,7 @@ import { ProcessShapeComponent } from '../../../components/shapes/process/proces
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
-  state = inject(AppStateService);
+  state = inject(AppCoordinator);
   translate = inject(TranslateService);
 
   isOpen = signal<boolean>(true);
