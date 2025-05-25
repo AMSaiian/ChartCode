@@ -8,7 +8,7 @@ import { ShapeDirective } from '../shape.directive';
   styleUrl: './input-shape.component.css'
 })
 export class InputShapeComponent extends ShapeDirective {
-  getParallelogramPoints(width: number, height: number, offsetRatio: number = 0.25): string {
+  getParallelogramPoints(width: number, height: number, offsetRatio = 0.25): string {
     const offset = width * offsetRatio;
 
     const points = [

@@ -15,7 +15,7 @@
     <app-bool-expression-builder
       id="checkExpression"
       [root]="$any(expression)"
-      (rootChanged)="onExpressionChanged($event)"
+      (rootChanged)="onExpressionChanged()"
     />
 
     <label for="isIncrement">{{ 'MODALS.FOR_LOOP.INCREMENT' | translate }}</label>

@@ -3,8 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { InputText } from 'primeng/inputtext';
-import { ConditionElement, WhileLoopElement } from '../../../../../common/models/element/element.model';
+import { WhileLoopElement } from '../../../../../common/models/element/element.model';
 import { FlowchartRepository } from '../../../../../common/services/flowchart.repository';
 import { BoolExpression } from '../../../../../common/models/expression/expression.model';
 import {

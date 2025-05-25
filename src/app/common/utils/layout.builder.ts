@@ -147,7 +147,7 @@ export class ProcedureLayoutBuilder {
 
     if (node.element instanceof ConditionElement) {
       this.positionBranch(node.left!, x + margin.left, branchY);
-      this.positionBranch(node.right!, x + margin.left + node.left?.width!, branchY);
+      this.positionBranch(node.right!, x + margin.left + (node.left?.width ?? 0), branchY);
 
     } else if (node.element instanceof ProcedureElement || isLoop(node.element)) {
       this.positionBranch(node.body!, x + margin.left, branchY);

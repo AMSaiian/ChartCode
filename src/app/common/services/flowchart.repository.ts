@@ -32,11 +32,9 @@ export class FlowchartRepository {
     redoStack: [] as FlowchartState[]
   });
 
-  constructor() { }
-
   public addElement(element: IElement, scopeId: string, previousId: string | null): string {
     const snapshot = this.getStateSnapshot(true);
-    // element = element.clone();
+    element = element.clone();
     if (element.id) {
       throw new Error(`Cannot insert initialised element. Id ${element.id}`);
     } else {
@@ -199,7 +197,7 @@ export class FlowchartRepository {
     this.updateState(snapshot);
   }
 
-  public getStateSnapshot(isCopied: boolean = false): FlowchartState {
+  public getStateSnapshot(isCopied = false): FlowchartState {
     const value = this.current$.value;
 
     return !isCopied ? {
@@ -330,7 +328,7 @@ export class FlowchartRepository {
     });
   }
 
-  public updateState(newState: FlowchartState, withHistory: boolean = true) {
+  public updateState(newState: FlowchartState, withHistory = true) {
     if (withHistory) {
       const current = this.getStateSnapshot(true);
       const history = this.history$.value;

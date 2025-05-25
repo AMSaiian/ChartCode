@@ -8,7 +8,7 @@ import {
 import { IElement } from './element.interface';
 
 export abstract class BaseElement implements IElement {
-  id: string = '';
+  id = '';
   previousId: string[];
   nextId: string | null;
   inScopeId: string | null;
@@ -38,8 +38,8 @@ export class ProcedureElement extends BaseElement {
 
   constructor(
     public name: string,
-    public isMain: boolean = false,
-    public scopeId: string = ''
+    public isMain = false,
+    public scopeId = ''
   ) {
     super();
   }
@@ -59,7 +59,7 @@ export class InputElement extends BaseElement {
   constructor(
     public destination: string,
     public type: DataType,
-    public isOutside: boolean = true
+    public isOutside = true
   ) {
     super();
   }
@@ -78,7 +78,7 @@ export class OutputElement extends BaseElement {
 
   constructor(
     public source: string,
-    public isOutside: boolean = true
+    public isOutside = true
   ) {
     super();
   }
@@ -149,8 +149,8 @@ export class ForLoopElement extends BaseElement {
   constructor(
     public checkExpression: BoolExpression,
     public accumulator: AssignExpression,
-    public isIncrement: boolean = true,
-    public scopeId: string = ''
+    public isIncrement = true,
+    public scopeId = ''
   ) {
     super();
   }
@@ -176,7 +176,7 @@ export class WhileLoopElement extends BaseElement {
 
   constructor(
     public checkExpression: BoolExpression,
-    public scopeId: string = ''
+    public scopeId = ''
   ) {
     super();
   }
@@ -200,8 +200,8 @@ export class ConditionElement extends BaseElement {
 
   constructor(
     public conditionExpression: BoolExpression,
-    public positiveWayId: string = '',
-    public negativeWayId: string = '',
+    public positiveWayId = '',
+    public negativeWayId = '',
   ) {
     super();
   }

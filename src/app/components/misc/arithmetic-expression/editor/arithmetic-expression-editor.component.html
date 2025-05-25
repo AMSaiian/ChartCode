@@ -19,8 +19,9 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <label>{{ 'EXPRESSION_BUILDER.OPERATION' | translate }}:</label>
+    <label for="operationType">{{ 'EXPRESSION_BUILDER.OPERATION' | translate }}:</label>
     <p-select
+      id="operationType"
       [options]="operators"
       optionLabel="symbol"
       optionValue="type"

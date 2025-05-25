@@ -40,8 +40,9 @@
       ) {
         <p-button severity="secondary" (click)="onDeleteExpression()">{{ 'MODALS.ASSIGN.REMOVE_EXPRESSION' | translate }}</p-button>
       }
-      <label>{{ 'MODALS.ASSIGN.DATATYPE' | translate }}:</label>
+      <label for="datatype">{{ 'MODALS.ASSIGN.DATATYPE' | translate }}:</label>
       <p-select
+        id="datatype"
         [options]="dataTypes"
         [overlayOptions]="{ mode: 'modal' }"
         formControlName="dataType"

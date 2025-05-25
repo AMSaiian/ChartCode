@@ -9,11 +9,11 @@ import {
   NodeVm,
   Point,
 } from '../vm/layout.vm';
-import { ConditionElement, ForLoopElement, WhileLoopElement } from '../models/element/element.model';
+import { ConditionElement, ForLoopElement } from '../models/element/element.model';
 import { isLoop, isScopable } from './element.utils';
 
 export class LinePathBuilder {
-  private path: string = '';
+  private path = '';
   private current: Point = { x: 0, y: 0 };
 
   constructor(current: Point = { x: 0, y: 0 }) {
@@ -283,7 +283,7 @@ export class ProcedureEdgeBuilder {
     } else {
       loopBodyEnd = {
         x: labelPosition.x,
-        y: labelPosition.y + node.body?.height!
+        y: labelPosition.y + (node.body?.height ?? 0)
       };
 
       loopEnd = {

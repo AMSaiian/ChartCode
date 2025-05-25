@@ -33,7 +33,7 @@ export class BoolExpression {
     return left && right;
   }
 
-  toReadable(isRoot: boolean = false): string {
+  toReadable(isRoot = false): string {
     const left = this.leftOperand instanceof BoolExpression
                  ? this.leftOperand.toReadable()
                  : this.leftOperand;
@@ -81,7 +81,7 @@ export class ArithmeticExpression {
     return left && right;
   }
 
-  toReadable(isRoot: boolean = false): string {
+  toReadable(isRoot = false): string {
     const left = this.leftOperand instanceof ArithmeticExpression
                  ? this.leftOperand.toReadable()
                  : this.leftOperand;
@@ -152,7 +152,7 @@ export class AssignExpression {
   constructor(
     public destination: string,
     public assign: string | ArithmeticExpression | BoolExpression,
-    public isNew: boolean = false,
+    public isNew = false,
     public type: ValueType,
   ) {}
 
@@ -177,7 +177,7 @@ export const DataTypeList: DataType[] = Object.values(DataType);
 export class ValueType {
   constructor(
     public type: DataType,
-    public isCollection: boolean = false,
+    public isCollection = false,
     public length?: string
   ) {}
 

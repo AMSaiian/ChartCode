@@ -5,8 +5,9 @@
       pInputText
       formControlName="destination"
     />
-    <label>{{ 'MODALS.INPUT.DATATYPE' | translate }}:</label>
+    <label for="datatype">{{ 'MODALS.INPUT.DATATYPE' | translate }}:</label>
     <p-select
+      id="datatype"
       [options]="dataTypes"
       [overlayOptions]="{ mode: 'modal' }"
       formControlName="type"

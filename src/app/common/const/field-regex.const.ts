@@ -26,7 +26,7 @@ export const IdentifierArrayOrIntegerLiteral =
 export const IdentifierArrayOrStringLiteral =
   /^(?:[a-zA-Z_][a-zA-Z0-9_]*(?:\[(?:[a-zA-Z_][a-zA-Z0-9_]*|\d+)\])*|"[^"\\]*(?:\\.[^"\\]*)*")$/;
 
-export const getRegexByValueType = (type: DataType, unsigned: boolean = false): RegExp => {
+export const getRegexByValueType = (type: DataType, unsigned = false): RegExp => {
   switch (type) {
     case DataType.Integer:
       return unsigned ? IdentifierArrayOrUnsignedIntegerLiteral : IdentifierArrayOrIntegerLiteral;

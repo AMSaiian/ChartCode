@@ -103,7 +103,7 @@ export class ForLoopEditModalComponent implements OnInit {
     return this.form.valid && this.expression.isValid();
   }
 
-  public onExpressionChanged($event: { expression: BoolExpression, isValid: boolean }) {
+  public onExpressionChanged() {
     this.isValid = this.isValidForLoop();
   }
 }

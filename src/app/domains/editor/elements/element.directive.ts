@@ -1,4 +1,4 @@
-import { computed, Directive, inject, input, OnInit, Signal } from '@angular/core';
+import { computed, Directive, inject, input, Signal } from '@angular/core';
 import { IElement } from '../../../common/models/element/element.interface';
 import { AppCoordinator } from '../../../common/services/app-coordinator';
 import { ElementsModalService } from '../../../common/services/elements-modal.service';
