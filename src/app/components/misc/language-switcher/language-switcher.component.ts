@@ -15,8 +15,7 @@ import { defaultLanguage, ILanguageEntry, languageStorageKey } from '../../../co
     NgClass,
     Ripple,
   ],
-  templateUrl: './language-switcher.component.html',
-  styleUrl: './language-switcher.component.css'
+  templateUrl: './language-switcher.component.html'
 })
 export class LanguageSwitcherComponent {
   languages: ILanguageEntry[] = [
@@ -26,7 +25,7 @@ export class LanguageSwitcherComponent {
 
   currentLanguage = signal<string>(defaultLanguage);
 
-  constructor(private translate: TranslateService) {
+  constructor(private readonly translate: TranslateService) {
     const savedLanguage = localStorage.getItem(languageStorageKey);
     if (savedLanguage) {
       this.currentLanguage.set(savedLanguage);

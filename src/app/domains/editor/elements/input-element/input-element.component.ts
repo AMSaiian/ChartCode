@@ -10,8 +10,7 @@ import { ElementDirective } from '../element.directive';
     InputShapeComponent,
     DialogModule
   ],
-  templateUrl: './input-element.component.html',
-  styleUrl: './input-element.component.css'
+  templateUrl: './input-element.component.html'
 })
 export class InputElementComponent extends ElementDirective<InputElement> {
 

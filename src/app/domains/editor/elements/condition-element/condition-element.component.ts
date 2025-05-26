@@ -8,8 +8,7 @@ import { ConditionShapeComponent } from '../../../../components/shapes/condition
   imports: [
     ConditionShapeComponent,
   ],
-  templateUrl: './condition-element.component.html',
-  styleUrl: './condition-element.component.css'
+  templateUrl: './condition-element.component.html'
 })
 export class ConditionElementComponent extends ElementDirective<ConditionElement> {
 

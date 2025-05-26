@@ -14,7 +14,7 @@ import { isLoop, isScopable } from './element.utils';
 
 export class LinePathBuilder {
   private path = '';
-  private current: Point = { x: 0, y: 0 };
+  private readonly current: Point = { x: 0, y: 0 };
 
   constructor(current: Point = { x: 0, y: 0 }) {
     this.current = { ...current };
@@ -47,9 +47,9 @@ function getNodeBottomY(node: NodeVm): number {
 export class ProcedureEdgeBuilder {
   private edges!: EdgeVm[];
   private insertPoints!: InsertionVm[];
-  private nodeMap: Record<string, NodeVm>;
+  private readonly nodeMap: Record<string, NodeVm>;
 
-  constructor(private nodes: NodeVm[]) {
+  constructor(private readonly nodes: NodeVm[]) {
     this.nodeMap = nodes.reduce<Record<string, NodeVm>>((acc, node) => {
       acc[node.element.id] = node;
       return acc;

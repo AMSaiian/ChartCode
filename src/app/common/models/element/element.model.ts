@@ -33,7 +33,7 @@ export abstract class BaseElement implements IElement {
 
 export class ProcedureElement extends BaseElement {
   static readonly type = 'procedure';
-  static getDefault = () => this.DEFAULT.clone();
+  static readonly getDefault = () => this.DEFAULT.clone();
   private static readonly DEFAULT = new ProcedureElement('Procedure', false);
 
   constructor(
@@ -53,7 +53,7 @@ export class ProcedureElement extends BaseElement {
 
 export class InputElement extends BaseElement {
   static readonly type = 'input';
-  static getDefault = () => this.DEFAULT.clone();
+  static readonly getDefault = () => this.DEFAULT.clone();
   private static readonly DEFAULT = new InputElement('x', DataType.Integer);
 
   constructor(
@@ -73,7 +73,7 @@ export class InputElement extends BaseElement {
 
 export class OutputElement extends BaseElement {
   static readonly type = 'output';
-  static getDefault = () => this.DEFAULT.clone();
+  static readonly getDefault = () => this.DEFAULT.clone();
   private static readonly DEFAULT = new OutputElement('x');
 
   constructor(
@@ -92,7 +92,7 @@ export class OutputElement extends BaseElement {
 
 export class TerminalElement extends BaseElement {
   static readonly type = 'terminal';
-  static getDefault = () => this.DEFAULT.clone();
+  static readonly getDefault = () => this.DEFAULT.clone();
   private static readonly DEFAULT = new TerminalElement(true);
 
   constructor(
@@ -110,7 +110,7 @@ export class TerminalElement extends BaseElement {
 
 export class AssignElement extends BaseElement {
   static readonly type = 'assign';
-  static getDefault = () => this.DEFAULT.clone();
+  static readonly getDefault = () => this.DEFAULT.clone();
   private static readonly DEFAULT = new AssignElement(
     new AssignExpression(
       'x',
@@ -135,7 +135,7 @@ export class AssignElement extends BaseElement {
 
 export class ForLoopElement extends BaseElement {
   static readonly type = 'for-loop';
-  static getDefault = () => this.DEFAULT.clone();
+  static readonly getDefault = () => this.DEFAULT.clone();
   private static readonly DEFAULT = new ForLoopElement(
     new BoolExpression('i', BoolExpressionType.LessThan, '10'),
     new AssignExpression(
@@ -169,7 +169,7 @@ export class ForLoopElement extends BaseElement {
 
 export class WhileLoopElement extends BaseElement {
   static readonly type = 'while-loop';
-  static getDefault = () => this.DEFAULT.clone();
+  static readonly getDefault = () => this.DEFAULT.clone();
   private static readonly DEFAULT = new WhileLoopElement(
     new BoolExpression('true', BoolExpressionType.Equals, 'true')
   );
@@ -193,7 +193,7 @@ export class WhileLoopElement extends BaseElement {
 
 export class ConditionElement extends BaseElement {
   static readonly type = 'condition';
-  static getDefault = () => this.DEFAULT.clone();
+  static readonly getDefault = () => this.DEFAULT.clone();
   private static readonly DEFAULT = new ConditionElement(
     new BoolExpression('true', BoolExpressionType.Equals, 'true')
   );

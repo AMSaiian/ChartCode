@@ -4,8 +4,7 @@ import { ShapeDirective } from '../shape.directive';
 @Component({
   selector: '[for-loop-shape]',
   imports: [],
-  templateUrl: './for-loop-shape.component.html',
-  styleUrl: './for-loop-shape.component.css'
+  templateUrl: './for-loop-shape.component.html'
 })
 export class ForLoopShapeComponent extends ShapeDirective {
   getHexagonPoints(width: number, height: number): string {

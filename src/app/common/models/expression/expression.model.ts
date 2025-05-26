@@ -23,12 +23,12 @@ export class BoolExpression {
   isValid(): boolean {
     const left = this.leftOperand instanceof BoolExpression
                  ? this.leftOperand.isValid()
-                 : this.leftOperand.match(IdentifierOrArrayAccessOrLiteral) !== null;
+                 : RegExp(IdentifierOrArrayAccessOrLiteral).exec(this.leftOperand) !== null;
 
     const right = this.rightOperand instanceof BoolExpression
                   ? this.rightOperand.isValid()
                   : (this.expressionType === BoolExpressionType.Not && !this.rightOperand) ||
-                    (!!this.rightOperand && this.rightOperand.match(IdentifierOrArrayAccessOrLiteral) !== null);
+                    (!!this.rightOperand && RegExp(IdentifierOrArrayAccessOrLiteral).exec(this.rightOperand) !== null);
 
     return left && right;
   }
@@ -72,11 +72,11 @@ export class ArithmeticExpression {
   isValid(): boolean {
     const left = this.leftOperand instanceof ArithmeticExpression
                  ? this.leftOperand.isValid()
-                 : this.leftOperand.match(getRegexByValueType(DataType.Float, true)) !== null;
+                 : RegExp(getRegexByValueType(DataType.Float, true)).exec(this.leftOperand) !== null;
 
     const right = this.rightOperand instanceof ArithmeticExpression
                  ? this.rightOperand.isValid()
-                 : this.rightOperand.match(getRegexByValueType(DataType.Float, true)) !== null;
+                 : RegExp(getRegexByValueType(DataType.Float, true)).exec(this.rightOperand) !== null;
 
     return left && right;
   }

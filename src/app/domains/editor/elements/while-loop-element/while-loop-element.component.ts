@@ -8,8 +8,7 @@ import { ElementDirective } from '../element.directive';
   imports: [
     ConditionShapeComponent,
   ],
-  templateUrl: './while-loop-element.component.html',
-  styleUrl: './while-loop-element.component.css'
+  templateUrl: './while-loop-element.component.html'
 })
 export class WhileLoopElementComponent extends ElementDirective<WhileLoopElement> {
 

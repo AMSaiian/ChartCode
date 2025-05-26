@@ -49,7 +49,7 @@ export const MARGIN_MAP = new Map<Function, Margin>([
 const DEFAULT_MARGINS: Margin = { top: 60, bottom: 60, left: 10, right: 10 };
 
 export function getMargins(node: IElement): Margin {
-  return MARGIN_MAP.get(node.constructor as Function) ?? DEFAULT_MARGINS;
+  return MARGIN_MAP.get(node.constructor) ?? DEFAULT_MARGINS;
 }
 
 export const DEFAULT_WIDTH = 120;

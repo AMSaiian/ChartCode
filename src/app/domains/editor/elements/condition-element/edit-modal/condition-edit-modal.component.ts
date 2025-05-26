@@ -19,8 +19,7 @@ import {
     TranslatePipe,
     BoolExpressionBuilderComponent,
   ],
-  templateUrl: './condition-edit-modal.component.html',
-  styleUrl: './condition-edit-modal.component.css'
+  templateUrl: './condition-edit-modal.component.html'
 })
 export class ConditionEditModalComponent implements OnInit {
   element = input.required<ConditionElement>();

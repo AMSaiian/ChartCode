@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { TabsModule } from 'primeng/tabs';
-import { Observable, switchMap, tap } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { DEFAULT_ARROW_SIZE, DEFAULT_INSERT_RADIUS, EdgeVm, InsertionVm, NodeVm } from '../../common/vm/layout.vm';
 import { ElementType } from '../../common/models/element/element.interface';
 import {
@@ -18,7 +18,6 @@ import {
 } from '../../common/models/element/element.model';
 import { InstanceofPipe } from '../../common/pipes/instance-of.pipe';
 import { AppCoordinator } from '../../common/services/app-coordinator';
-import { CodegenService } from '../../common/services/codegen.service';
 import { LanguageSwitcherComponent } from '../../components/misc/language-switcher/language-switcher.component';
 import { TerminalShapeComponent } from '../../components/shapes/terminal/terminal-shape.component';
 import { AssignElementComponent } from './elements/assign-element/assign-element.component';
@@ -36,7 +35,6 @@ import { SourceCodeSectionComponent } from './source-code-section/source-code-se
   imports: [
     InstanceofPipe,
     NgForOf,
-    AsyncPipe,
     TerminalShapeComponent,
     SidebarComponent,
     LanguageSwitcherComponent,
@@ -52,8 +50,7 @@ import { SourceCodeSectionComponent } from './source-code-section/source-code-se
     TabsModule,
     DividerModule,
   ],
-  templateUrl: './editor.component.html',
-  styleUrl: './editor.component.css'
+  templateUrl: './editor.component.html'
 })
 export class EditorComponent implements OnInit, AfterViewInit {
   state = inject(AppCoordinator);

@@ -19,8 +19,7 @@ import {
     Button,
     Select,
   ],
-  templateUrl: './bool-expression-editor.component.html',
-  styleUrl: './bool-expression-editor.component.css'
+  templateUrl: './bool-expression-editor.component.html'
 })
 export class BoolExpressionEditorComponent {
   expression = input.required<BoolExpression>();

@@ -45,8 +45,7 @@ import {
     ArithmeticExpressionBuilderComponent,
     BoolExpressionBuilderComponent,
   ],
-  templateUrl: './assign-edit-modal.component.html',
-  styleUrl: './assign-edit-modal.component.css'
+  templateUrl: './assign-edit-modal.component.html'
 })
 export class AssignEditModalComponent implements OnInit {
   element = input.required<AssignElement>();

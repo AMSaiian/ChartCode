@@ -19,8 +19,7 @@ import {
     TranslatePipe,
     BoolExpressionBuilderComponent,
   ],
-  templateUrl: './while-loop-edit-modal.component.html',
-  styleUrl: './while-loop-edit-modal.component.css'
+  templateUrl: './while-loop-edit-modal.component.html'
 })
 export class WhileLoopEditModalComponent implements OnInit {
   element = input.required<WhileLoopElement>();

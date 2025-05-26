@@ -21,8 +21,7 @@ import {
     Button,
     Select,
   ],
-  templateUrl: './arithmetic-expression-editor.component.html',
-  styleUrl: './arithmetic-expression-editor.component.css'
+  templateUrl: './arithmetic-expression-editor.component.html'
 })
 export class ArithmeticExpressionEditorComponent {
   expression = input.required<ArithmeticExpression>();

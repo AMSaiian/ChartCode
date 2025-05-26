@@ -9,10 +9,9 @@ import { LanguageSwitcherComponent } from '../../components/misc/language-switch
   selector: 'app-welcome',
   imports: [ButtonModule, DividerModule, TranslatePipe, LanguageSwitcherComponent],
   templateUrl: './welcome.component.html',
-  styleUrl: './welcome.component.css'
 })
 export class WelcomeComponent {
-  private coordinator = inject(AppCoordinator);
+  private readonly coordinator = inject(AppCoordinator);
 
   public onNewFlowchart() {
     this.coordinator.initializeFlowchart();

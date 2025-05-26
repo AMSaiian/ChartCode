@@ -13,8 +13,8 @@ import { AppCoordinator } from './common/services/app-coordinator';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  private state: AppCoordinator = inject(AppCoordinator);
-  private router = inject(Router);
+  private readonly state: AppCoordinator = inject(AppCoordinator);
+  private readonly router = inject(Router);
 
   ngOnInit(): void {
 

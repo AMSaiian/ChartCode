@@ -4,8 +4,7 @@ import { ShapeDirective } from '../shape.directive';
 @Component({
   selector: '[condition-shape]',
   imports: [],
-  templateUrl: './condition-shape.component.html',
-  styleUrl: './condition-shape.component.css'
+  templateUrl: './condition-shape.component.html'
 })
 export class ConditionShapeComponent extends ShapeDirective {
   getDiamondPoints(width: number, height: number): string {

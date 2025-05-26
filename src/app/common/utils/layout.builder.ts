@@ -20,10 +20,10 @@ export class ProcedureLayoutBuilder {
   private nodes: NodeVm[] = [];
 
   constructor(
-    private procedureId: string,
-    private snapshot: FlowchartState,
-    private originX = 0,
-    private originY = 0
+    private readonly procedureId: string,
+    private readonly snapshot: FlowchartState,
+    private readonly originX = 0,
+    private readonly originY = 0
   ) {}
 
   public build(): NodeVm[] {
@@ -97,8 +97,8 @@ export class ProcedureLayoutBuilder {
 
     if (element instanceof ConditionElement) {
 
-      const positiveBranch = this.measureScope(element.positiveWayId!);
-      const negativeBranch = this.measureScope(element.negativeWayId!);
+      const positiveBranch = this.measureScope(element.positiveWayId);
+      const negativeBranch = this.measureScope(element.negativeWayId);
       node.width = positiveBranch.width + negativeBranch.width;
       node.height = Math.max(positiveBranch.height, negativeBranch.height);
       node.left = positiveBranch;
@@ -142,7 +142,7 @@ export class ProcedureLayoutBuilder {
     node.x = x;
     node.y = y;
 
-    const margin = getMargins(node.element!);
+    const margin = getMargins(node.element);
     const branchY = y + margin.top;
 
     if (node.element instanceof ConditionElement) {

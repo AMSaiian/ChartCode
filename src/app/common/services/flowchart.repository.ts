@@ -103,9 +103,7 @@ export class FlowchartRepository {
       }
       scope.startId = element.id;
 
-      if (!scope.endId) {
-        scope.endId = element.id;
-      }
+      scope.endId ??= element.id;
     }
 
     this.updateState(snapshot);

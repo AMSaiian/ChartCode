@@ -1,30 +1,30 @@
 import { DataType } from '../models/expression/expression.model';
 
-export const Identifier = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+export const Identifier = /^[a-zA-Z_]\w*$/;
 
 export const IdentifierOrArrayAccess =
-  /^(?:[a-zA-Z_][a-zA-Z0-9_]*)(?:\[(?:[a-zA-Z_][a-zA-Z0-9_]*|\d+)\])*$/;
+  /^[a-zA-Z_]\w*(?:\[(?:[a-zA-Z_]\w*|\d+)])*$/;
 
 export const IdentifierOrArrayAccessOrLiteral =
-  /^(?:[a-zA-Z_][a-zA-Z0-9_]*(?:\[(?:[a-zA-Z_][a-zA-Z0-9_]*|\d+)\])*|"[^"\\]*(?:\\.[^"\\]*)*"|-?\d+(?:\.\d+)?|-?\.\d+)$/;
+  /^(?:[a-zA-Z_]\w*(?:\[(?:[a-zA-Z_]\w*|\d+)])*|"[^"\\]*(?:\\.[^"\\]*)*"|-?\d+(?:\.\d+)?|-?\.\d+)$/;
 
 export const IdentifierArrayOrUnsignedFloatLiteral =
-  /^(?:[a-zA-Z_][a-zA-Z0-9_]*(?:\[(?:[a-zA-Z_][a-zA-Z0-9_]*|\d+)\])*|\d+\.\d+|\d+)$/;
+  /^(?:[a-zA-Z_]\w*(?:\[(?:[a-zA-Z_]\w*|\d+)])*|\d+\.\d+|\d+)$/;
 
 export const IdentifierArrayOrFloatLiteral =
-  /^(?:[a-zA-Z_][a-zA-Z0-9_]*(?:\[(?:[a-zA-Z_][a-zA-Z0-9_]*|\d+)\])*|-?\d+\.\d+|-?\d+)$/;
+  /^(?:[a-zA-Z_]\w*(?:\[(?:[a-zA-Z_]\w*|\d+)])*|-?\d+\.\d+|-?\d+)$/;
 
 export const IdentifierArrayOrBooleanLiteral =
-  /^(?:[a-zA-Z_][a-zA-Z0-9_]*(?:\[(?:[a-zA-Z_][a-zA-Z0-9_]*|\d+)\])*|true|false)$/;
+  /^(?:[a-zA-Z_]\w*(?:\[(?:[a-zA-Z_]\w*|\d+)])*|true|false)$/;
 
 export const IdentifierArrayOrUnsignedIntegerLiteral =
-  /^(?:[a-zA-Z_][a-zA-Z0-9_]*(?:\[(?:[a-zA-Z_][a-zA-Z0-9_]*|\d+)\])*|\d+)$/;
+  /^(?:[a-zA-Z_]\w*(?:\[(?:[a-zA-Z_]\w*|\d+)])*|\d+)$/;
 
 export const IdentifierArrayOrIntegerLiteral =
-  /^(?:[a-zA-Z_][a-zA-Z0-9_]*(?:\[(?:[a-zA-Z_][a-zA-Z0-9_]*|\d+)\])*|-?\d+)$/;
+  /^(?:[a-zA-Z_]\w*(?:\[(?:[a-zA-Z_]\w*|\d+)])*|-?\d+)$/;
 
 export const IdentifierArrayOrStringLiteral =
-  /^(?:[a-zA-Z_][a-zA-Z0-9_]*(?:\[(?:[a-zA-Z_][a-zA-Z0-9_]*|\d+)\])*|"[^"\\]*(?:\\.[^"\\]*)*")$/;
+  /^(?:[a-zA-Z_]\w*(?:\[(?:[a-zA-Z_]\w*|\d+)])*|"[^"\\]*(?:\\.[^"\\]*)*")$/;
 
 export const getRegexByValueType = (type: DataType, unsigned = false): RegExp => {
   switch (type) {

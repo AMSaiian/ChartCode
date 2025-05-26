@@ -19,8 +19,7 @@ import { FlowchartRepository } from '../../../../../common/services/flowchart.re
     ButtonModule,
     Select,
   ],
-  templateUrl: './input-edit-modal.component.html',
-  styleUrl: './input-edit-modal.component.css'
+  templateUrl: './input-edit-modal.component.html'
 })
 export class InputEditModalComponent implements OnInit {
   element = input.required<InputElement>();

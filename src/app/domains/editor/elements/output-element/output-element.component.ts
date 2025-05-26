@@ -8,8 +8,7 @@ import { ElementDirective } from '../element.directive';
   imports: [
     InputShapeComponent,
   ],
-  templateUrl: './output-element.component.html',
-  styleUrl: './output-element.component.css'
+  templateUrl: './output-element.component.html'
 })
 export class OutputElementComponent extends ElementDirective<OutputElement> {
 

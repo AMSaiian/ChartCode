@@ -8,8 +8,7 @@ import { ElementDirective } from '../element.directive';
   imports: [
     ForLoopShapeComponent,
   ],
-  templateUrl: './for-loop-element.component.html',
-  styleUrl: './for-loop-element.component.css'
+  templateUrl: './for-loop-element.component.html'
 })
 export class ForLoopElementComponent extends ElementDirective<ForLoopElement> {
 
@@ -24,7 +23,7 @@ export class ForLoopElementComponent extends ElementDirective<ForLoopElement> {
 
   override transformElementData(element: ForLoopElement): string {
     return `
-    ${element.accumulator.destination} := ${element.accumulator.assign};
+    ${element.accumulator.destination} := ${(element.accumulator.assign as string)};
     ${element.checkExpression.toReadable(true)};
     ${element.accumulator.destination}${element.isIncrement ? '++' : '--'}`;
   }

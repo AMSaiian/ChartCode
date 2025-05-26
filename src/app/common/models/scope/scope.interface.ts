@@ -1,18 +1,10 @@
 import { Clonable } from '../clonable';
 
-type ScopeId = string;
-type ElementId = string;
-
 export interface IScope extends Clonable<IScope> {
   id: string;
-  startId: ElementId | null;
-  endId: ElementId | null;
-  parentId: ScopeId | null;
-  childrenId: ScopeId[];
-  elementsId: ElementId[];
+  startId: string | null;
+  endId: string | null;
+  parentId: string | null;
+  childrenId: string[];
+  elementsId: string[];
 }
-
-// export interface IScopeVariable {
-//   initiatedAtId: ElementId | null;
-//   variableId: VariableId;
-// }

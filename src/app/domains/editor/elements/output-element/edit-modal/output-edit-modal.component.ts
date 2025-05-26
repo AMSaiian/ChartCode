@@ -16,8 +16,7 @@ import { FlowchartRepository } from '../../../../../common/services/flowchart.re
     ReactiveFormsModule,
     Button,
   ],
-  templateUrl: './output-edit-modal.component.html',
-  styleUrl: './output-edit-modal.component.css'
+  templateUrl: './output-edit-modal.component.html'
 })
 export class OutputEditModalComponent implements OnInit {
   element = input.required<OutputElement>();

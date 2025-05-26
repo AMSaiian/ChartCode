@@ -29,8 +29,7 @@ import {
     CheckboxModule,
     BoolExpressionBuilderComponent,
   ],
-  templateUrl: './for-loop-edit-modal.component.html',
-  styleUrl: './for-loop-edit-modal.component.css'
+  templateUrl: './for-loop-edit-modal.component.html'
 })
 export class ForLoopEditModalComponent implements OnInit {
   element = input.required<ForLoopElement>();

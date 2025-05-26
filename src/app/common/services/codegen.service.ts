@@ -158,7 +158,7 @@ export class CodegenService {
 
     if (expr.isNew) {
       return expr.type.isCollection
-             ? this.format(template.assign.declareArray, { type, name: dst, length: expr.type.length || '0' })
+             ? this.format(template.assign.declareArray, { type, name: dst, length: expr.type.length ?? '0' })
              : this.format(template.assign.declare, { type, name: dst, value });
     }
 

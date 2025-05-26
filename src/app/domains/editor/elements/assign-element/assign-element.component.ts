@@ -9,8 +9,7 @@ import { ElementDirective } from '../element.directive';
   imports: [
     ProcessShapeComponent,
   ],
-  templateUrl: './assign-element.component.html',
-  styleUrl: './assign-element.component.css'
+  templateUrl: './assign-element.component.html'
 })
 export class AssignElementComponent extends ElementDirective<AssignElement> {
   constructor() {
