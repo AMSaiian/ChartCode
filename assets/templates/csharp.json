@@ -1,0 +1,64 @@
+{
+  "language": "csharp",
+  "displayName": "C#",
+  "extension": ".cs",
+  "style": "allman",
+  "indentSize": 4,
+  "indentChar": " ",
+  "imports": [
+    "using System;",
+    "using System.Collections.Generic;"
+  ],
+  "mainWrapper": {
+    "signature": "public class Program",
+    "mainSignature": "public static void Main(string[] args)"
+  },
+  "assign": {
+    "declare": "{type} {name} = {value};",
+    "declareArray": "{type}[] {name} = new {type}[{length}];",
+    "assign": "{name} = {value};"
+  },
+  "input": "{name} = Console.ReadLine();",
+  "inputByType": {
+    "Integer": "{name} = int.Parse(Console.ReadLine());",
+    "Float": "{name} = float.Parse(Console.ReadLine());",
+    "String": "{name} = Console.ReadLine();",
+    "Boolean": "{name} = bool.Parse(Console.ReadLine());"
+  },
+  "output": "Console.Write({name});",
+  "if": {
+    "start": "if ({condition})",
+    "else": "else"
+  },
+  "while": "while ({condition})",
+  "for": "for ({init}; {condition}; {update})",
+  "increment": "{var}++",
+  "decrement": "{var}--",
+  "blockStart": "{",
+  "blockEnd": "}",
+  "types": {
+    "Integer": "int",
+    "Float": "float",
+    "String": "string",
+    "Boolean": "bool"
+  },
+  "boolExpression": {
+    "Not": "!{a}",
+    "And": "{a} && {b}",
+    "Or": "{a} || {b}",
+    "Xor": "{a} ^ {b}",
+    "Equals": "{a} == {b}",
+    "NotEquals": "{a} != {b}",
+    "GreaterThan": "{a} > {b}",
+    "GreaterThanOrEqualTo": "{a} >= {b}",
+    "LessThan": "{a} < {b}",
+    "LessThanOrEqualTo": "{a} <= {b}"
+  },
+  "arithmeticExpression": {
+    "Add": "{a} + {b}",
+    "Subtract": "{a} - {b}",
+    "Multiply": "{a} * {b}",
+    "Divide": "{a} / {b}",
+    "Modulus": "{a} % {b}"
+  }
+}

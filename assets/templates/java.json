@@ -1,0 +1,63 @@
+{
+  "language": "java",
+  "displayName": "Java",
+  "extension": ".java",
+  "style": "kr",
+  "indentSize": 4,
+  "indentChar": " ",
+  "imports": [
+    "import java.util.Scanner;"
+  ],
+  "mainWrapper": {
+    "signature": "public class Program",
+    "mainSignature": "public static void main(String[] args)"
+  },
+  "assign": {
+    "declare": "{type} {name} = {value};",
+    "declareArray": "{type}[] {name} = new {type}[{length}];",
+    "assign": "{name} = {value};"
+  },
+  "input": "{name} = scanner.nextLine();",
+  "inputByType": {
+    "Integer": "{name} = new Scanner(System.in).nextInt();",
+    "Float": "{name} = new Scanner(System.in).nextFloat();",
+    "String": "{name} = new Scanner(System.in).nextLine();",
+    "Boolean": "{name} = new Scanner(System.in).nextBoolean();"
+  },
+  "output": "System.out.println({name});",
+  "if": {
+    "start": "if ({condition})",
+    "else": "else"
+  },
+  "while": "while ({condition})",
+  "for": "for ({init}; {condition}; {update})",
+  "increment": "{var}++",
+  "decrement": "{var}--",
+  "blockStart": "{",
+  "blockEnd": "}",
+  "types": {
+    "Integer": "int",
+    "Float": "float",
+    "String": "String",
+    "Boolean": "boolean"
+  },
+  "boolExpression": {
+    "Not": "!{a}",
+    "And": "{a} && {b}",
+    "Or": "{a} || {b}",
+    "Xor": "{a} ^ {b}",
+    "Equals": "{a} == {b}",
+    "NotEquals": "{a} != {b}",
+    "GreaterThan": "{a} > {b}",
+    "GreaterThanOrEqualTo": "{a} >= {b}",
+    "LessThan": "{a} < {b}",
+    "LessThanOrEqualTo": "{a} <= {b}"
+  },
+  "arithmeticExpression": {
+    "Add": "{a} + {b}",
+    "Subtract": "{a} - {b}",
+    "Multiply": "{a} * {b}",
+    "Divide": "{a} / {b}",
+    "Modulus": "{a} % {b}"
+  }
+}
