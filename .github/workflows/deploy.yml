@@ -1,0 +1,31 @@
+name: Build & Deploy ChartCode to GitHub Pages
+
+on:
+  push:
+    branches: ["master"]
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Github pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: |
+          npm run ng --deploy --repo="https://github.com/AMSaiian/ChartCode.git" --base-href=/ChartCode/ --name=AMSaiian --email=artursaiyan56@gmail.com
