@@ -1,0 +1,75 @@
+<div class="w-full justify-items-start">
+  <p-button
+    severity="secondary"
+    icon="pi pi-bars"
+    [fluid]="true"
+    styleClass="w-full! px-3!"
+    (onClick)="onIsOpenClick()"
+  ></p-button>
+</div>
+
+@if (isOpen()) {
+  <div class="px-4">
+    <h3 class="font-semibold">
+      {{ "EDITOR.SIDEBAR.CHOOSE" | translate }}
+    </h3>
+    <p-divider styleClass="border! border-x-0! border-y! border-y-gray-300!"></p-divider>
+  </div>
+  <div class="flex flex-col overflow-auto gap-4 thin">
+    <div class="justify-items-center">
+      <svg input-shape
+           [info]="`${(translate.get('ELEMENTS_DEFAULT.INPUT') | async)} >>`"
+           [isSelected]="selectedType() === 'input'"
+           (click)="onElementSelect('input')"
+           [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
+           viewBox="-1 -1 122 62">
+      </svg>
+    </div>
+    <div class="justify-items-center">
+      <svg input-shape
+           [info]="`${(translate.get('ELEMENTS_DEFAULT.OUTPUT') | async)} <<`"
+           [isSelected]="selectedType() === 'output'"
+           (click)="onElementSelect('output')"
+           [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
+           viewBox="-1 -1 122 62">
+      </svg>
+    </div>
+    <div class="justify-items-center">
+      <svg process-shape
+           [info]="`${(translate.get('ELEMENTS_DEFAULT.ASSIGN') | async)} :=`"
+           [isSelected]="selectedType() === 'assign'"
+           (click)="onElementSelect('assign')"
+           [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
+           viewBox="-1 -1 122 62">
+      </svg>
+    </div>
+    <div class="justify-items-center">
+      <svg condition-shape
+           [info]="`${(translate.get('ELEMENTS_DEFAULT.CONDITION') | async)} ?`"
+           [isSelected]="selectedType() === 'condition'"
+           (click)="onElementSelect('condition')"
+           [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
+           viewBox="-1 -1 122 62">
+      </svg>
+    </div>
+    <div class="justify-items-center">
+      <svg for-loop-shape
+           [info]="`${(translate.get('ELEMENTS_DEFAULT.FOR-LOOP') | async)}`"
+           [isSelected]="selectedType() === 'for-loop'"
+           (click)="onElementSelect('for-loop')"
+           [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
+           viewBox="-1 -1 122 62">
+      </svg>
+    </div>
+    <div class="justify-items-center">
+      <svg condition-shape
+           [info]="`${(translate.get('ELEMENTS_DEFAULT.PRE-LOOP') | async)}`"
+           [isSelected]="selectedType() === 'while-loop'"
+           (click)="onElementSelect('while-loop')"
+           [attr.width]="DEFAULT_WIDTH" [attr.height]="DEFAULT_HEIGHT"
+           viewBox="-1 -1 122 62">
+      </svg>
+    </div>
+  </div>
+}
+

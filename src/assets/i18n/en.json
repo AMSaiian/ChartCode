@@ -1,0 +1,78 @@
+{
+  "MODALS": {
+    "INPUT": {
+      "HEADER": "Edit Input Element",
+      "DESTINATION": "Enter Input Destination",
+      "DATATYPE": "Data Type of Input"
+    },
+    "OUTPUT": {
+      "HEADER": "Edit Output Element",
+      "SOURCE": "Enter Output Source"
+    },
+    "ASSIGN": {
+      "HEADER": "Edit Assign Element",
+      "DESTINATION": "Enter Assigning Destination",
+      "ASSIGN": "Enter Assigning Source",
+      "ADD_EXPRESSION": "Add Nested Expression",
+      "REMOVE_EXPRESSION": "Remove Nested Expression",
+      "DATATYPE": "Data Type",
+      "NEW": "Is New",
+      "COLLECTION": "Is Collection",
+      "LENGTH": "New Collection Length"
+    },
+    "CONDITION": {
+      "HEADER": "Edit Condition Element",
+      "CHECK": "Construct Condition Expression"
+    },
+    "WHILE_LOOP": {
+      "HEADER": "Edit While Loop Element",
+      "CHECK": "Construct Check Expression"
+    },
+    "FOR_LOOP": {
+      "HEADER": "Edit For Loop Element",
+      "CHECK": "Construct Check Expression",
+      "DESTINATION": "Enter accumulator variable name",
+      "START": "Enter accumulator initial value",
+      "INCREMENT": "Is increment"
+    },
+    "SAVE": "Save",
+    "CANCEL": "Cancel"
+  },
+  "ELEMENTS_DEFAULT": {
+    "START": "Begin",
+    "END": "End",
+    "INPUT": "Input",
+    "OUTPUT": "Output",
+    "ASSIGN": "Assign",
+    "CONDITION": "Condition",
+    "FOR-LOOP": "For Loop",
+    "PRE-LOOP": "While Loop"
+  },
+  "EDITOR": {
+    "SIDEBAR": {
+      "CHOOSE": "Choose a New Element"
+    },
+    "ADD_PROCEDURE": "Add New Procedure",
+    "CODE": {
+      "LANGUAGE": "Prog. lang"
+    }
+  },
+  "WELCOME": {
+    "SALUTATION": "Welcome to ChartCode by AMSaiian",
+    "NEW": "Create a new flowchart",
+    "LOAD": "Load an existed flowchart"
+  },
+  "EXPRESSION_BUILDER": {
+    "ARITHMETIC": "Arithmetic Expression Builder",
+    "BOOL": "Boolean Expression Builder",
+    "LEFT": "Left Operand",
+    "RIGHT": "Right Operand",
+    "OPERATION": "Operation",
+    "ADD": "Add Nested",
+    "REMOVE": "Remove Nested"
+  },
+  "LANGUAGES": {
+    "EN": "English",
+    "UA": "Ukrainian"
+  }
+}

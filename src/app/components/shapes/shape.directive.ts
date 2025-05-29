@@ -1,0 +1,26 @@
+import { computed, Directive, input, signal } from '@angular/core';
+import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '../../common/vm/layout.vm';
+
+@Directive()
+export class ShapeDirective {
+  info = input.required<string>();
+
+  formattedInfo = computed(() => this.info());
+
+  isSelected = input<boolean>(false);
+  isHovered = signal<boolean>(false);
+
+  protected readonly DEFAULT_WIDTH = DEFAULT_WIDTH;
+  protected readonly DEFAULT_HEIGHT = DEFAULT_HEIGHT;
+
+  strokeColor = computed(() => {
+    const isSelected = this.isSelected();
+    const isHovered = this.isHovered();
+
+    return isHovered
+           ? '#800000'
+           : isSelected
+             ? '#D22B2B'
+             : '#000000';
+  });
+}

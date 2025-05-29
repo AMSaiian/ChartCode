@@ -1,0 +1,16 @@
+<h2>{{ 'EXPRESSION_BUILDER.BOOL' | translate }}</h2>
+
+<p-divider></p-divider>
+
+<app-bool-expression-preview
+  [expression]="root()"
+  (expressionSelected)="selectExpression($event)"
+  [isRoot]="true">
+</app-bool-expression-preview>
+
+<p-divider></p-divider>
+
+<app-bool-expression-editor
+  [expression]="selected"
+  (expressionChanged)="onExpressionChanged($event)">
+</app-bool-expression-editor>

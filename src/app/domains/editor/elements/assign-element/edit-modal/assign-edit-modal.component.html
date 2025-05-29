@@ -1,0 +1,84 @@
+<form [formGroup]="form" class="flex flex-col gap-6">
+  <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-2">
+      <label for="destination">{{ 'MODALS.ASSIGN.DESTINATION' | translate }}</label>
+      <input id="destination"
+             pInputText
+             formControlName="destination"
+      />
+      @if (
+        !expression &&
+        !(form.value['isCollection'] === true &&
+        form.value['isNew'] === true)
+      ) {
+        <label for="assign">{{ 'MODALS.ASSIGN.ASSIGN' | translate }}</label>
+        <input id="assign"
+               pInputText
+               formControlName="assign"
+        />
+      } @else if (expression | instanceOf: ArithmeticExpression) {
+          <app-arithmetic-expression-builder
+            [root]="$any(expression)"
+            (rootChanged)="onExpressionChanged($event)"
+          />
+      } @else if (expression | instanceOf: BoolExpression) {
+        <app-bool-expression-builder
+          [root]="$any(expression)"
+          (rootChanged)="onExpressionChanged($event)"
+        />
+      }
+      @if (
+        form.value['isCollection'] === false &&
+        form.value['dataType'] !== DataType.String &&
+        !expression
+      ) {
+        <p-button severity="secondary" (click)="onAddExpression()">{{ 'MODALS.ASSIGN.ADD_EXPRESSION' | translate }}</p-button>
+      } @else if (
+        form.value['isCollection'] === false &&
+        form.value['dataType'] !== DataType.String &&
+        expression
+      ) {
+        <p-button severity="secondary" (click)="onDeleteExpression()">{{ 'MODALS.ASSIGN.REMOVE_EXPRESSION' | translate }}</p-button>
+      }
+      <label for="datatype">{{ 'MODALS.ASSIGN.DATATYPE' | translate }}:</label>
+      <p-select
+        id="datatype"
+        [options]="dataTypes"
+        [overlayOptions]="{ mode: 'modal' }"
+        formControlName="dataType"
+      />
+      <label for="isNew">{{ 'MODALS.ASSIGN.NEW' | translate }}</label>
+      <p-checkbox
+        id="isNew"
+        [binary]="true"
+        formControlName="isNew"
+      />
+      <label for="isCollection">{{ 'MODALS.ASSIGN.COLLECTION' | translate }}</label>
+      <p-checkbox
+        id="isCollection"
+        [binary]="true"
+        formControlName="isCollection"
+      />
+
+      @if (form.value['isCollection'] === true && form.value['isNew'] === true) {
+        <label for="length">{{ 'MODALS.ASSIGN.LENGTH' | translate }}</label>
+        <input
+          id="length"
+          formControlName="length"
+          pInputText
+        />
+      }
+    </div>
+    <div class="flex gap-2 justify-end">
+      <p-button
+        [label]="'MODALS.SAVE' | translate"
+        (click)="onSave()"
+        [disabled]="!isValid"
+      />
+      <p-button
+        [label]="'MODALS.CANCEL' | translate"
+        severity="secondary"
+        (click)="onCancel()" />
+    </div>
+  </div>
+</form>

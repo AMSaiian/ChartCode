@@ -1,0 +1,153 @@
+@let selectedType = selectedElementType$ | async;
+@let selectedId = selectedElementId$ | async;
+@let undoStepsCount = undoSteps$ | async;
+@let redoStepsCount = redoSteps$ | async;
+
+<div class="flex flex-col h-screen pb-8 bg-gray-100">
+  <div class="flex shrink-0 bg-gray-100 px-2 py-4 gap-4">
+    <p-button
+      severity="secondary"
+      icon="pi pi-sign-out"
+      (click)="onExit()"
+    />
+    <app-language-switcher></app-language-switcher>
+    <p-button
+      severity="secondary"
+      icon="pi pi-save"
+      (click)="onSave()">
+    </p-button>
+    <p-button
+      severity="secondary"
+      icon="pi pi-download"
+      (click)="onLoad()">
+    </p-button>
+    <p-button
+      severity="secondary"
+      icon="pi pi-trash"
+      (onClick)="onDeleteSelected()"
+      [disabled]="!selectedId"
+    />
+    <p-button
+      severity="secondary"
+      icon="pi pi-chevron-left"
+      (click)="onUndo()"
+      [disabled]="!(undoStepsCount! > 0)">
+      {{ undoStepsCount }}
+    </p-button>
+    <p-button
+      severity="secondary"
+      icon="pi pi-chevron-right"
+      (click)="onRedo()"
+      [disabled]="!(redoStepsCount! > 0)">
+      {{ redoStepsCount }}
+    </p-button>
+    <p-button
+      severity="secondary"
+      icon="pi pi-images"
+      (click)="onGenerateChart()"
+    />
+  </div>
+  <div class="flex flex-grow overflow-hidden">
+    <div class="flex flex-shrink-0">
+      <app-sidebar></app-sidebar>
+    </div>
+    <div class="flex-grow overflow-hidden border border-gray-300 rounded-2xl">
+      @if (elements(); as elements) {
+        <svg
+          #editorScene
+          [attr.width]="'100%'"
+          [attr.height]="'100%'"
+          class="mx-auto! bg-white"
+        >
+          <defs>
+            <marker
+              id="arrow"
+              [attr.markerWidth]="DEFAULT_ARROW_SIZE"
+              [attr.markerHeight]="DEFAULT_ARROW_SIZE"
+              [attr.refX]="DEFAULT_ARROW_SIZE - 1"
+              [attr.refY]="DEFAULT_ARROW_SIZE / 2"
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <path
+                [attr.d]="`M0,0 L${DEFAULT_ARROW_SIZE},${DEFAULT_ARROW_SIZE / 2} L0,${DEFAULT_ARROW_SIZE} Z`"
+                fill="black"
+              />
+            </marker>
+          </defs>
+
+          @for (edge of elements.edges; track edge.path) {
+            <path
+              [attr.d]="edge.path"
+              stroke="black"
+              fill="none"
+              [attr.marker-end]="!edge.isSupport ? 'url(#arrow)' : null"
+            />
+          }
+
+          @for (node of elements.nodes; track node.element.id) {
+            @if (node.element | instanceOf: TerminalElement) {
+              <g terminal-shape
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 [info]="($any(node.element).isStart ? 'ELEMENTS_DEFAULT.START' : 'ELEMENTS_DEFAULT.END') | translate"
+              />
+            }
+            @if (node.element | instanceOf: ConditionElement) {
+              <g condition-element
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 [element]="$any(node.element)"
+              />
+            }
+            @if (node.element | instanceOf: InputElement) {
+              <g input-element
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 [element]="$any(node.element)" />
+            }
+            @if (node.element | instanceOf: OutputElement) {
+              <g output-element
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 [element]="$any(node.element)" />
+            }
+            @if (node.element | instanceOf: ForLoopElement) {
+              <g for-loop-element
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 [element]="$any(node.element)" />
+            }
+            @if (node.element | instanceOf: WhileLoopElement) {
+              <g while-loop-element
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 [element]="$any(node.element)" />
+            }
+            @if (node.element | instanceOf: AssignElement) {
+              <g assign-element
+                 [attr.transform]="`translate(${node.x},${node.y})`"
+                 [element]="$any(node.element)" />
+              />
+            }
+          }
+          <g
+            *ngFor="let point of elements.insertions"
+            [attr.transform]="`translate(${point.x},${point.y})`"
+            [attr.display]="!selectedType ? 'none' : null">
+            <circle
+              cx="0"
+              cy="0"
+              [attr.r]="DEFAULT_INSERT_RADIUS"
+              fill="red"
+              style="cursor: pointer;"
+              onmouseover="this.setAttribute('fill', 'darkred')"
+              onmouseout="this.setAttribute('fill', 'red')"
+              stroke="black"
+              stroke-width="1"
+              (click)="onInsert(point)"
+            />
+          </g>
+        </svg>
+      }
+    </div>
+    <div class="flex flex-shrink-0">
+      <app-source-code-section></app-source-code-section>
+    </div>
+  </div>
+</div>
+

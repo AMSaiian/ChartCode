@@ -1,0 +1,22 @@
+<div class="flex flex-col gap-6">
+  <div class="flex flex-col gap-2">
+    <label for="checkExpression">{{ 'MODALS.WHILE_LOOP.CHECK' | translate }}</label>
+    <app-bool-expression-builder
+      id="checkExpression"
+      [root]="$any(expression)"
+      (rootChanged)="onExpressionChanged($event)"
+    />
+  </div>
+
+  <div class="flex gap-2 justify-end">
+    <p-button
+      [label]="'MODALS.SAVE' | translate"
+      (click)="onSave()"
+      [disabled]="!isExpressionValid"
+    />
+    <p-button
+      [label]="'MODALS.CANCEL' | translate"
+      severity="secondary"
+      (click)="onCancel()" />
+  </div>
+</div>

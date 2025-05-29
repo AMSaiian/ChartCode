@@ -1,0 +1,26 @@
+<div class="flex flex-col h-screen p-32 gap-16 bg-gray-100 justify-start items-stretch">
+  <div class="flex justify-center">
+    <div class="flex gap-4">
+      <h1 class="content-center text-3xl">{{ 'WELCOME.SALUTATION' | translate }}</h1>
+      <app-language-switcher></app-language-switcher>
+    </div>
+  </div>
+
+  <div class="flex flex-col items-center">
+    <p-button
+      [label]="'WELCOME.NEW' | translate"
+      icon="pi pi-plus"
+      (click)="onNewFlowchart()"
+      variant="outlined"
+      severity="contrast"
+    />
+    <p-divider></p-divider>
+    <p-button
+      [label]="'WELCOME.LOAD' | translate"
+      icon="pi pi-download"
+      (click)="onLoadFlowchart()"
+      variant="outlined"
+      severity="contrast"
+    />
+  </div>
+</div>

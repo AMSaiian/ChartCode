@@ -1,0 +1,48 @@
+<span
+  [ngClass]="{ 'bg-amber-200 cursor-pointer': hovered && !leftHovered && !rightHovered }"
+  (mouseenter)="$event.stopPropagation(); hovered = true"
+  (mouseleave)="$event.stopPropagation(); hovered = false"
+  (click)="$event.stopPropagation(); expressionSelected.emit(expression())"
+  class="text-xl"
+>
+  @if (expression().expressionType === BoolExpressionType.Not) {
+    {{ operatorsMap[expression().expressionType] }}
+    @if (isNested(expression().leftOperand)) {
+      <app-bool-expression-preview
+        (mouseenter)="$event.stopPropagation(); leftHovered = true"
+        (mouseleave)="$event.stopPropagation(); leftHovered = false"
+        [expression]="$any(expression().leftOperand)"
+        [isRoot]="false"
+        (expressionSelected)="expressionSelected.emit($event)"
+      />
+    } @else {
+      {{ expression().leftOperand }}
+    }
+  } @else {
+    {{ isRoot() ? '' : '(' }}
+    @if (isNested(expression().leftOperand)) {
+      <app-bool-expression-preview
+        (mouseenter)="$event.stopPropagation(); leftHovered = true"
+        (mouseleave)="$event.stopPropagation(); leftHovered = false"
+        [expression]="$any(expression().leftOperand)"
+        [isRoot]="false"
+        (expressionSelected)="expressionSelected.emit($event)"
+      />
+    } @else {
+      {{ expression().leftOperand }}
+    }
+    {{ ' ' + operatorsMap[expression().expressionType] + ' ' }}
+    @if (isNested(expression().rightOperand)) {
+      <app-bool-expression-preview
+        (mouseenter)="$event.stopPropagation(); rightHovered = true"
+        (mouseleave)="$event.stopPropagation(); rightHovered = false"
+        [expression]="$any(expression().rightOperand)"
+        [isRoot]="false"
+        (expressionSelected)="expressionSelected.emit($event)"
+      />
+    } @else if (expression().rightOperand) {
+      {{ expression().rightOperand }}
+    }
+    {{ isRoot() ? '' : ')' }}
+  }
+</span>
