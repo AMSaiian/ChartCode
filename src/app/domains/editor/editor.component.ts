@@ -49,6 +49,7 @@ import { SourceCodeSectionComponent } from './source-code-section/source-code-se
     TranslatePipe,
     TabsModule,
     DividerModule,
+    AsyncPipe
   ],
   templateUrl: './editor.component.html'
 })
