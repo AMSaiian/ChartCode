@@ -16,9 +16,9 @@ export const codegenTemplateList = Object.entries(CodegenTemplates)
                                          );
 
 export interface FormatOptions {
-  style?: 'allman' | 'kr';
-  indentSize?: number;
-  indentChar?: string;
+  style?: 'allman' | 'kr' | null;
+  indentSize?: number | null;
+  indentChar?: string | null;
 }
 
 

@@ -17,14 +17,14 @@
     "declareArray": "{type}[] {name} = new {type}[{length}];",
     "assign": "{name} = {value};"
   },
-  "input": "{name} = scanner.nextLine();",
+  "input": "{name} = new Scanner(System.in).nextLine();",
   "inputByType": {
     "Integer": "{name} = new Scanner(System.in).nextInt();",
     "Float": "{name} = new Scanner(System.in).nextFloat();",
     "String": "{name} = new Scanner(System.in).nextLine();",
     "Boolean": "{name} = new Scanner(System.in).nextBoolean();"
   },
-  "output": "System.out.println({name});",
+  "output": "System.out.print({name});",
   "if": {
     "start": "if ({condition})",
     "else": "else"

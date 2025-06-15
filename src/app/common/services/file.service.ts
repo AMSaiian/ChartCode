@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { CodegenTemplates } from '../const/сode-template.const';
 import { NodeVm } from '../vm/layout.vm';
 import { FlowchartState } from './flowchart.repository';
 import serializer from '../utils/flowchart-serializer';
@@ -19,7 +20,8 @@ export class FileService {
           description: 'ChartCode Flowchart File',
           accept: { 'application/octet-stream': ['.chrtcd'] }
         }],
-        excludeAcceptAllOption: true
+        excludeAcceptAllOption: true,
+        multiple: false
       });
 
       const writable = await handle.createWritable();
@@ -27,6 +29,28 @@ export class FileService {
       await writable.close();
     } catch (err) {
       console.error('Save cancelled or failed:', err);
+    }
+  }
+
+  async saveSourceCodeToFile(language: string, sourceCode: string): Promise<void> {
+    try {
+      const extension = CodegenTemplates[language].extension;
+
+      const handle = await (window as any).showSaveFilePicker({
+        suggestedName: `main${extension}`,
+        types: [{
+          description: 'Source Code File',
+          accept: { 'text/plain': [extension] }
+        }],
+        excludeAcceptAllOption: true,
+        multiple: false
+      });
+
+      const writable = await handle.createWritable();
+      await writable.write(sourceCode);
+      await writable.close();
+    } catch (err) {
+      console.error('Source code save cancelled or failed:', err);
     }
   }
 
@@ -77,6 +101,8 @@ export class FileService {
           accept: { 'image/jpeg': ['.jpg', '.jpeg'] },
         },
       ],
+      excludeAcceptAllOption: true,
+      multiple: false
     });
 
     const writable = await handle.createWritable();
