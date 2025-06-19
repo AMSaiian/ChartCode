@@ -12,7 +12,7 @@
   },
   "assign": {
     "declare": "let {name} = {value};",
-    "declareArray": "let {name} = new Array({length});",
+    "declareArray": "let {name} = Array({length});",
     "assign": "{name} = {value};"
   },
   "input": "{name} = prompt();",
