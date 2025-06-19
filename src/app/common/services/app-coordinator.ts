@@ -193,6 +193,19 @@ export class AppCoordinator {
     await this.fileService.exportToJpg(flowchart, procedureNode);
   }
 
+  public async exportFlowchartAsCode(language: string, options?: FormatOptions) {
+    const currentState = this.flowchart.current$.value;
+    const sourceCode = this.codegenService.generate(
+      language,
+      currentState.selectedProcedureId,
+      currentState.elements,
+      currentState.scopes,
+      options
+    );
+
+    await this.fileService.saveSourceCodeToFile(language, sourceCode);
+  }
+
   public selectProcedure(procedureId: string) {
     this.flowchart.current$.value.selectedProcedureId = procedureId;
     this.flowchart.current$.next(this.flowchart.current$.value);

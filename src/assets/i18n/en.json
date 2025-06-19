@@ -54,7 +54,13 @@
     },
     "ADD_PROCEDURE": "Add New Procedure",
     "CODE": {
-      "LANGUAGE": "Prog. lang"
+      "LANGUAGE": "Prog. lang",
+      "STYLE": "Style",
+      "RESET": "Reset format",
+      "INDENT-LENGTH": "Indent",
+      "TAB": "Tab",
+      "SPACE": "Space",
+      "EXPORT": "Export"
     }
   },
   "WELCOME": {
