@@ -10,7 +10,7 @@
     "using System.Collections.Generic;"
   ],
   "mainWrapper": {
-    "signature": "public class Program",
+    "signature": "public static class Program",
     "mainSignature": "public static void Main(string[] args)"
   },
   "assign": {
