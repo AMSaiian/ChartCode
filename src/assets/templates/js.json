@@ -5,7 +5,7 @@
   "style": "kr",
   "indentSize": 2,
   "indentChar": " ",
-  "imports": [],
+  "imports": ["var prompt = require('prompt-sync')();"],
   "mainWrapper": {
     "signature": "",
     "mainSignature": ""
@@ -15,12 +15,12 @@
     "declareArray": "let {name} = new Array({length});",
     "assign": "{name} = {value};"
   },
-  "input": "let {name} = prompt();",
+  "input": "{name} = prompt();",
   "inputByType": {
-    "Integer": "let {name} = parseInt(prompt(), 10);",
-    "Float": "let {name} = parseFloat(prompt());",
-    "String": "let {name} = prompt();",
-    "Boolean": "let {name} = prompt() === 'true';"
+    "Integer": "{name} = parseInt(prompt(), 10);",
+    "Float": "{name} = parseFloat(prompt());",
+    "String": "{name} = prompt();",
+    "Boolean": "{name} = prompt() === 'true';"
   },
   "output": "console.log({name});",
   "if": {
